@@ -1,0 +1,129 @@
+/* Common */
+"app_name" = "Pixel Quest";
+"cancel" = "Cancel";
+"confirm" = "Confirm";
+"delete" = "Delete";
+"save" = "Save";
+"back" = "BACK";
+"done" = "Done";
+
+/* Tab Bar */
+"tab_quests" = "QUESTS";
+"tab_map" = "MAP";
+"tab_items" = "ITEMS";
+"tab_settings" = "SETTINGS";
+
+/* Settings */
+"settings_title" = "SETTINGS";
+"settings_language" = "Language";
+"settings_work_in_progress" = "WORK IN PROGRESS...";
+"language_english" = "English";
+"language_chinese" = "中文";
+
+/* Quests */
+"quests_title" = "DAILY QUESTS";
+"quests_completed" = "COMPLETED";
+"quests_progress" = "Progress";
+
+/* Map */
+"map_title" = "WORLD MAP";
+"map_home_base" = "Home Base";
+"map_gym" = "Gym";
+"map_library" = "Library";
+"map_company" = "Company";
+
+/* Items */
+"items_title" = "MY ITEMS";
+"items_total_value" = "Total Value";
+"items_add_item" = "ADD ITEM";
+"items_rarity_common" = "Common";
+"items_rarity_rare" = "Rare";
+"items_rarity_epic" = "Epic";
+"items_rarity_legendary" = "Legendary";
+"items_empty_collection" = "No items in collection yet";
+
+/* Finance */
+"finance_transactions" = "Transactions";
+"finance_reconcile" = "Reconcile";
+"finance_total_assets" = "Total Assets";
+"finance_last_reconcile" = "Last Reconcile";
+"finance_month_income" = "Monthly Income";
+"finance_month_expense" = "Monthly Expense";
+"finance_net" = "Net";
+"finance_expense" = "Expense";
+"finance_income" = "Income";
+"finance_quick_entry" = "Quick Entry";
+"finance_add_entry" = "Add Entry";
+"finance_update_balance" = "Update Balance";
+"finance_start_reconcile" = "Start Reconcile";
+"finance_no_records" = "No records yet";
+"finance_history_records" = "Reconciliation History";
+"finance_note_optional" = "Note (optional)";
+
+/* Finance Categories */
+"category_food" = "Food";
+"category_transport" = "Transport";
+"category_shopping" = "Shopping";
+"category_entertainment" = "Entertainment";
+"category_other" = "Other";
+"category_salary" = "Salary";
+"category_bonus" = "Bonus";
+"category_investment" = "Investment";
+
+/* Reconcile Sheet */
+"reconcile_title" = "Balance Reconcile";
+"reconcile_enter_balance" = "Enter current balance for each wallet";
+"reconcile_new_total" = "New Total";
+"reconcile_confirm" = "Confirm Update";
+"reconcile_receipt_title" = "Asset Reconciliation";
+"reconcile_new_balance" = "New Balance";
+"reconcile_old_balance" = "Old Balance";
+"reconcile_actual_change" = "Actual Change";
+"reconcile_recorded_change" = "Recorded Change";
+"reconcile_difference" = "Difference";
+"reconcile_matched" = "Matched";
+"reconcile_discrepancy" = "Discrepancy";
+"reconcile_thank_you" = "※ Thank you for using PIXEL QUEST ※";
+"reconcile_slogan" = "Keep tracking, stay pixel!";
+"reconcile_tear_here" = "--- TEAR HERE ---";
+"reconcile_got_it" = "Got It";
+
+/* Wallet */
+"wallet_cash" = "Cash";
+"wallet_bank" = "Bank";
+"wallet_wechat" = "WeChat";
+"wallet_alipay" = "Alipay";
+
+/* Date */
+"date_today" = "TODAY";
+"date_yesterday" = "YESTERDAY";
+
+/* Sleep (Home) */
+"sleep_log" = "SLEEP LOG";
+"sleep_sync_health" = "Sync from Apple Health";
+"sleep_syncing" = "Syncing...";
+"sleep_bed_time" = "Bed Time";
+"sleep_wake_time" = "Wake Time";
+"sleep_duration" = "Sleep Duration";
+"sleep_quality" = "Sleep Quality";
+"sleep_record_today" = "Log Today's Sleep";
+"sleep_already_logged" = "Already logged today";
+"sleep_week_trend" = "Weekly Trend";
+"sleep_avg_duration" = "Avg Sleep";
+"sleep_avg_quality" = "Avg Quality";
+
+/* Exercise (Gym) */
+"exercise_log" = "EXERCISE LOG";
+"exercise_type" = "Exercise Type";
+"exercise_duration" = "Duration";
+"exercise_calories" = "Calories Burned";
+"exercise_record" = "Log Exercise";
+"exercise_week_stats" = "Weekly Stats";
+"exercise_total_duration" = "Total Duration";
+"exercise_total_calories" = "Total Calories";
+"exercise_total_count" = "Workouts";
+
+/* Library */
+"library_my_books" = "MY BOOKS";
+"library_books_count" = "%d books";
+"library_add_book" = "Add New Book";

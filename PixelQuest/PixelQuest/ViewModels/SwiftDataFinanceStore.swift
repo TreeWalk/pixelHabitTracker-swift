@@ -1,0 +1,159 @@
+import Foundation
+import SwiftData
+
+@MainActor
+class SwiftDataFinanceStore: ObservableObject {
+    private var modelContext: ModelContext?
+    
+    @Published var wallets: [WalletData] = []
+    @Published var snapshots: [WalletSnapshotData] = []
+    @Published var entries: [FinanceEntryData] = []
+    @Published var isLoading = false
+    
+    // 上次选择的分类
+    @Published var lastExpenseCategory: String = "food"
+    @Published var lastIncomeCategory: String = "salary"
+    
+    // MARK: - 配置 ModelContext
+    
+    func configure(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        loadData()
+        initializeDefaultWallets()
+    }
+    
+    private func loadData() {
+        guard let context = modelContext else { return }
+        
+        do {
+            let walletDescriptor = FetchDescriptor<WalletData>(sortBy: [SortDescriptor(\.order)])
+            wallets = try context.fetch(walletDescriptor)
+            
+            let snapshotDescriptor = FetchDescriptor<WalletSnapshotData>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+            snapshots = try context.fetch(snapshotDescriptor)
+            
+            let entryDescriptor = FetchDescriptor<FinanceEntryData>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+            entries = try context.fetch(entryDescriptor)
+        } catch {
+            print("Load data error: \(error)")
+        }
+    }
+    
+    private func initializeDefaultWallets() {
+        guard let context = modelContext, wallets.isEmpty else { return }
+        
+        let defaults = [
+            ("现金", "banknote.fill", "PixelGreen", 0),
+            ("银行卡", "creditcard.fill", "PixelBlue", 1),
+            ("微信", "message.fill", "PixelGreen", 2),
+            ("支付宝", "bolt.circle.fill", "PixelBlue", 3)
+        ]
+        
+        for (name, icon, color, order) in defaults {
+            let wallet = WalletData(name: name, icon: icon, color: color, order: order)
+            context.insert(wallet)
+            wallets.append(wallet)
+        }
+        
+        try? context.save()
+    }
+    
+    // MARK: - 计算属性
+    
+    var latestSnapshot: WalletSnapshotData? {
+        snapshots.first
+    }
+    
+    var totalBalance: Int {
+        latestSnapshot?.totalBalance ?? 0
+    }
+    
+    var formattedTotalBalance: String {
+        String(format: "%.2f", Double(totalBalance) / 100.0)
+    }
+    
+    var todayEntries: [FinanceEntryData] {
+        let calendar = Calendar.current
+        return entries.filter { calendar.isDateInToday($0.date) }
+    }
+    
+    var monthIncome: Int {
+        let calendar = Calendar.current
+        guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
+        return entries.filter { $0.date >= monthStart && $0.isIncome }.reduce(0) { $0 + $1.amount }
+    }
+    
+    var monthExpense: Int {
+        let calendar = Calendar.current
+        guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
+        return entries.filter { $0.date >= monthStart && $0.isExpense }.reduce(0) { $0 + $1.amount }
+    }
+    
+    var monthNet: Int { monthIncome - monthExpense }
+    
+    // MARK: - 交易操作
+    
+    func addEntry(amount: Int, type: String, category: String, note: String? = nil) {
+        guard let context = modelContext else { return }
+        
+        let entry = FinanceEntryData(amount: amount, type: type, category: category, note: note)
+        context.insert(entry)
+        entries.insert(entry, at: 0)
+        
+        if type == "expense" { lastExpenseCategory = category }
+        else if type == "income" { lastIncomeCategory = category }
+        
+        try? context.save()
+    }
+    
+    func deleteEntry(_ entry: FinanceEntryData) {
+        guard let context = modelContext else { return }
+        context.delete(entry)
+        entries.removeAll { $0.id == entry.id }
+        try? context.save()
+    }
+    
+    // MARK: - 快照操作
+    
+    func createSnapshot(balances: [String: Int]) {
+        guard let context = modelContext else { return }
+        
+        let snapshot = WalletSnapshotData()
+        snapshot.balances = balances
+        context.insert(snapshot)
+        snapshots.insert(snapshot, at: 0)
+        
+        // 更新钱包时间
+        for wallet in wallets {
+            wallet.lastUpdated = Date()
+        }
+        
+        try? context.save()
+    }
+    
+    func calculateDifference(from oldSnapshot: WalletSnapshotData?, to newSnapshot: WalletSnapshotData) -> (actual: Int, recorded: Int, diff: Int) {
+        let actualChange: Int
+        if let old = oldSnapshot {
+            actualChange = newSnapshot.totalBalance - old.totalBalance
+        } else {
+            actualChange = newSnapshot.totalBalance
+        }
+        
+        let startDate = oldSnapshot?.date ?? Date.distantPast
+        let endDate = newSnapshot.date
+        
+        let recordedIncome = entries.filter { $0.date >= startDate && $0.date <= endDate && $0.isIncome }.reduce(0) { $0 + $1.amount }
+        let recordedExpense = entries.filter { $0.date >= startDate && $0.date <= endDate && $0.isExpense }.reduce(0) { $0 + $1.amount }
+        let recordedChange = recordedIncome - recordedExpense
+        
+        return (actual: actualChange, recorded: recordedChange, diff: actualChange - recordedChange)
+    }
+    
+    // MARK: - 按日期分组
+    
+    func entriesGroupedByDate() -> [(date: Date, entries: [FinanceEntryData])] {
+        let calendar = Calendar.current
+        let grouped = Dictionary(grouping: entries) { calendar.startOfDay(for: $0.date) }
+        return grouped.sorted { $0.key > $1.key }.map { (date: $0.key, entries: $0.value) }
+    }
+}

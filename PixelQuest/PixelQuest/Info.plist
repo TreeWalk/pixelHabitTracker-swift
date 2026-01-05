@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>VT323-Regular.ttf</string>
+	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>用于读取您的睡眠和运动数据</string>
+</dict>
+</plist>

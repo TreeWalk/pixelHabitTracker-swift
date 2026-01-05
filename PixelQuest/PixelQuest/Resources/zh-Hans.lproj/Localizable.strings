@@ -1,0 +1,129 @@
+/* Common */
+"app_name" = "像素任务";
+"cancel" = "取消";
+"confirm" = "确认";
+"delete" = "删除";
+"save" = "保存";
+"back" = "返回";
+"done" = "完成";
+
+/* Tab Bar */
+"tab_quests" = "任务";
+"tab_map" = "地图";
+"tab_items" = "物品";
+"tab_settings" = "设置";
+
+/* Settings */
+"settings_title" = "设置";
+"settings_language" = "语言";
+"settings_work_in_progress" = "开发中...";
+"language_english" = "English";
+"language_chinese" = "中文";
+
+/* Quests */
+"quests_title" = "每日任务";
+"quests_completed" = "已完成";
+"quests_progress" = "进度";
+
+/* Map */
+"map_title" = "世界地图";
+"map_home_base" = "家园";
+"map_gym" = "健身房";
+"map_library" = "图书馆";
+"map_company" = "公司";
+
+/* Items */
+"items_title" = "我的物品";
+"items_total_value" = "总价值";
+"items_add_item" = "添加物品";
+"items_rarity_common" = "普通";
+"items_rarity_rare" = "稀有";
+"items_rarity_epic" = "史诗";
+"items_rarity_legendary" = "传说";
+"items_empty_collection" = "收藏中还没有物品";
+
+/* Finance */
+"finance_transactions" = "流水";
+"finance_reconcile" = "核对";
+"finance_total_assets" = "总资产";
+"finance_last_reconcile" = "上次核对";
+"finance_month_income" = "本月收入";
+"finance_month_expense" = "本月支出";
+"finance_net" = "净额";
+"finance_expense" = "支出";
+"finance_income" = "收入";
+"finance_quick_entry" = "快速记账";
+"finance_add_entry" = "记一笔";
+"finance_update_balance" = "更新余额";
+"finance_start_reconcile" = "开始核对";
+"finance_no_records" = "暂无记录";
+"finance_history_records" = "历史核对记录";
+"finance_note_optional" = "备注（可选）";
+
+/* Finance Categories */
+"category_food" = "餐饮";
+"category_transport" = "交通";
+"category_shopping" = "购物";
+"category_entertainment" = "娱乐";
+"category_other" = "其他";
+"category_salary" = "工资";
+"category_bonus" = "奖金";
+"category_investment" = "投资";
+
+/* Reconcile Sheet */
+"reconcile_title" = "余额核对";
+"reconcile_enter_balance" = "请输入各钱包当前余额";
+"reconcile_new_total" = "新总额";
+"reconcile_confirm" = "确认更新";
+"reconcile_receipt_title" = "资产核对单";
+"reconcile_new_balance" = "新总额";
+"reconcile_old_balance" = "旧总额";
+"reconcile_actual_change" = "实际变化";
+"reconcile_recorded_change" = "记录变化";
+"reconcile_difference" = "差值";
+"reconcile_matched" = "账目一致";
+"reconcile_discrepancy" = "存在差异";
+"reconcile_thank_you" = "※ 感谢使用 PIXEL QUEST ※";
+"reconcile_slogan" = "Keep tracking, stay pixel!";
+"reconcile_tear_here" = "--- TEAR HERE ---";
+"reconcile_got_it" = "知道了";
+
+/* Wallet */
+"wallet_cash" = "现金";
+"wallet_bank" = "银行卡";
+"wallet_wechat" = "微信";
+"wallet_alipay" = "支付宝";
+
+/* Date */
+"date_today" = "今日";
+"date_yesterday" = "昨日";
+
+/* Sleep (Home) */
+"sleep_log" = "睡眠日志";
+"sleep_sync_health" = "从 Apple Health 同步";
+"sleep_syncing" = "同步中...";
+"sleep_bed_time" = "入睡时间";
+"sleep_wake_time" = "起床时间";
+"sleep_duration" = "睡眠时长";
+"sleep_quality" = "睡眠质量";
+"sleep_record_today" = "记录今日睡眠";
+"sleep_already_logged" = "今日已记录";
+"sleep_week_trend" = "本周趋势";
+"sleep_avg_duration" = "平均睡眠";
+"sleep_avg_quality" = "平均质量";
+
+/* Exercise (Gym) */
+"exercise_log" = "运动日志";
+"exercise_type" = "运动类型";
+"exercise_duration" = "运动时长";
+"exercise_calories" = "消耗卡路里";
+"exercise_record" = "记录运动";
+"exercise_week_stats" = "本周统计";
+"exercise_total_duration" = "总时长";
+"exercise_total_calories" = "总卡路里";
+"exercise_total_count" = "运动次数";
+
+/* Library */
+"library_my_books" = "我的书籍";
+"library_books_count" = "%d 本";
+"library_add_book" = "添加新书";
