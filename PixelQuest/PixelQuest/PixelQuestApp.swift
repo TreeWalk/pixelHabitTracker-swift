@@ -21,7 +21,9 @@ struct PixelQuestApp: App {
             WalletData.self,
             WalletSnapshotData.self,
             FinanceEntryData.self,
-            BookEntryData.self
+            BookEntryData.self,
+            AssetData.self,
+            AssetSnapshotData.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         

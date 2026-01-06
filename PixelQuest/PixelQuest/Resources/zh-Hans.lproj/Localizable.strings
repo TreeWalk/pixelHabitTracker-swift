@@ -127,3 +127,30 @@
 "library_my_books" = "我的书籍";
 "library_books_count" = "%d 本";
 "library_add_book" = "添加新书";
+
+/* Assets */
+"finance_assets" = "资产";
+"asset_update" = "资产更新";
+"asset_type" = "资产类型";
+"asset_current" = "流动资金";
+"asset_investment" = "投资理财";
+"asset_liability" = "负债";
+"asset_net_worth" = "净资产";
+"asset_total_assets" = "总资产";
+"asset_total_liabilities" = "总负债";
+"asset_add" = "添加资产";
+"asset_stocks" = "股票";
+"asset_funds" = "基金";
+"asset_fixed_deposit" = "定期存款";
+"asset_credit_card" = "信用卡";
+"asset_loan" = "贷款";
+"asset_update_instruction" = "请输入各资产的当前余额";
+
+/* Transaction Statistics */
+"stats_title" = "流水统计";
+"stats_period" = "统计期间";
+"stats_total_income" = "总收入";
+"stats_total_expense" = "总支出";
+"stats_net" = "净额";
+"stats_daily_avg" = "日均支出";
+"stats_by_category" = "按分类";

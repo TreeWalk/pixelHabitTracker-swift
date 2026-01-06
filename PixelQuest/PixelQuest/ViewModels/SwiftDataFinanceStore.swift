@@ -8,6 +8,8 @@ class SwiftDataFinanceStore: ObservableObject {
     @Published var wallets: [WalletData] = []
     @Published var snapshots: [WalletSnapshotData] = []
     @Published var entries: [FinanceEntryData] = []
+    @Published var assets: [AssetData] = []
+    @Published var assetSnapshots: [AssetSnapshotData] = []
     @Published var isLoading = false
     
     // 上次选择的分类
@@ -34,6 +36,12 @@ class SwiftDataFinanceStore: ObservableObject {
             
             let entryDescriptor = FetchDescriptor<FinanceEntryData>(sortBy: [SortDescriptor(\.date, order: .reverse)])
             entries = try context.fetch(entryDescriptor)
+            
+            let assetDescriptor = FetchDescriptor<AssetData>(sortBy: [SortDescriptor(\.order)])
+            assets = try context.fetch(assetDescriptor)
+            
+            let assetSnapshotDescriptor = FetchDescriptor<AssetSnapshotData>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+            assetSnapshots = try context.fetch(assetSnapshotDescriptor)
         } catch {
             print("Load data error: \(error)")
         }
@@ -155,5 +163,83 @@ class SwiftDataFinanceStore: ObservableObject {
         let calendar = Calendar.current
         let grouped = Dictionary(grouping: entries) { calendar.startOfDay(for: $0.date) }
         return grouped.sorted { $0.key > $1.key }.map { (date: $0.key, entries: $0.value) }
+    }
+    
+    // MARK: - 资产管理
+    
+    var latestAssetSnapshot: AssetSnapshotData? {
+        assetSnapshots.first
+    }
+    
+    var totalAssets: Int {
+        assets.filter { $0.type != "liability" }.reduce(0) { $0 + $1.currentBalance }
+    }
+    
+    var totalLiabilities: Int {
+        assets.filter { $0.type == "liability" }.reduce(0) { $0 + abs($1.currentBalance) }
+    }
+    
+    var netWorth: Int {
+        totalAssets - totalLiabilities
+    }
+    
+    func assetsByType(_ type: String) -> [AssetData] {
+        assets.filter { $0.type == type }.sorted { $0.order < $1.order }
+    }
+    
+    func addAsset(name: String, icon: String, color: String, type: String, balance: Int) {
+        guard let context = modelContext else { return }
+        
+        let order = assets.filter { $0.type == type }.count
+        let asset = AssetData(name: name, icon: icon, color: color, type: type, order: order, currentBalance: balance)
+        context.insert(asset)
+        assets.append(asset)
+        
+        try? context.save()
+    }
+    
+    func updateAsset(_ asset: AssetData, balance: Int) {
+        asset.currentBalance = balance
+        asset.lastUpdated = Date()
+        try? modelContext?.save()
+    }
+    
+    func deleteAsset(_ asset: AssetData) {
+        guard let context = modelContext else { return }
+        context.delete(asset)
+        assets.removeAll { $0.assetId == asset.assetId }
+        try? context.save()
+    }
+    
+    func createAssetSnapshot() {
+        guard let context = modelContext else { return }
+        
+        var balances: [String: Int] = [:]
+        for asset in assets {
+            balances[asset.assetId.uuidString] = asset.currentBalance
+        }
+        
+        let snapshot = AssetSnapshotData(
+            balances: balances,
+            totalAssets: totalAssets,
+            totalLiabilities: totalLiabilities
+        )
+        context.insert(snapshot)
+        assetSnapshots.insert(snapshot, at: 0)
+        
+        try? context.save()
+    }
+    
+    func calculateAssetChange(from oldSnapshot: AssetSnapshotData?, to newSnapshot: AssetSnapshotData) -> [(assetId: UUID, oldBalance: Int, newBalance: Int, change: Int)] {
+        var changes: [(assetId: UUID, oldBalance: Int, newBalance: Int, change: Int)] = []
+        
+        for asset in assets {
+            let newBalance = newSnapshot.balance(for: asset.assetId)
+            let oldBalance = oldSnapshot?.balance(for: asset.assetId) ?? 0
+            let change = newBalance - oldBalance
+            changes.append((assetId: asset.assetId, oldBalance: oldBalance, newBalance: newBalance, change: change))
+        }
+        
+        return changes
     }
 }

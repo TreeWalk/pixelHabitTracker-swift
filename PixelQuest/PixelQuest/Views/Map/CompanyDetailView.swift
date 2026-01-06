@@ -8,7 +8,8 @@ struct CompanyDetailView: View {
     
     @State private var selectedTab: Int = 0
     @State private var showQuickEntry = false
-    @State private var showReconcile = false
+    @State private var showAssetUpdate = false
+    @State private var showStats = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -51,8 +52,8 @@ struct CompanyDetailView: View {
                                     )
                                     
                                     TabButton(
-                                        title: "finance_reconcile".localized,
-                                        icon: "wallet.pass.fill",
+                                        title: "finance_assets".localized,
+                                        icon: "chart.pie.fill",
                                         isSelected: selectedTab == 1,
                                         action: { selectedTab = 1 }
                                     )
@@ -67,13 +68,14 @@ struct CompanyDetailView: View {
                                         TransactionsTab(
                                             financeStore: financeStore,
                                             contentWidth: contentWidth,
-                                            onQuickEntry: { showQuickEntry = true }
+                                            onQuickEntry: { showQuickEntry = true },
+                                            onShowStats: { showStats = true }
                                         )
                                     } else {
-                                        ReconciliationTab(
+                                        AssetTab(
                                             financeStore: financeStore,
                                             contentWidth: contentWidth,
-                                            onReconcile: { showReconcile = true }
+                                            onAssetUpdate: { showAssetUpdate = true }
                                         )
                                     }
                                 }
@@ -107,8 +109,11 @@ struct CompanyDetailView: View {
         .sheet(isPresented: $showQuickEntry) {
             QuickEntrySheet()
         }
-        .sheet(isPresented: $showReconcile) {
-            ReconcileSheet()
+        .sheet(isPresented: $showAssetUpdate) {
+            AssetUpdateSheet()
+        }
+        .sheet(isPresented: $showStats) {
+            TransactionStatsSheet()
         }
     }
 }
@@ -144,17 +149,34 @@ struct TransactionsTab: View {
     @ObservedObject var financeStore: SwiftDataFinanceStore
     let contentWidth: CGFloat
     let onQuickEntry: () -> Void
+    let onShowStats: () -> Void
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
                 VStack(spacing: 16) {
-                    // 月度统计
-                    MonthStatsCard(
-                        income: financeStore.monthIncome,
-                        expense: financeStore.monthExpense,
-                        net: financeStore.monthNet
-                    )
+                    // 月度统计和统计按钮
+                    HStack(spacing: 12) {
+                        MonthStatsCard(
+                            income: financeStore.monthIncome,
+                            expense: financeStore.monthExpense,
+                            net: financeStore.monthNet
+                        )
+                        
+                        // 统计按钮
+                        Button(action: onShowStats) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "chart.bar.fill")
+                                    .font(.system(size: 24))
+                                Text("stats_title".localized)
+                                    .font(.pixel(10))
+                            }
+                            .foregroundColor(Color("PixelBorder"))
+                            .frame(width: 80, height: 80)
+                            .background(Color.white)
+                            .pixelBorderSmall()
+                        }
+                    }
                     .frame(width: contentWidth)
                     .padding(.top, 16)
                     

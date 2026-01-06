@@ -127,3 +127,30 @@
 "library_my_books" = "MY BOOKS";
 "library_books_count" = "%d books";
 "library_add_book" = "Add New Book";
+
+/* Assets */
+"finance_assets" = "Assets";
+"asset_update" = "Asset Update";
+"asset_type" = "Asset Type";
+"asset_current" = "Current Assets";
+"asset_investment" = "Investment";
+"asset_liability" = "Liability";
+"asset_net_worth" = "Net Worth";
+"asset_total_assets" = "Total Assets";
+"asset_total_liabilities" = "Total Liabilities";
+"asset_add" = "Add Asset";
+"asset_stocks" = "Stocks";
+"asset_funds" = "Funds";
+"asset_fixed_deposit" = "Fixed Deposit";
+"asset_credit_card" = "Credit Card";
+"asset_loan" = "Loan";
+"asset_update_instruction" = "Enter the current balance for each asset";
+
+/* Transaction Statistics */
+"stats_title" = "Transaction Statistics";
+"stats_period" = "Period";
+"stats_total_income" = "Total Income";
+"stats_total_expense" = "Total Expense";
+"stats_net" = "Net";
+"stats_daily_avg" = "Daily Average";
+"stats_by_category" = "By Category";

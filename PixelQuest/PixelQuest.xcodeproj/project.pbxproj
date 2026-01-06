@@ -54,6 +54,11 @@
 		23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298502F0C0BA800C1B539 /* QuestData.swift */; };
 		23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2984E2F0C0BA800C1B539 /* FinanceData.swift */; };
 		23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298562F0C0BE700C1B539 /* SwiftDataFinanceStore.swift */; };
+		23D298592F0D304600C1B539 /* AssetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298582F0D304600C1B539 /* AssetData.swift */; };
+		23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2985A2F0D31DC00C1B539 /* AddAssetSheet.swift */; };
+		23D2985D2F0D31EA00C1B539 /* AssetTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2985C2F0D31EA00C1B539 /* AssetTab.swift */; };
+		23D2985F2F0D31F300C1B539 /* AssetUpdateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2985E2F0D31F300C1B539 /* AssetUpdateSheet.swift */; };
+		23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298602F0D31FC00C1B539 /* TransactionStatsSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +111,11 @@
 		23D2984F2F0C0BA800C1B539 /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
 		23D298502F0C0BA800C1B539 /* QuestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestData.swift; sourceTree = "<group>"; };
 		23D298562F0C0BE700C1B539 /* SwiftDataFinanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataFinanceStore.swift; sourceTree = "<group>"; };
+		23D298582F0D304600C1B539 /* AssetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetData.swift; sourceTree = "<group>"; };
+		23D2985A2F0D31DC00C1B539 /* AddAssetSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetSheet.swift; sourceTree = "<group>"; };
+		23D2985C2F0D31EA00C1B539 /* AssetTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetTab.swift; sourceTree = "<group>"; };
+		23D2985E2F0D31F300C1B539 /* AssetUpdateSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetUpdateSheet.swift; sourceTree = "<group>"; };
+		23D298602F0D31FC00C1B539 /* TransactionStatsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStatsSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +255,7 @@
 		303 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				23D298582F0D304600C1B539 /* AssetData.swift */,
 				23D298512F0C0BA800C1B539 /* SwiftData */,
 				23D2982E2F0A9BA800C1B539 /* WalletSnapshot.swift */,
 				23D2982A2F090E9200C1B539 /* Wallet.swift */,
@@ -305,6 +316,10 @@
 		308 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				23D298602F0D31FC00C1B539 /* TransactionStatsSheet.swift */,
+				23D2985E2F0D31F300C1B539 /* AssetUpdateSheet.swift */,
+				23D2985C2F0D31EA00C1B539 /* AssetTab.swift */,
+				23D2985A2F0D31DC00C1B539 /* AddAssetSheet.swift */,
 				23D298322F0A9C3400C1B539 /* ReconcileSheet.swift */,
 				23D298302F0A9C2A00C1B539 /* QuickEntrySheet.swift */,
 				23D298282F090E8800C1B539 /* LibraryDetailView.swift */,
@@ -416,8 +431,10 @@
 				002 /* ContentView.swift in Sources */,
 				001 /* PixelQuestApp.swift in Sources */,
 				005 /* Quest.swift in Sources */,
+				23D2985D2F0D31EA00C1B539 /* AssetTab.swift in Sources */,
 				23D298292F090E8800C1B539 /* LibraryDetailView.swift in Sources */,
 				23D298182F08F2D000C1B539 /* SupabaseConfig.swift in Sources */,
+				23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */,
 				23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */,
 				23D298232F090E0900C1B539 /* AddBookView.swift in Sources */,
 				23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */,
@@ -427,6 +444,7 @@
 				23D298522F0C0BA800C1B539 /* ItemData.swift in Sources */,
 				23D298532F0C0BA800C1B539 /* BookData.swift in Sources */,
 				23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */,
+				23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */,
 				23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */,
 				23D2982D2F090E9D00C1B539 /* FinanceStore.swift in Sources */,
 				23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */,
@@ -437,11 +455,13 @@
 				23D298212F090DED00C1B539 /* BookStore.swift in Sources */,
 				23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */,
 				010 /* ItemStore.swift in Sources */,
+				23D298592F0D304600C1B539 /* AssetData.swift in Sources */,
 				23D298312F0A9C2A00C1B539 /* QuickEntrySheet.swift in Sources */,
 				011 /* LogStore.swift in Sources */,
 				012 /* QuestsView.swift in Sources */,
 				23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */,
 				013 /* MapView.swift in Sources */,
+				23D2985F2F0D31F300C1B539 /* AssetUpdateSheet.swift in Sources */,
 				23D2981F2F090DD000C1B539 /* FinanceEntry.swift in Sources */,
 				23D298252F090E1700C1B539 /* BookDetailView.swift in Sources */,
 				23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */,
