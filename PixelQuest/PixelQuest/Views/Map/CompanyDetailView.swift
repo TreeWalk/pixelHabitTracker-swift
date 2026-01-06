@@ -27,45 +27,60 @@ struct CompanyDetailView: View {
                             .padding(.top, 8)
                     }
                 } else {
-                    VStack(spacing: 0) {
-                        // Custom Tab Bar
-                        HStack(spacing: 0) {
-                            TabButton(
-                                title: "finance_transactions".localized,
-                                icon: "list.bullet.rectangle.fill",
-                                isSelected: selectedTab == 0,
-                                action: { selectedTab = 0 }
-                            )
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            // Banner
+                            if let banner = location.banner {
+                                Image(banner)
+                                    .resizable()
+                                    .interpolation(.none)
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: contentWidth, height: 180)
+                                    .clipped()
+                                    .pixelBorderSmall()
+                            }
                             
-                            TabButton(
-                                title: "finance_reconcile".localized,
-                                icon: "wallet.pass.fill",
-                                isSelected: selectedTab == 1,
-                                action: { selectedTab = 1 }
-                            )
+                            VStack(spacing: 0) {
+                                // Custom Tab Bar
+                                HStack(spacing: 0) {
+                                    TabButton(
+                                        title: "finance_transactions".localized,
+                                        icon: "list.bullet.rectangle.fill",
+                                        isSelected: selectedTab == 0,
+                                        action: { selectedTab = 0 }
+                                    )
+                                    
+                                    TabButton(
+                                        title: "finance_reconcile".localized,
+                                        icon: "wallet.pass.fill",
+                                        isSelected: selectedTab == 1,
+                                        action: { selectedTab = 1 }
+                                    )
+                                }
+                                .background(Color.white)
+                                .pixelBorderSmall()
+                                .padding(.horizontal, 16)
+                                
+                                // Tab Content
+                                Group {
+                                    if selectedTab == 0 {
+                                        TransactionsTab(
+                                            financeStore: financeStore,
+                                            contentWidth: contentWidth,
+                                            onQuickEntry: { showQuickEntry = true }
+                                        )
+                                    } else {
+                                        ReconciliationTab(
+                                            financeStore: financeStore,
+                                            contentWidth: contentWidth,
+                                            onReconcile: { showReconcile = true }
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        .background(Color.white)
-                        .pixelBorderSmall()
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
-                        
-                        // Tab Content
-                        TabView(selection: $selectedTab) {
-                            TransactionsTab(
-                                financeStore: financeStore,
-                                contentWidth: contentWidth,
-                                onQuickEntry: { showQuickEntry = true }
-                            )
-                            .tag(0)
-                            
-                            ReconciliationTab(
-                                financeStore: financeStore,
-                                contentWidth: contentWidth,
-                                onReconcile: { showReconcile = true }
-                            )
-                            .tag(1)
-                        }
-                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .frame(width: geometry.size.width)
+                        .padding(.vertical, 16)
                     }
                 }
             }
