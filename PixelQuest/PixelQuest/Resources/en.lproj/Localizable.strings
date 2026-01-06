@@ -145,6 +145,7 @@
 "asset_credit_card" = "Credit Card";
 "asset_loan" = "Loan";
 "asset_update_instruction" = "Enter the current balance for each asset";
+"asset_history" = "History";
 
 /* Transaction Statistics */
 "stats_title" = "Transaction Statistics";

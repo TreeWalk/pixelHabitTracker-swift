@@ -145,6 +145,7 @@
 "asset_credit_card" = "信用卡";
 "asset_loan" = "贷款";
 "asset_update_instruction" = "请输入各资产的当前余额";
+"asset_history" = "历史记录";
 
 /* Transaction Statistics */
 "stats_title" = "流水统计";

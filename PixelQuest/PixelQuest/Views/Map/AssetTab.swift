@@ -6,6 +6,7 @@ struct AssetTab: View {
     let onAssetUpdate: () -> Void
     
     @State private var showAddAsset = false
+    @State private var showHistory = false
     
     var body: some View {
         ScrollView {
@@ -20,18 +21,35 @@ struct AssetTab: View {
                 .frame(width: contentWidth)
                 .padding(.top, 16)
                 
-                // 资产更新按钮
-                Button(action: onAssetUpdate) {
-                    HStack {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("asset_update".localized)
-                            .font(.pixel(20))
+                // 操作按钮行
+                HStack(spacing: 12) {
+                    // 资产更新按钮
+                    Button(action: onAssetUpdate) {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Text("asset_update".localized)
+                                .font(.pixel(16))
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color("PixelBlue"))
+                        .pixelBorderSmall(color: Color("PixelBlue"))
                     }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color("PixelBlue"))
-                    .pixelBorderSmall(color: Color("PixelBlue"))
+                    
+                    // 历史记录按钮
+                    Button(action: { showHistory = true }) {
+                        HStack {
+                            Image(systemName: "clock.arrow.circlepath")
+                            Text("asset_history".localized)
+                                .font(.pixel(16))
+                        }
+                        .foregroundColor(Color("PixelBorder"))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                    }
                 }
                 .frame(width: contentWidth)
                 
@@ -81,6 +99,9 @@ struct AssetTab: View {
         }
         .sheet(isPresented: $showAddAsset) {
             AddAssetSheet()
+        }
+        .sheet(isPresented: $showHistory) {
+            AssetHistorySheet()
         }
     }
 }
@@ -236,6 +257,197 @@ struct AssetRow: View {
         .buttonStyle(.plain)
         .sheet(isPresented: $showEdit) {
             EditAssetSheet(asset: asset)
+        }
+    }
+}
+
+// MARK: - Asset History Sheet
+
+struct AssetHistorySheet: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var financeStore: SwiftDataFinanceStore
+    
+    @State private var selectedSnapshot: AssetSnapshotData?
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color("PixelBg").ignoresSafeArea()
+                
+                if let snapshot = selectedSnapshot {
+                    // 显示选中的小票
+                    ScrollView {
+                        AssetHistoryReceipt(
+                            snapshot: snapshot,
+                            assets: financeStore.assets,
+                            onBack: { selectedSnapshot = nil }
+                        )
+                        .padding()
+                    }
+                } else {
+                    // 历史列表
+                    if financeStore.assetSnapshots.isEmpty {
+                        VStack {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .font(.system(size: 48))
+                                .foregroundColor(.secondary)
+                            Text("finance_no_records".localized)
+                                .font(.pixel(16))
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 12) {
+                                ForEach(financeStore.assetSnapshots) { snapshot in
+                                    Button(action: { selectedSnapshot = snapshot }) {
+                                        HistorySnapshotRow(snapshot: snapshot)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .padding(.horizontal, 16)
+                                }
+                            }
+                            .padding(.vertical, 16)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("asset_history".localized)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("done".localized) {
+                        dismiss()
+                    }
+                    .font(.pixel(16))
+                    .foregroundColor(Color("PixelBorder"))
+                }
+            }
+        }
+    }
+}
+
+// MARK: - History Snapshot Row
+
+struct HistorySnapshotRow: View {
+    let snapshot: AssetSnapshotData
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(formatDate(snapshot.date))
+                    .font(.pixel(16))
+                    .foregroundColor(Color("PixelBorder"))
+                
+                Text(formatTime(snapshot.date))
+                    .font(.pixel(12))
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            VStack(alignment: .trailing, spacing: 4) {
+                Text("asset_net_worth".localized)
+                    .font(.pixel(10))
+                    .foregroundColor(.secondary)
+                
+                Text("¥\(snapshot.formattedNetWorth)")
+                    .font(.pixel(18))
+                    .foregroundColor(Color("PixelBlue"))
+            }
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14))
+                .foregroundColor(.secondary)
+        }
+        .padding()
+        .background(Color.white)
+        .pixelBorderSmall()
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy/MM/dd"
+        return formatter.string(from: date)
+    }
+    
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
+    }
+}
+
+// MARK: - Asset History Receipt
+
+struct AssetHistoryReceipt: View {
+    let snapshot: AssetSnapshotData
+    let assets: [AssetData]
+    let onBack: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            ThermalReceiptView(
+                ticketNo: String(snapshot.snapshotId.uuidString.prefix(6)).uppercased(),
+                date: snapshot.date,
+                title: "asset_update".localized
+            ) {
+                VStack(spacing: 12) {
+                    // 各资产余额
+                    ForEach(assets) { asset in
+                        ReceiptRow(
+                            label: asset.displayName,
+                            value: "¥\(snapshot.formattedBalance(for: asset.assetId))",
+                            valueColor: asset.isLiability ? Color("PixelRed") : Color(red: 0.3, green: 0.25, blue: 0.2)
+                        )
+                    }
+                    
+                    ReceiptDivider()
+                    
+                    // 总计
+                    ReceiptRow(
+                        label: "asset_total_assets".localized,
+                        value: "¥\(snapshot.formattedTotalAssets)",
+                        valueColor: Color("PixelGreen"),
+                        isBold: true
+                    )
+                    
+                    ReceiptRow(
+                        label: "asset_total_liabilities".localized,
+                        value: "¥\(snapshot.formattedTotalLiabilities)",
+                        valueColor: Color("PixelRed"),
+                        isBold: true
+                    )
+                    
+                    ReceiptDivider()
+                    
+                    // 净资产
+                    HStack {
+                        Text("asset_net_worth".localized)
+                            .font(.pixel(20))
+                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                        Spacer()
+                        Text("¥\(snapshot.formattedNetWorth)")
+                            .font(.pixel(24))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("PixelBlue"))
+                    }
+                    .padding(.vertical, 8)
+                }
+            }
+            
+            // 返回按钮
+            Button(action: onBack) {
+                HStack {
+                    Image(systemName: "arrow.left")
+                    Text("back".localized)
+                        .font(.pixel(16))
+                }
+                .foregroundColor(Color("PixelBorder"))
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Color("PixelAccent"))
+                .pixelBorderSmall()
+            }
         }
     }
 }

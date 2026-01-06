@@ -9,7 +9,6 @@ struct TransactionStatsSheet: View {
     @State private var showResult = false
     
     init() {
-        // 默认：上月今天到今天
         let calendar = Calendar.current
         let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) ?? Date()
         _startDate = State(initialValue: oneMonthAgo)
@@ -21,17 +20,16 @@ struct TransactionStatsSheet: View {
                 Color("PixelBg").ignoresSafeArea()
                 
                 if showResult {
-                    // POS 小票样式显示统计结果
-                    StatsReceiptView(
-                        startDate: startDate,
-                        endDate: endDate,
-                        entries: filteredEntries,
-                        onDismiss: {
-                            showResult = false
-                        }
-                    )
+                    ScrollView {
+                        StatsReceipt(
+                            startDate: startDate,
+                            endDate: endDate,
+                            entries: filteredEntries,
+                            onDismiss: { showResult = false }
+                        )
+                        .padding()
+                    }
                 } else {
-                    // 日期选择界面
                     ScrollView {
                         VStack(spacing: 20) {
                             Text("stats_period".localized)
@@ -113,16 +111,15 @@ struct TransactionStatsSheet: View {
     }
 }
 
-// MARK: - Stats Receipt View
+// MARK: - Stats Receipt
 
-struct StatsReceiptView: View {
+struct StatsReceipt: View {
     let startDate: Date
     let endDate: Date
     let entries: [FinanceEntryData]
     let onDismiss: () -> Void
     
-    @State private var printedLines: Int = 0
-    private let totalLines = 15
+    @State private var showContent = false
     
     var totalIncome: Int {
         entries.filter { $0.isIncome }.reduce(0) { $0 + $1.amount }
@@ -143,7 +140,8 @@ struct StatsReceiptView: View {
     }
     
     var dailyAverage: Int {
-        totalExpense / dayCount
+        guard dayCount > 0 else { return 0 }
+        return totalExpense / dayCount
     }
     
     var categoryStats: [(category: String, amount: Int)] {
@@ -153,163 +151,104 @@ struct StatsReceiptView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                // POS 小票样式
-                VStack(spacing: 4) {
-                    // 标题
-                    Text("※ \("stats_title".localized.uppercased()) ※")
-                        .font(.system(size: 16, design: .monospaced))
-                        .fontWeight(.bold)
-                        .padding(.top, 20)
-                    
-                    if printedLines >= 1 {
-                        Text("\(formatDate(startDate)) - \(formatDate(endDate))")
-                            .font(.system(size: 12, design: .monospaced))
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 10)
-                    }
-                    
-                    if printedLines >= 2 {
-                        Divider()
-                    }
-                    
-                    // 总收入
-                    if printedLines >= 3 {
+        VStack(spacing: 16) {
+            ThermalReceiptView(
+                ticketNo: String(UUID().uuidString.prefix(6)).uppercased(),
+                date: Date(),
+                title: "stats_title".localized
+            ) {
+                if showContent {
+                    VStack(spacing: 12) {
+                        // 统计期间
                         HStack {
-                            Text("stats_total_income".localized)
-                                .font(.system(size: 14, design: .monospaced))
+                            Text("\(formatDate(startDate)) - \(formatDate(endDate))")
+                                .font(.pixel(12))
+                                .foregroundColor(.secondary)
                             Spacer()
-                            Text("¥\(String(format: "%.2f", Double(totalIncome) / 100.0))")
-                                .font(.system(size: 14, design: .monospaced))
-                                .foregroundColor(Color("PixelGreen"))
+                            Text("\(dayCount) days")
+                                .font(.pixel(12))
+                                .foregroundColor(.secondary)
                         }
-                        .padding(.vertical, 4)
-                    }
-                    
-                    // 总支出
-                    if printedLines >= 4 {
-                        HStack {
-                            Text("stats_total_expense".localized)
-                                .font(.system(size: 14, design: .monospaced))
-                            Spacer()
-                            Text("¥\(String(format: "%.2f", Double(totalExpense) / 100.0))")
-                                .font(.system(size: 14, design: .monospaced))
-                                .foregroundColor(Color("PixelRed"))
-                        }
-                        .padding(.vertical, 4)
-                    }
-                    
-                    if printedLines >= 5 {
-                        Divider()
-                    }
-                    
-                    // 净额
-                    if printedLines >= 6 {
+                        
+                        ReceiptDivider()
+                        
+                        // 总收入
+                        ReceiptRow(
+                            label: "stats_total_income".localized,
+                            value: "¥\(String(format: "%.2f", Double(totalIncome) / 100.0))",
+                            valueColor: Color("PixelGreen")
+                        )
+                        
+                        // 总支出
+                        ReceiptRow(
+                            label: "stats_total_expense".localized,
+                            value: "¥\(String(format: "%.2f", Double(totalExpense) / 100.0))",
+                            valueColor: Color("PixelRed")
+                        )
+                        
+                        ReceiptDivider()
+                        
+                        // 净额
                         HStack {
                             Text("stats_net".localized)
-                                .font(.system(size: 16, design: .monospaced))
-                                .fontWeight(.bold)
+                                .font(.pixel(18))
+                                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
                             Spacer()
                             Text("\(net >= 0 ? "+" : "")¥\(String(format: "%.2f", Double(net) / 100.0))")
-                                .font(.system(size: 16, design: .monospaced))
+                                .font(.pixel(20))
                                 .fontWeight(.bold)
                                 .foregroundColor(net >= 0 ? Color("PixelGreen") : Color("PixelRed"))
                         }
-                        .padding(.vertical, 8)
-                    }
-                    
-                    // 日均支出
-                    if printedLines >= 7 {
-                        HStack {
-                            Text("stats_daily_avg".localized)
-                                .font(.system(size: 14, design: .monospaced))
-                            Spacer()
-                            Text("¥\(String(format: "%.2f", Double(dailyAverage) / 100.0))")
-                                .font(.system(size: 14, design: .monospaced))
-                                .foregroundColor(Color("PixelBlue"))
-                        }
-                        .padding(.vertical, 4)
-                    }
-                    
-                    if printedLines >= 8 {
-                        Divider()
+                        
+                        // 日均支出
+                        ReceiptRow(
+                            label: "stats_daily_avg".localized,
+                            value: "¥\(String(format: "%.2f", Double(dailyAverage) / 100.0))",
+                            valueColor: Color("PixelBlue")
+                        )
+                        
+                        ReceiptDivider()
                         
                         // 按分类统计
                         Text("stats_by_category".localized)
-                            .font(.system(size: 14, design: .monospaced))
-                            .fontWeight(.bold)
-                            .padding(.vertical, 8)
-                    }
-                    
-                    if printedLines >= 9 {
-                        ForEach(Array(categoryStats.prefix(5).enumerated()), id: \.offset) { index, stat in
-                            if printedLines >= 9 + index {
-                                HStack {
-                                    Text(getCategoryName(stat.category))
-                                        .font(.system(size: 12, design: .monospaced))
-                                    Spacer()
-                                    Text("¥\(String(format: "%.2f", Double(stat.amount) / 100.0))")
-                                        .font(.system(size: 12, design: .monospaced))
-                                }
-                                .padding(.vertical, 2)
-                            }
+                            .font(.pixel(14))
+                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        ForEach(Array(categoryStats.prefix(5).enumerated()), id: \.offset) { _, stat in
+                            ReceiptRow(
+                                label: getCategoryName(stat.category),
+                                value: "¥\(String(format: "%.2f", Double(stat.amount) / 100.0))"
+                            )
                         }
-                    }
-                    
-                    if printedLines >= totalLines {
-                        Divider()
-                        
-                        Text("reconcile_thank_you".localized)
-                            .font(.system(size: 12, design: .monospaced))
-                            .padding(.top, 10)
-                        
-                        Text("reconcile_slogan".localized)
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 10)
-                        
-                        Text("reconcile_tear_here".localized)
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(.secondary)
-                            .padding(.vertical, 10)
                         
                         // 完成按钮
                         Button(action: onDismiss) {
-                            Text("reconcile_got_it".localized)
-                                .font(.pixel(20))
+                            Text("back".localized)
+                                .font(.pixel(18))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 12)
                                 .background(Color("PixelBlue"))
                                 .pixelBorderSmall(color: Color("PixelBlue"))
                         }
-                        .padding(.top, 10)
+                        .padding(.top, 8)
                     }
                 }
-                .padding()
-                .frame(maxWidth: 400)
-                .background(Color.white)
-                .pixelBorderSmall()
-                .padding()
             }
         }
         .onAppear {
-            animatePrint()
-        }
-    }
-    
-    private func animatePrint() {
-        for i in 0...totalLines {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.1) {
-                printedLines = i
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    showContent = true
+                }
             }
         }
     }
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.dateFormat = "yy/MM/dd"
         return formatter.string(from: date)
     }
     
