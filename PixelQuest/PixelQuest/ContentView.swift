@@ -33,10 +33,10 @@ struct ContentView: View {
                 }
                 .tag(2)
             
-            SettingsView()
+            CharacterStatusView()
                 .tabItem {
                     VStack {
-                        Image(systemName: "gearshape.fill")
+                        Image(systemName: "person.fill")
                         Text("tab_settings".localized)
                     }
                 }

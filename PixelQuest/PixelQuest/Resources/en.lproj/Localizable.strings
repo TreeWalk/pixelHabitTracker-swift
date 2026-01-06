@@ -155,3 +155,16 @@
 "stats_net" = "Net";
 "stats_daily_avg" = "Daily Average";
 "stats_by_category" = "By Category";
+
+/* Character Status */
+"character_adventurer" = "Adventurer";
+"character_title" = "Explorer";
+"character_stats" = "STATS";
+"character_str_desc" = "From weekly exercise";
+"character_int_desc" = "From reading books";
+"character_vit_desc" = "From quest completion";
+"character_gold_desc" = "From net worth";
+"character_inventory" = "INVENTORY";
+"character_inventory_hint" = "Collect items from your quests";
+"character_system_settings" = "System Settings";
+

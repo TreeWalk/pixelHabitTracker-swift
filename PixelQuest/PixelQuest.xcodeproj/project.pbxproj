@@ -60,6 +60,8 @@
 		23D2985F2F0D31F300C1B539 /* AssetUpdateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2985E2F0D31F300C1B539 /* AssetUpdateSheet.swift */; };
 		23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298602F0D31FC00C1B539 /* TransactionStatsSheet.swift */; };
 		23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */; };
+		23D298662F0D632D00C1B539 /* CharacterStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298652F0D632D00C1B539 /* CharacterStatusView.swift */; };
+		23D298682F0D634A00C1B539 /* PlayerStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298672F0D634A00C1B539 /* PlayerStatsService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +120,8 @@
 		23D2985E2F0D31F300C1B539 /* AssetUpdateSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetUpdateSheet.swift; sourceTree = "<group>"; };
 		23D298602F0D31FC00C1B539 /* TransactionStatsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStatsSheet.swift; sourceTree = "<group>"; };
 		23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThermalReceiptView.swift; sourceTree = "<group>"; };
+		23D298652F0D632D00C1B539 /* CharacterStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStatusView.swift; sourceTree = "<group>"; };
+		23D298672F0D634A00C1B539 /* PlayerStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +169,7 @@
 		23D298152F08F2B600C1B539 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				23D298672F0D634A00C1B539 /* PlayerStatsService.swift */,
 				23D298142F08F2B600C1B539 /* HealthKitManager.swift */,
 			);
 			path = Services;
@@ -355,6 +360,7 @@
 		310 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				23D298652F0D632D00C1B539 /* CharacterStatusView.swift */,
 				115 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -454,6 +460,7 @@
 				23D298162F08F2B600C1B539 /* HealthKitManager.swift in Sources */,
 				23D298522F0C0BA800C1B539 /* ItemData.swift in Sources */,
 				23D298532F0C0BA800C1B539 /* BookData.swift in Sources */,
+				23D298682F0D634A00C1B539 /* PlayerStatsService.swift in Sources */,
 				23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */,
 				23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */,
 				23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */,
@@ -461,6 +468,7 @@
 				23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */,
 				23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */,
 				007 /* Location.swift in Sources */,
+				23D298662F0D632D00C1B539 /* CharacterStatusView.swift in Sources */,
 				008 /* LogEntry.swift in Sources */,
 				009 /* QuestStore.swift in Sources */,
 				23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */,

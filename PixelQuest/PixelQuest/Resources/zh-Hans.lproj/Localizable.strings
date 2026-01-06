@@ -155,3 +155,16 @@
 "stats_net" = "净额";
 "stats_daily_avg" = "日均支出";
 "stats_by_category" = "按分类";
+
+/* Character Status */
+"character_adventurer" = "冒险者";
+"character_title" = "探索者";
+"character_stats" = "属性面板";
+"character_str_desc" = "来自本周运动";
+"character_int_desc" = "来自阅读书籍";
+"character_vit_desc" = "来自任务完成率";
+"character_gold_desc" = "来自净资产";
+"character_inventory" = "物品栏";
+"character_inventory_hint" = "从任务中收集物品";
+"character_system_settings" = "系统设置";
+
