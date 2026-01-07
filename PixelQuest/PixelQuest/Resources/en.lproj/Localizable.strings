@@ -24,6 +24,23 @@
 "quests_title" = "DAILY QUESTS";
 "quests_completed" = "COMPLETED";
 "quests_progress" = "Progress";
+"quest_active" = "IN PROGRESS";
+"quest_completed_section" = "COMPLETED";
+"quest_completing" = "Completing...";
+"quest_undo" = "UNDO";
+"quest_empty" = "No quests yet. Create your first quest!";
+"quest_new" = "NEW QUEST";
+"quest_title_label" = "Quest Title";
+"quest_title_placeholder" = "Enter quest name...";
+"quest_type_label" = "Quest Type";
+"quest_xp_reward" = "XP Reward";
+"quest_preview" = "Preview";
+"quest_create" = "CREATE QUEST";
+"quest_recurrence_label" = "Repeat";
+"quest_recurrence_once" = "Once";
+"quest_recurrence_daily" = "Daily";
+"quest_recurrence_weekly" = "Weekly";
+"quest_recurrence_monthly" = "Monthly";
 
 /* Map */
 "map_title" = "WORLD MAP";

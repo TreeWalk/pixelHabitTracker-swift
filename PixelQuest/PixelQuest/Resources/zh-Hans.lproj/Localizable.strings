@@ -24,6 +24,23 @@
 "quests_title" = "每日任务";
 "quests_completed" = "已完成";
 "quests_progress" = "进度";
+"quest_active" = "进行中";
+"quest_completed_section" = "已完成";
+"quest_completing" = "即将完成...";
+"quest_undo" = "撤销";
+"quest_empty" = "还没有任务，创建你的第一个任务吧！";
+"quest_new" = "新建任务";
+"quest_title_label" = "任务标题";
+"quest_title_placeholder" = "输入任务名称...";
+"quest_type_label" = "任务类型";
+"quest_xp_reward" = "经验奖励";
+"quest_preview" = "预览";
+"quest_create" = "创建任务";
+"quest_recurrence_label" = "重复周期";
+"quest_recurrence_once" = "单次";
+"quest_recurrence_daily" = "每日";
+"quest_recurrence_weekly" = "每周";
+"quest_recurrence_monthly" = "每月";
 
 /* Map */
 "map_title" = "世界地图";

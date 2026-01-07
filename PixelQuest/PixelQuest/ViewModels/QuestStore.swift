@@ -10,12 +10,12 @@ class QuestStore: ObservableObject {
     
     // 本地默认数据（用于离线模式或初始化）
     private let defaultQuests: [Quest] = [
-        Quest(id: 1, title: "Drink Water", xp: 50, completed: false, type: .health, userId: nil),
-        Quest(id: 2, title: "Read Book", xp: 100, completed: false, type: .intellect, userId: nil),
-        Quest(id: 3, title: "Exercise", xp: 150, completed: true, type: .strength, userId: nil),
-        Quest(id: 4, title: "Meditate", xp: 50, completed: false, type: .spirit, userId: nil),
-        Quest(id: 5, title: "Code", xp: 200, completed: false, type: .skill, userId: nil),
-        Quest(id: 6, title: "Walk Dog", xp: 75, completed: false, type: .strength, userId: nil),
+        Quest(id: 1, title: "Drink Water", xp: 50, completed: false, type: .health, recurrence: .daily, lastCompletedAt: nil, userId: nil),
+        Quest(id: 2, title: "Read Book", xp: 100, completed: false, type: .intellect, recurrence: .daily, lastCompletedAt: nil, userId: nil),
+        Quest(id: 3, title: "Exercise", xp: 150, completed: true, type: .strength, recurrence: .daily, lastCompletedAt: Date(), userId: nil),
+        Quest(id: 4, title: "Meditate", xp: 50, completed: false, type: .spirit, recurrence: .daily, lastCompletedAt: nil, userId: nil),
+        Quest(id: 5, title: "Code", xp: 200, completed: false, type: .skill, recurrence: .weekly, lastCompletedAt: nil, userId: nil),
+        Quest(id: 6, title: "Walk Dog", xp: 75, completed: false, type: .strength, recurrence: .once, lastCompletedAt: nil, userId: nil),
     ]
     
     init() {
@@ -31,6 +31,15 @@ class QuestStore: ObservableObject {
         guard !quests.isEmpty else { return 0 }
         let completed = quests.filter { $0.completed }.count
         return Int((Double(completed) / Double(quests.count)) * 100)
+    }
+    
+    // MARK: - 分区任务列表
+    var activeQuests: [Quest] {
+        quests.filter { !$0.completed }
+    }
+    
+    var completedQuests: [Quest] {
+        quests.filter { $0.completed }
     }
     
     // MARK: - 从 Supabase 获取任务
@@ -102,13 +111,15 @@ class QuestStore: ObservableObject {
     }
     
     // MARK: - 添加新任务
-    func addQuest(title: String, xp: Int, type: Quest.QuestType) async {
+    func addQuest(title: String, xp: Int, type: Quest.QuestType, recurrence: Quest.QuestRecurrence = .daily) async {
         let newQuest = Quest(
             id: Int(Date().timeIntervalSince1970),
             title: title,
             xp: xp,
             completed: false,
             type: type,
+            recurrence: recurrence,
+            lastCompletedAt: nil,
             userId: supabase.auth.currentUser?.id
         )
         
@@ -120,6 +131,7 @@ class QuestStore: ObservableObject {
             xp: xp,
             completed: false,
             type: type.rawValue,
+            recurrence: recurrence.rawValue,
             userId: supabase.auth.currentUser?.id
         )
         
@@ -166,13 +178,15 @@ class QuestStore: ObservableObject {
         }
     }
     
-    func addQuestLocally(title: String, xp: Int, type: Quest.QuestType) {
+    func addQuestLocally(title: String, xp: Int, type: Quest.QuestType, recurrence: Quest.QuestRecurrence = .daily) {
         let newQuest = Quest(
             id: Int(Date().timeIntervalSince1970),
             title: title,
             xp: xp,
             completed: false,
             type: type,
+            recurrence: recurrence,
+            lastCompletedAt: nil,
             userId: nil
         )
         quests.append(newQuest)

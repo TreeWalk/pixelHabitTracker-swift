@@ -5,6 +5,7 @@ struct CharacterStatusView: View {
     @EnvironmentObject var bookStore: BookStore
     @EnvironmentObject var exerciseStore: ExerciseStore
     @EnvironmentObject var financeStore: SwiftDataFinanceStore
+    @EnvironmentObject var itemStore: ItemStore
     
     @StateObject private var statsService = PlayerStatsService()
     @StateObject private var localizationManager = LocalizationManager.shared
@@ -175,27 +176,43 @@ struct CharacterStatusView: View {
     
     private var inventorySection: some View {
         VStack(spacing: 12) {
-            Text("character_inventory".localized)
-                .font(.pixel(18))
-                .foregroundColor(Color("PixelBorder"))
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text("character_inventory".localized)
+                    .font(.pixel(18))
+                    .foregroundColor(Color("PixelBorder"))
+                
+                Spacer()
+                
+                Text("\(itemStore.items.count) / 12")
+                    .font(.pixel(14))
+                    .foregroundColor(Color("PixelWood"))
+            }
             
-            // 物品栏格子
+            // 物品栏格子 - 显示实际物品
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 8) {
                 ForEach(0..<12, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(Color("PixelBorder").opacity(0.1))
-                        .frame(height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 2)
-                                .stroke(Color("PixelBorder").opacity(0.3), lineWidth: 1)
-                        )
+                    if index < itemStore.items.count {
+                        // 有物品的格子
+                        let item = itemStore.items[index]
+                        InventorySlot(item: item)
+                    } else {
+                        // 空格子
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color("PixelBorder").opacity(0.1))
+                            .frame(height: 44)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 2)
+                                    .stroke(Color("PixelBorder").opacity(0.3), lineWidth: 1)
+                            )
+                    }
                 }
             }
             
-            Text("character_inventory_hint".localized)
-                .font(.pixel(12))
-                .foregroundColor(Color("PixelWood"))
+            if itemStore.items.isEmpty {
+                Text("character_inventory_hint".localized)
+                    .font(.pixel(12))
+                    .foregroundColor(Color("PixelWood"))
+            }
         }
         .padding()
         .background(Color.white)
@@ -270,6 +287,31 @@ struct StatCard: View {
     }
 }
 
+// MARK: - Inventory Slot
+
+struct InventorySlot: View {
+    let item: Item
+    
+    var body: some View {
+        ZStack {
+            // 背景 - 根据稀有度着色
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color(item.rarity.color).opacity(0.2))
+                .frame(height: 44)
+            
+            // 物品图标
+            Image(item.icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 2)
+                .stroke(Color(item.rarity.color).opacity(0.6), lineWidth: 2)
+        )
+    }
+}
+
 // MARK: - System Settings Sheet
 
 struct SystemSettingsSheet: View {
@@ -322,4 +364,6 @@ struct SystemSettingsSheet: View {
         .environmentObject(BookStore())
         .environmentObject(ExerciseStore())
         .environmentObject(SwiftDataFinanceStore())
+        .environmentObject(ItemStore())
 }
+
