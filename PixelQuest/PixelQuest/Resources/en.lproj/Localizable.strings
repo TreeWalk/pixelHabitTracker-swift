@@ -42,6 +42,15 @@
 "quest_recurrence_weekly" = "Weekly";
 "quest_recurrence_monthly" = "Monthly";
 
+/* Quest Log */
+"quest_log_title" = "QUEST LOG";
+"quest_log_recent" = "Recent History";
+"quest_log_empty" = "No completion records yet.";
+"quest_log_activity" = "Activity";
+"quest_log_distribution" = "Type Distribution";
+"close" = "CLOSE";
+"cancel" = "CANCEL";
+
 /* Map */
 "map_title" = "WORLD MAP";
 "map_home_base" = "Home Base";
@@ -184,4 +193,24 @@
 "character_inventory" = "INVENTORY";
 "character_inventory_hint" = "Collect items from your quests";
 "character_system_settings" = "System Settings";
+
+/* Pixel Date Picker */
+"picker_select_date" = "Select Date";
+"picker_select_time" = "Select Time";
+"picker_hour" = "Hour";
+"picker_minute" = "Minute";
+
+/* Additional Stats */
+"stats_start_date" = "Start Date";
+"stats_end_date" = "End Date";
+
+/* Items */
+"items_purchase_date" = "Purchase Date";
+
+/* Item Rarity */
+"items_rarity_common" = "Common";
+"items_rarity_rare" = "Rare";
+"items_rarity_epic" = "Epic";
+"items_rarity_legendary" = "Legendary";
+
 

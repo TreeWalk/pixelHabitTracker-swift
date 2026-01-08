@@ -49,7 +49,6 @@
 		23D2983B2F0BE43B00C1B539 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 23D298392F0BE43B00C1B539 /* Localizable.strings */; };
 		23D2983F2F0BE46000C1B539 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 23D2983D2F0BE46000C1B539 /* Localizable.strings */; };
 		23D298432F0BE46B00C1B539 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 23D298412F0BE46B00C1B539 /* Localizable.strings */; };
-		23D298522F0C0BA800C1B539 /* ItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2984F2F0C0BA800C1B539 /* ItemData.swift */; };
 		23D298532F0C0BA800C1B539 /* BookData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2984D2F0C0BA800C1B539 /* BookData.swift */; };
 		23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298502F0C0BA800C1B539 /* QuestData.swift */; };
 		23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2984E2F0C0BA800C1B539 /* FinanceData.swift */; };
@@ -62,6 +61,10 @@
 		23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */; };
 		23D298662F0D632D00C1B539 /* CharacterStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298652F0D632D00C1B539 /* CharacterStatusView.swift */; };
 		23D298682F0D634A00C1B539 /* PlayerStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298672F0D634A00C1B539 /* PlayerStatsService.swift */; };
+		23D2986A2F0E18A400C1B539 /* PixelDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298692F0E18A400C1B539 /* PixelDatePicker.swift */; };
+		23D2986C2F0E1C8D00C1B539 /* QuestLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2986B2F0E1C8D00C1B539 /* QuestLogView.swift */; };
+		23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */; };
+		23E228362F0EA0020068CEFC /* ItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228352F0EA0020068CEFC /* ItemData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -111,7 +114,6 @@
 		23D298402F0BE46B00C1B539 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
 		23D2984D2F0C0BA800C1B539 /* BookData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookData.swift; sourceTree = "<group>"; };
 		23D2984E2F0C0BA800C1B539 /* FinanceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceData.swift; sourceTree = "<group>"; };
-		23D2984F2F0C0BA800C1B539 /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
 		23D298502F0C0BA800C1B539 /* QuestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestData.swift; sourceTree = "<group>"; };
 		23D298562F0C0BE700C1B539 /* SwiftDataFinanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataFinanceStore.swift; sourceTree = "<group>"; };
 		23D298582F0D304600C1B539 /* AssetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetData.swift; sourceTree = "<group>"; };
@@ -122,6 +124,10 @@
 		23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThermalReceiptView.swift; sourceTree = "<group>"; };
 		23D298652F0D632D00C1B539 /* CharacterStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStatusView.swift; sourceTree = "<group>"; };
 		23D298672F0D634A00C1B539 /* PlayerStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsService.swift; sourceTree = "<group>"; };
+		23D298692F0E18A400C1B539 /* PixelDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelDatePicker.swift; sourceTree = "<group>"; };
+		23D2986B2F0E1C8D00C1B539 /* QuestLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestLogView.swift; sourceTree = "<group>"; };
+		23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataItemStore.swift; sourceTree = "<group>"; };
+		23E228352F0EA0020068CEFC /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,7 +220,6 @@
 			children = (
 				23D2984D2F0C0BA800C1B539 /* BookData.swift */,
 				23D2984E2F0C0BA800C1B539 /* FinanceData.swift */,
-				23D2984F2F0C0BA800C1B539 /* ItemData.swift */,
 				23D298502F0C0BA800C1B539 /* QuestData.swift */,
 			);
 			path = SwiftData;
@@ -223,6 +228,7 @@
 		23D298632F0D36EE00C1B539 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				23D298692F0E18A400C1B539 /* PixelDatePicker.swift */,
 				23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */,
 			);
 			path = Components;
@@ -270,6 +276,7 @@
 		303 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				23E228352F0EA0020068CEFC /* ItemData.swift */,
 				23D298582F0D304600C1B539 /* AssetData.swift */,
 				23D298512F0C0BA800C1B539 /* SwiftData */,
 				23D2982E2F0A9BA800C1B539 /* WalletSnapshot.swift */,
@@ -289,6 +296,7 @@
 		304 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */,
 				23D298562F0C0BE700C1B539 /* SwiftDataFinanceStore.swift */,
 				23D2982C2F090E9D00C1B539 /* FinanceStore.swift */,
 				23D298202F090DED00C1B539 /* BookStore.swift */,
@@ -324,6 +332,7 @@
 		307 /* Quests */ = {
 			isa = PBXGroup;
 			children = (
+				23D2986B2F0E1C8D00C1B539 /* QuestLogView.swift */,
 				112 /* QuestsView.swift */,
 			);
 			path = Quests;
@@ -450,6 +459,7 @@
 				005 /* Quest.swift in Sources */,
 				23D2985D2F0D31EA00C1B539 /* AssetTab.swift in Sources */,
 				23D298292F090E8800C1B539 /* LibraryDetailView.swift in Sources */,
+				23D2986C2F0E1C8D00C1B539 /* QuestLogView.swift in Sources */,
 				23D298182F08F2D000C1B539 /* SupabaseConfig.swift in Sources */,
 				23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */,
 				23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */,
@@ -457,8 +467,8 @@
 				23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */,
 				23D2981D2F090DC600C1B539 /* BookEntry.swift in Sources */,
 				006 /* Item.swift in Sources */,
+				23D2986A2F0E18A400C1B539 /* PixelDatePicker.swift in Sources */,
 				23D298162F08F2B600C1B539 /* HealthKitManager.swift in Sources */,
-				23D298522F0C0BA800C1B539 /* ItemData.swift in Sources */,
 				23D298532F0C0BA800C1B539 /* BookData.swift in Sources */,
 				23D298682F0D634A00C1B539 /* PlayerStatsService.swift in Sources */,
 				23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */,
@@ -488,8 +498,10 @@
 				23D298052F08F23200C1B539 /* ExerciseStore.swift in Sources */,
 				23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */,
 				014 /* ItemsView.swift in Sources */,
+				23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */,
 				015 /* SettingsView.swift in Sources */,
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
+				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,
 				23D298072F08F23C00C1B539 /* SleepStore.swift in Sources */,
 			);

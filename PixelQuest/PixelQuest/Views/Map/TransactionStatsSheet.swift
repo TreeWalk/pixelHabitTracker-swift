@@ -38,33 +38,19 @@ struct TransactionStatsSheet: View {
                                 .padding(.top, 16)
                             
                             // 开始日期
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Start Date")
-                                    .font(.pixel(14))
-                                    .foregroundColor(Color("PixelBorder").opacity(0.7))
-                                
-                                DatePicker("", selection: $startDate, displayedComponents: .date)
-                                    .datePickerStyle(.compact)
-                                    .labelsHidden()
-                                    .padding(12)
-                                    .background(Color.white)
-                                    .pixelBorderSmall()
-                            }
+                            PixelDatePicker(
+                                title: "stats_start_date".localized,
+                                selection: $startDate,
+                                displayedComponents: .date
+                            )
                             .padding(.horizontal, 16)
                             
                             // 结束日期
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("End Date")
-                                    .font(.pixel(14))
-                                    .foregroundColor(Color("PixelBorder").opacity(0.7))
-                                
-                                DatePicker("", selection: $endDate, displayedComponents: .date)
-                                    .datePickerStyle(.compact)
-                                    .labelsHidden()
-                                    .padding(12)
-                                    .background(Color.white)
-                                    .pixelBorderSmall()
-                            }
+                            PixelDatePicker(
+                                title: "stats_end_date".localized,
+                                selection: $endDate,
+                                displayedComponents: .date
+                            )
                             .padding(.horizontal, 16)
                             
                             // 统计按钮

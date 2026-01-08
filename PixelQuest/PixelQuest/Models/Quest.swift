@@ -26,11 +26,21 @@ struct Quest: Identifiable, Codable {
         
         var color: String {
             switch self {
-            case .health: return "PixelRed"
-            case .intellect: return "PixelBlue"
-            case .strength: return "PixelGreen"
-            case .spirit: return "PixelAccent"
-            case .skill: return "PixelWood"
+            case .health: return "PixelBlue"     // Water
+            case .intellect: return "PixelGreen" // Wood
+            case .strength: return "PixelRed"    // Fire
+            case .spirit: return "PixelWood"     // Earth
+            case .skill: return "PixelAccent"    // Metal (Gold)
+            }
+        }
+        
+        var icon: String {
+            switch self {
+            case .health: return "drop.fill"                 // Water
+            case .intellect: return "leaf.fill"              // Wood (Reading)
+            case .strength: return "flame.fill"              // Fire (Exercise)
+            case .spirit: return "mountain.2.fill"           // Earth
+            case .skill: return "circle.hexagongrid.fill"    // Metal (Money)
             }
         }
     }

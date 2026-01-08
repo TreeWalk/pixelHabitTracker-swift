@@ -91,9 +91,8 @@ struct HomeBaseDetailView: View {
                                             .foregroundColor(Color("PixelBorder"))
                                     }
                                     Spacer()
-                                    DatePicker("", selection: $bedTime, displayedComponents: .hourAndMinute)
-                                        .labelsHidden()
-                                        .scaleEffect(0.9)
+                                    PixelDatePicker(title: "", selection: $bedTime, displayedComponents: .hourAndMinute)
+                                        .frame(width: 100)
                                 }
                                 
                                 Divider()
@@ -108,9 +107,8 @@ struct HomeBaseDetailView: View {
                                             .foregroundColor(Color("PixelBorder"))
                                     }
                                     Spacer()
-                                    DatePicker("", selection: $wakeTime, displayedComponents: .hourAndMinute)
-                                        .labelsHidden()
-                                        .scaleEffect(0.9)
+                                    PixelDatePicker(title: "", selection: $wakeTime, displayedComponents: .hourAndMinute)
+                                        .frame(width: 100)
                                 }
                                 
                                 Divider()

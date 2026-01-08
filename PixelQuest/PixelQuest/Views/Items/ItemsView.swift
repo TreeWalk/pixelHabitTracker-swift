@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct ItemsView: View {
-    @EnvironmentObject var itemStore: ItemStore
+    @EnvironmentObject var itemStore: SwiftDataItemStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @State private var showAddSheet = false
-    @State private var selectedItem: Item?
+    @State private var selectedItem: ItemData?
     
     var body: some View {
         NavigationStack {
@@ -26,8 +26,8 @@ struct ItemsView: View {
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 12) {
-                                ForEach(itemStore.items) { item in
-                                    ItemCard(item: item) {
+                                ForEach(itemStore.items, id: \.itemId) { item in
+                                    ItemDataCard(item: item) {
                                         selectedItem = item
                                     }
                                 }
@@ -42,11 +42,9 @@ struct ItemsView: View {
             AddItemSheet()
         }
         .sheet(item: $selectedItem) { item in
-            ItemDetailSheet(item: item) {
-                Task {
-                    await itemStore.deleteItem(id: item.id)
-                    selectedItem = nil
-                }
+            ItemDataDetailSheet(item: item) {
+                itemStore.deleteItem(item)
+                selectedItem = nil
             }
         }
     }
@@ -142,28 +140,19 @@ struct StatBadge: View {
     }
 }
 
-// MARK: - Item Card
+// MARK: - Item Data Card
 
-struct ItemCard: View {
-    let item: Item
+struct ItemDataCard: View {
+    let item: ItemData
     let onTap: () -> Void
-    
-    var daysOwned: Int {
-        Calendar.current.dateComponents([.day], from: item.purchaseDate, to: Date()).day ?? 1
-    }
-    
-    var dailyCost: Double {
-        let days = max(1, daysOwned)
-        return Double(item.price) / Double(days)
-    }
     
     // Color based on daily cost - lower is better (greener)
     var costColor: Color {
-        if dailyCost < 5 {
+        if item.dailyCost < 5 {
             return Color.green
-        } else if dailyCost < 20 {
+        } else if item.dailyCost < 20 {
             return Color("PixelAccent")
-        } else if dailyCost < 50 {
+        } else if item.dailyCost < 50 {
             return Color.orange
         } else {
             return Color("PixelRed")
@@ -193,7 +182,7 @@ struct ItemCard: View {
                         .lineLimit(1)
                     
                     HStack(spacing: 8) {
-                        Text("¥\(item.price)")
+                        Text(item.formattedPrice)
                             .font(.pixel(14))
                             .foregroundColor(Color("PixelAccent"))
                         
@@ -205,7 +194,7 @@ struct ItemCard: View {
                             .foregroundColor(.secondary)
                     }
                     
-                    Text(item.description)
+                    Text(item.itemDescription)
                         .font(.pixel(11))
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -215,7 +204,7 @@ struct ItemCard: View {
                 
                 // Daily Cost Display
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(String(format: "¥%.1f", dailyCost))
+                    Text(String(format: "¥%.1f", item.dailyCost))
                         .font(.pixel(18))
                         .foregroundColor(costColor)
                     
@@ -223,7 +212,7 @@ struct ItemCard: View {
                         .font(.pixel(10))
                         .foregroundColor(.secondary)
                     
-                    Text("已用\(daysOwned)天")
+                    Text("已用\(item.daysOwned)天")
                         .font(.pixel(10))
                         .foregroundColor(costColor.opacity(0.8))
                 }
@@ -293,40 +282,31 @@ struct EmptyCollectionView: View {
     }
 }
 
-// MARK: - Item Detail Sheet
+// MARK: - Item Data Detail Sheet
 
-struct ItemDetailSheet: View {
+struct ItemDataDetailSheet: View {
     @Environment(\.dismiss) var dismiss
-    let item: Item
+    let item: ItemData
     let onDelete: () -> Void
-    
-    var daysOwned: Int {
-        Calendar.current.dateComponents([.day], from: item.purchaseDate, to: Date()).day ?? 1
-    }
-    
-    var dailyCost: Double {
-        let days = max(1, daysOwned)
-        return Double(item.price) / Double(days)
-    }
     
     // Predict when daily cost will drop to certain thresholds
     var nextMilestone: (days: Int, cost: Double)? {
         let targets: [Double] = [50, 20, 10, 5, 2, 1, 0.5]
         for target in targets {
             let neededDays = Int(ceil(Double(item.price) / target))
-            if neededDays > daysOwned {
-                return (neededDays - daysOwned, target)
+            if neededDays > item.daysOwned {
+                return (neededDays - item.daysOwned, target)
             }
         }
         return nil
     }
     
     var costColor: Color {
-        if dailyCost < 5 {
+        if item.dailyCost < 5 {
             return Color.green
-        } else if dailyCost < 20 {
+        } else if item.dailyCost < 20 {
             return Color("PixelAccent")
-        } else if dailyCost < 50 {
+        } else if item.dailyCost < 50 {
             return Color.orange
         } else {
             return Color("PixelRed")
@@ -349,7 +329,7 @@ struct ItemDetailSheet: View {
                             .background(Color.white)
                             .overlay(
                                 Rectangle()
-                                    .stroke(Color("PixelBorder"), lineWidth: 4)
+                                    .stroke(Color(item.rarityColor), lineWidth: 4)
                             )
                         
                         // Item Name
@@ -357,8 +337,17 @@ struct ItemDetailSheet: View {
                             .font(.pixel(28))
                             .foregroundColor(Color("PixelBorder"))
                         
+                        // Rarity Badge
+                        Text(item.rarityEnum.localizedName)
+                            .font(.pixel(12))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Color(item.rarityColor))
+                            .cornerRadius(4)
+                        
                         // Description
-                        Text(item.description)
+                        Text(item.itemDescription)
                             .font(.pixel(14))
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
@@ -368,7 +357,7 @@ struct ItemDetailSheet: View {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                             DetailStatCard(
                                 title: "购买价格",
-                                value: "¥\(item.price)",
+                                value: item.formattedPrice,
                                 icon: "yensign.circle"
                             )
                             
@@ -380,13 +369,13 @@ struct ItemDetailSheet: View {
                             
                             DetailStatCard(
                                 title: "使用天数",
-                                value: "\(daysOwned) 天",
+                                value: "\(item.daysOwned) 天",
                                 icon: "clock"
                             )
                             
                             DetailStatCard(
                                 title: "日均成本",
-                                value: String(format: "¥%.2f", dailyCost),
+                                value: String(format: "¥%.2f", item.dailyCost),
                                 icon: "chart.line.downtrend.xyaxis",
                                 valueColor: costColor
                             )
@@ -494,11 +483,12 @@ struct DetailStatCard: View {
 
 struct AddItemSheet: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var itemStore: ItemStore
+    @EnvironmentObject var itemStore: SwiftDataItemStore
     @State private var name = ""
     @State private var description = ""
     @State private var priceText = ""
     @State private var selectedIcon = "item_car"
+    @State private var selectedRarity: ItemRarity = .common
     @State private var purchaseDate = Date()
     
     let availableIcons = [
@@ -570,21 +560,40 @@ struct AddItemSheet: View {
                                 )
                         }
                         
-                        // Date Picker
+                        // Rarity Picker
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("购买日期")
+                            Text("稀有度")
                                 .font(.pixel(14))
                                 .foregroundColor(Color("PixelAccent"))
-                            DatePicker("", selection: $purchaseDate, displayedComponents: .date)
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                .padding(8)
-                                .background(.white)
-                                .overlay(
-                                    Rectangle()
-                                        .stroke(Color("PixelBorder"), lineWidth: 2)
-                                )
+                            
+                            LazyVGrid(columns: [
+                                GridItem(.flexible()),
+                                GridItem(.flexible())
+                            ], spacing: 8) {
+                                ForEach(ItemRarity.allCases, id: \.self) { rarity in
+                                    Button(action: { selectedRarity = rarity }) {
+                                        Text(rarity.localizedName)
+                                            .font(.pixel(14))
+                                            .foregroundColor(selectedRarity == rarity ? .white : Color(rarity.color))
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 10)
+                                            .background(selectedRarity == rarity ? Color(rarity.color) : Color.white)
+                                            .overlay(
+                                                Rectangle()
+                                                    .stroke(Color(rarity.color), lineWidth: 2)
+                                            )
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
                         }
+                        
+                        // Date Picker
+                        PixelDatePicker(
+                            title: "items_purchase_date".localized,
+                            selection: $purchaseDate,
+                            displayedComponents: .date
+                        )
                         
                         // Description Input
                         VStack(alignment: .leading, spacing: 8) {
@@ -606,17 +615,15 @@ struct AddItemSheet: View {
                         // Add Button
                         Button(action: {
                             let price = Int(priceText) ?? 0
-                            Task {
-                                await itemStore.addItem(
-                                    name: name,
-                                    icon: selectedIcon,
-                                    rarity: .common,
-                                    description: description.isEmpty ? "无备注" : description,
-                                    price: price,
-                                    purchaseDate: purchaseDate
-                                )
-                                dismiss()
-                            }
+                            itemStore.addItem(
+                                name: name,
+                                icon: selectedIcon,
+                                rarity: selectedRarity,
+                                description: description.isEmpty ? "无备注" : description,
+                                price: price,
+                                purchaseDate: purchaseDate
+                            )
+                            dismiss()
                         }) {
                             Text("添加到收藏")
                                 .font(.pixel(20))
@@ -646,5 +653,6 @@ struct AddItemSheet: View {
 
 #Preview {
     ItemsView()
-        .environmentObject(ItemStore())
+        .environmentObject(SwiftDataItemStore())
 }
+

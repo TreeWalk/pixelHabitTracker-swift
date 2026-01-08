@@ -184,7 +184,7 @@ struct QuestsView: View {
             AddQuestSheet()
         }
         .sheet(isPresented: $showLogSheet) {
-            QuestLogSheet()
+            QuestLogView()
         }
     }
     
@@ -592,20 +592,10 @@ struct QuestTypeButton: View {
     let isSelected: Bool
     let onTap: () -> Void
     
-    var icon: String {
-        switch type {
-        case .health: return "heart.fill"
-        case .intellect: return "brain.head.profile"
-        case .strength: return "dumbbell.fill"
-        case .spirit: return "sparkles"
-        case .skill: return "wrench.and.screwdriver.fill"
-        }
-    }
-    
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 6) {
-                Image(systemName: icon)
+                Image(systemName: type.icon)
                     .font(.system(size: 24))
                     .foregroundColor(isSelected ? .white : Color(type.color))
                 

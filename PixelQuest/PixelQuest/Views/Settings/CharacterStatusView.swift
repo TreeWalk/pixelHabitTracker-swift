@@ -5,7 +5,7 @@ struct CharacterStatusView: View {
     @EnvironmentObject var bookStore: BookStore
     @EnvironmentObject var exerciseStore: ExerciseStore
     @EnvironmentObject var financeStore: SwiftDataFinanceStore
-    @EnvironmentObject var itemStore: ItemStore
+    @EnvironmentObject var itemStore: SwiftDataItemStore
     
     @StateObject private var statsService = PlayerStatsService()
     @StateObject private var localizationManager = LocalizationManager.shared
@@ -135,7 +135,7 @@ struct CharacterStatusView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 StatCard(
-                    icon: "figure.strengthtraining.traditional",
+                    icon: "flame.fill",
                     name: "STR",
                     value: statsService.strength,
                     color: Color("PixelRed"),
@@ -143,23 +143,23 @@ struct CharacterStatusView: View {
                 )
                 
                 StatCard(
-                    icon: "book.fill",
+                    icon: "leaf.fill",
                     name: "INT",
                     value: statsService.intelligence,
-                    color: Color("PixelBlue"),
+                    color: Color("PixelGreen"),
                     description: "character_int_desc".localized
                 )
                 
                 StatCard(
-                    icon: "heart.fill",
+                    icon: "drop.fill",
                     name: "VIT",
                     value: statsService.vitality,
-                    color: Color("PixelGreen"),
+                    color: Color("PixelBlue"),
                     description: "character_vit_desc".localized
                 )
                 
                 StatCard(
-                    icon: "dollarsign.circle.fill",
+                    icon: "circle.hexagongrid.fill",
                     name: "GOLD",
                     value: statsService.wealth,
                     color: Color("PixelAccent"),
@@ -194,7 +194,7 @@ struct CharacterStatusView: View {
                     if index < itemStore.items.count {
                         // 有物品的格子
                         let item = itemStore.items[index]
-                        InventorySlot(item: item)
+                        InventoryDataSlot(item: item)
                     } else {
                         // 空格子
                         RoundedRectangle(cornerRadius: 2)
@@ -287,16 +287,16 @@ struct StatCard: View {
     }
 }
 
-// MARK: - Inventory Slot
+// MARK: - Inventory Data Slot
 
-struct InventorySlot: View {
-    let item: Item
+struct InventoryDataSlot: View {
+    let item: ItemData
     
     var body: some View {
         ZStack {
             // 背景 - 根据稀有度着色
             RoundedRectangle(cornerRadius: 2)
-                .fill(Color(item.rarity.color).opacity(0.2))
+                .fill(Color(item.rarityColor).opacity(0.2))
                 .frame(height: 44)
             
             // 物品图标
@@ -307,7 +307,7 @@ struct InventorySlot: View {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 2)
-                .stroke(Color(item.rarity.color).opacity(0.6), lineWidth: 2)
+                .stroke(Color(item.rarityColor).opacity(0.6), lineWidth: 2)
         )
     }
 }

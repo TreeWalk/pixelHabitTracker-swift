@@ -4,7 +4,7 @@ import SwiftData
 @main
 struct PixelQuestApp: App {
     @StateObject private var questStore = QuestStore()
-    @StateObject private var itemStore = ItemStore()
+    @StateObject private var itemStore = SwiftDataItemStore()
     @StateObject private var logStore = LogStore()
     @StateObject private var sleepStore = SleepStore()
     @StateObject private var exerciseStore = ExerciseStore()
@@ -47,9 +47,12 @@ struct PixelQuestApp: App {
                 .environmentObject(financeStore)
                 .environmentObject(localizationManager)
                 .onAppear {
-                    financeStore.configure(modelContext: sharedModelContainer.mainContext)
+                    let context = sharedModelContainer.mainContext
+                    financeStore.configure(modelContext: context)
+                    itemStore.configure(modelContext: context)
                 }
         }
         .modelContainer(sharedModelContainer)
     }
 }
+

@@ -42,6 +42,15 @@
 "quest_recurrence_weekly" = "每周";
 "quest_recurrence_monthly" = "每月";
 
+/* Quest Log */
+"quest_log_title" = "任务日志";
+"quest_log_recent" = "最近记录";
+"quest_log_empty" = "暂无完成记录";
+"quest_log_activity" = "活跃度";
+"quest_log_distribution" = "类型分布";
+"close" = "关闭";
+"cancel" = "取消";
+
 /* Map */
 "map_title" = "世界地图";
 "map_home_base" = "家园";
@@ -184,4 +193,24 @@
 "character_inventory" = "物品栏";
 "character_inventory_hint" = "从任务中收集物品";
 "character_system_settings" = "系统设置";
+
+/* Pixel Date Picker */
+"picker_select_date" = "选择日期";
+"picker_select_time" = "选择时间";
+"picker_hour" = "时";
+"picker_minute" = "分";
+
+/* Additional Stats */
+"stats_start_date" = "开始日期";
+"stats_end_date" = "结束日期";
+
+/* Items */
+"items_purchase_date" = "购买日期";
+
+/* Item Rarity */
+"items_rarity_common" = "普通";
+"items_rarity_rare" = "稀有";
+"items_rarity_epic" = "史诗";
+"items_rarity_legendary" = "传说";
+
 

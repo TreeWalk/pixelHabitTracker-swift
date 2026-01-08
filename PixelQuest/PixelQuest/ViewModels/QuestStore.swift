@@ -197,4 +197,63 @@ class QuestStore: ObservableObject {
             quests[i].completed = false
         }
     }
+    
+    // MARK: - 统计数据
+    
+    // 连续打卡天数 (简单实现：检查每天是否有完成记录)
+    var currentStreak: Int {
+        let calendar = Calendar.current
+        var streak = 0
+        var checkDate = Date()
+        
+        // 检查今天是否完成
+        let todayCompleted = questLog.contains { calendar.isDate($0.completedAt, inSameDayAs: checkDate) }
+        // 如果今天没完成，检查昨天
+        if !todayCompleted {
+            // 注意：如果今天没完成，Streak 可能是昨天断的，也可能是昨天还在延续
+            // 这里我们允许今天还没打卡的情况，从昨天算起
+            checkDate = calendar.date(byAdding: .day, value: -1, to: checkDate)!
+        }
+        
+        while true {
+            let targetDate = checkDate // Create a local constant for capture in closure
+            let hasCompleted = questLog.contains { calendar.isDate($0.completedAt, inSameDayAs: targetDate) }
+            if hasCompleted {
+                streak += 1
+                checkDate = calendar.date(byAdding: .day, value: -1, to: checkDate)!
+            } else {
+                break
+            }
+        }
+        return streak
+    }
+    
+    var totalCompletedQuests: Int {
+        questLog.count
+    }
+    
+    var totalXP: Int {
+        questLog.reduce(0) { $0 + $1.xp }
+    }
+    
+    // 获取过去一年的热力图数据
+    var heatmapData: [Date: Int] {
+        var data: [Date: Int] = [:]
+        let calendar = Calendar.current
+        
+        for log in questLog {
+            let startOfDay = calendar.startOfDay(for: log.completedAt)
+            data[startOfDay, default: 0] += 1
+        }
+        return data
+    }
+    
+    // 获取属性分布数据
+    var typeDistribution: [Quest.QuestType: Int] {
+        var distribution: [Quest.QuestType: Int] = [:]
+        for log in questLog {
+            distribution[log.questType, default: 0] += 1
+        }
+        return distribution
+    }
 }
