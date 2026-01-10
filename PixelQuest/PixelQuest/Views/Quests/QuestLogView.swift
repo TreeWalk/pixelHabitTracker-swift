@@ -3,7 +3,7 @@ import Charts
 
 struct QuestLogView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var questStore: QuestStore
+    @EnvironmentObject var questStore: SwiftDataQuestStore
     @State private var selectedDate: Date? = nil
     
     var body: some View {
@@ -46,7 +46,7 @@ struct QuestLogView: View {
                                         .foregroundColor(.gray)
                                         .padding(.vertical, 20)
                                 } else {
-                                    ForEach(logsToShow) { log in
+                                    ForEach(logsToShow, id: \.completedAt) { log in
                                         LogItemRow(log: log)
                                     }
                                 }
@@ -72,17 +72,22 @@ struct QuestLogView: View {
         }
     }
     
+    // MARK: - Static DateFormatters (Performance Optimization)
+    private static let mediumDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }()
+    
     var historyTitle: String {
         if let date = selectedDate {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            return formatter.string(from: date)
+            return Self.mediumDateFormatter.string(from: date)
         } else {
             return "quest_log_recent".localized
         }
     }
     
-    var filteredLogs: [QuestLog] {
+    var filteredLogs: [QuestLogData] {
         if let date = selectedDate {
             let calendar = Calendar.current
             return questStore.questLog.filter { calendar.isDate($0.completedAt, inSameDayAs: date) }
@@ -270,7 +275,7 @@ struct HeatmapCell: View {
 }
 
  struct TypeDistributionChart: View {
-     let distribution: [Quest.QuestType: Int]
+     let distribution: [String: Int]
      
      var body: some View {
          VStack(alignment: .leading, spacing: 12) {
@@ -287,7 +292,7 @@ struct HeatmapCell: View {
              } else {
                  Chart {
                      ForEach(Quest.QuestType.allCases, id: \.self) { type in
-                         if let count = distribution[type], count > 0 {
+                         if let count = distribution[type.rawValue], count > 0 {
                              SectorMark(
                                  angle: .value("Count", count),
                                  innerRadius: .ratio(0.6),
@@ -326,20 +331,32 @@ struct HeatmapCell: View {
  }
 
 struct LogItemRow: View {
-    let log: QuestLog
+    let log: QuestLogData
+    
+    // Static DateFormatter for performance
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, HH:mm"
+        return formatter
+    }()
+    
+    // Convert String questType to Quest.QuestType for color
+    private var questType: Quest.QuestType {
+        Quest.QuestType(rawValue: log.questType) ?? .health
+    }
     
     var body: some View {
         HStack(spacing: 12) {
             // Icon
             ZStack {
                 Rectangle()
-                    .fill(Color(log.questType.color).opacity(0.1))
+                    .fill(Color(questType.color).opacity(0.1))
                     .frame(width: 40, height: 40)
-                    .pixelBorderSmall(color: Color(log.questType.color))
+                    .pixelBorderSmall(color: Color(questType.color))
                 
                 Image(systemName: "checkmark")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(Color(log.questType.color))
+                    .foregroundColor(Color(questType.color))
             }
             
             VStack(alignment: .leading, spacing: 4) {
@@ -347,7 +364,7 @@ struct LogItemRow: View {
                     .font(.pixel(16))
                     .foregroundColor(Color("PixelBorder"))
                 
-                Text(log.questType.rawValue + " • " + formatDate(log.completedAt))
+                Text(log.questType + " • " + Self.dateFormatter.string(from: log.completedAt))
                     .font(.pixel(10))
                     .foregroundColor(.gray)
             }
@@ -361,11 +378,5 @@ struct LogItemRow: View {
         .padding(8)
         .background(Color.white)
         .pixelBorderSmall(color: Color("PixelBorder").opacity(0.2))
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, HH:mm"
-        return formatter.string(from: date)
     }
 }

@@ -62,7 +62,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(QuestStore())
-        .environmentObject(ItemStore())
-        .environmentObject(LogStore())
+        .environmentObject(SwiftDataQuestStore())
+        .environmentObject(SwiftDataItemStore())
+        .environmentObject(SwiftDataLogStore())
 }

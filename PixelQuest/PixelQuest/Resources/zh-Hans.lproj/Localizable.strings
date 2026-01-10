@@ -14,8 +14,21 @@
 "tab_settings" = "设置";
 
 /* Settings */
-"settings_title" = "设置";
+"settings_title" = "系统设置";
+"settings_subtitle" = "自定义你的游戏";
 "settings_language" = "语言";
+"settings_game" = "游戏设置";
+"settings_sound" = "音效";
+"settings_notifications" = "通知提醒";
+"settings_data" = "数据管理";
+"settings_export" = "导出数据";
+"settings_export_desc" = "保存到本地";
+"settings_reset" = "重置数据";
+"settings_reset_desc" = "清除所有进度";
+"settings_about" = "关于";
+"settings_rate" = "评价应用";
+"settings_help" = "帮助与反馈";
+"settings_version" = "版本";
 "settings_work_in_progress" = "开发中...";
 "language_english" = "English";
 "language_chinese" = "中文";
@@ -185,11 +198,12 @@
 /* Character Status */
 "character_adventurer" = "冒险者";
 "character_title" = "探索者";
-"character_stats" = "属性面板";
-"character_str_desc" = "来自本周运动";
-"character_int_desc" = "来自阅读书籍";
-"character_vit_desc" = "来自任务完成率";
-"character_gold_desc" = "来自净资产";
+"character_stats" = "五行属性";
+"character_fire_desc" = "来自本周运动";
+"character_wood_desc" = "来自阅读书籍";
+"character_water_desc" = "来自任务完成率";
+"character_metal_desc" = "来自净资产";
+"character_earth_desc" = "来自完成的任务";
 "character_inventory" = "物品栏";
 "character_inventory_hint" = "从任务中收集物品";
 "character_system_settings" = "系统设置";

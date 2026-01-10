@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LibraryDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var bookStore: BookStore
+    @EnvironmentObject var bookStore: SwiftDataBookStore
     @EnvironmentObject var localizationManager: LocalizationManager
     let location: Location
     
@@ -95,23 +95,32 @@ struct LibraryDetailView: View {
         .sheet(isPresented: $showAddBook) {
             AddBookView()
         }
-        .onAppear {
-            Task {
-                await bookStore.fetchBooks()
-            }
-        }
     }
 }
 
 // MARK: - Book Card
 
 struct BookCard: View {
-    let book: BookEntry
+    let book: BookEntryData
+    
+    // Convert status string to ReadingStatus for display
+    private var readingStatus: ReadingStatus {
+        switch book.status {
+        case "reading": return .reading
+        case "finished": return .finished
+        default: return .wantToRead
+        }
+    }
+    
+    // Get cover color from coverIcon or use default
+    private var coverColor: BookCoverColor {
+        .blue  // Default color since we store icon not color
+    }
     
     var body: some View {
         VStack(spacing: 8) {
             // Book Cover
-            BookCoverView(color: book.coverColor, size: 80)
+            BookCoverView(color: coverColor, size: 80)
             
             // Title
             Text(book.title)
@@ -133,12 +142,12 @@ struct BookCard: View {
             
             // Status
             HStack(spacing: 4) {
-                Image(systemName: book.status.icon)
+                Image(systemName: readingStatus.icon)
                     .font(.system(size: 10))
-                Text(book.status.rawValue)
+                Text(readingStatus.rawValue)
                     .font(.pixel(10))
             }
-            .foregroundColor(Color(book.status.color))
+            .foregroundColor(Color(readingStatus.color))
         }
         .padding()
         .frame(maxWidth: .infinity)

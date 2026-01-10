@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MapView: View {
-    @EnvironmentObject var logStore: LogStore
+    @EnvironmentObject var logStore: SwiftDataLogStore
     @EnvironmentObject var localizationManager: LocalizationManager
     @State private var selectedLocation: Location?
     @State private var showDetail = false
@@ -143,7 +143,7 @@ struct BuildingCard: View {
 
 struct LocationDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var logStore: LogStore
+    @EnvironmentObject var logStore: SwiftDataLogStore
     let location: Location
     @State private var inputText = ""
     
@@ -223,7 +223,7 @@ struct LocationDetailView: View {
                                             .background(Color("PixelBlue").opacity(0.1))
                                             .foregroundColor(Color("PixelBlue"))
                                         
-                                        Text(log.text)
+                                        Text(log.content)
                                             .font(.pixel(16))
                                             .foregroundColor(Color("PixelBorder"))
                                             .fixedSize(horizontal: false, vertical: true)
@@ -273,13 +273,11 @@ struct LocationDetailView: View {
         let text = inputText
         inputText = ""
         
-        Task {
-            await logStore.addLog(locationId: location.id, text: text)
-        }
+        logStore.addLog(locationId: location.id, content: text)
     }
 }
 
 #Preview {
     MapView()
-        .environmentObject(LogStore())
+        .environmentObject(SwiftDataLogStore())
 }

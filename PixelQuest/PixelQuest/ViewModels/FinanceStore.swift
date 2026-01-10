@@ -1,5 +1,4 @@
 import Foundation
-import Supabase
 
 @MainActor
 class FinanceStore: ObservableObject {

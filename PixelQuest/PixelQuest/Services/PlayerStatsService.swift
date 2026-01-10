@@ -7,9 +7,9 @@ import Combine
 class PlayerStatsService: ObservableObject {
     
     // MARK: - Dependencies
-    private var questStore: QuestStore?
-    private var bookStore: BookStore?
-    private var exerciseStore: ExerciseStore?
+    private var questStore: SwiftDataQuestStore?
+    private var bookStore: SwiftDataBookStore?
+    private var exerciseStore: SwiftDataExerciseStore?
     private var financeStore: SwiftDataFinanceStore?
     
     private var cancellables = Set<AnyCancellable>()
@@ -19,17 +19,22 @@ class PlayerStatsService: ObservableObject {
     @Published var currentXP: Int = 0
     @Published var xpToNextLevel: Int = 100
     
-    @Published var strength: Int = 0     // 力量 - 来自运动
-    @Published var intelligence: Int = 0 // 智力 - 来自阅读
-    @Published var vitality: Int = 0     // 活力 - 来自习惯完成率
-    @Published var wealth: Int = 0       // 财富 - 来自资产净值
+    @Published var strength: Int = 0     // 力量 - 来自运动 (火)
+    @Published var intelligence: Int = 0 // 智力 - 来自阅读 (木)
+    @Published var vitality: Int = 0     // 活力 - 来自习惯完成率 (水)
+    @Published var wealth: Int = 0       // 财富 - 来自资产净值 (金)
+    
+    // 土 (Earth) - 总完成任务数
+    var totalQuests: Int {
+        questStore?.totalCompletedQuests ?? 0
+    }
     
     // MARK: - Configuration
     
     func configure(
-        questStore: QuestStore,
-        bookStore: BookStore,
-        exerciseStore: ExerciseStore,
+        questStore: SwiftDataQuestStore,
+        bookStore: SwiftDataBookStore,
+        exerciseStore: SwiftDataExerciseStore,
         financeStore: SwiftDataFinanceStore
     ) {
         self.questStore = questStore
@@ -44,23 +49,27 @@ class PlayerStatsService: ObservableObject {
     // MARK: - Subscriptions
     
     private func setupSubscriptions() {
-        // 监听 QuestStore 变化
+        // 监听 QuestStore 变化 (with debounce to prevent rapid recalculations)
         questStore?.$quests
+            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .sink { [weak self] _ in self?.recalculateStats() }
             .store(in: &cancellables)
         
         // 监听 BookStore 变化
         bookStore?.$books
+            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .sink { [weak self] _ in self?.recalculateStats() }
             .store(in: &cancellables)
         
         // 监听 ExerciseStore 变化
         exerciseStore?.$entries
+            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .sink { [weak self] _ in self?.recalculateStats() }
             .store(in: &cancellables)
         
         // 监听 FinanceStore 变化
         financeStore?.$assets
+            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .sink { [weak self] _ in self?.recalculateStats() }
             .store(in: &cancellables)
     }
@@ -95,7 +104,23 @@ class PlayerStatsService: ObservableObject {
         while accumulatedXP + xpNeeded <= totalXP {
             accumulatedXP += xpNeeded
             calculatedLevel += 1
-            xpNeeded = Int(Double(baseXP) * pow(growthRate, Double(calculatedLevel - 1)))
+            
+            // Calculate next level requirement safely
+            let nextXP = Double(baseXP) * pow(growthRate, Double(calculatedLevel - 1))
+            
+            // Safety check: Prevent Integer overflow or infinite loop
+            if nextXP > Double(Int.max) || calculatedLevel >= 100 {
+                xpNeeded = Int.max // Cap at max
+                break
+            }
+            
+            xpNeeded = Int(nextXP)
+            
+            // Safety check: Ensure xpNeeded is positive to prevent infinite loop
+            if xpNeeded <= 0 { 
+                xpNeeded = Int.max 
+                break 
+            }
         }
         
         self.level = calculatedLevel
@@ -145,7 +170,10 @@ class PlayerStatsService: ObservableObject {
     
     var xpProgress: Double {
         guard xpToNextLevel > 0 else { return 0 }
-        return Double(currentXP) / Double(xpToNextLevel)
+        let progress = Double(currentXP) / Double(xpToNextLevel)
+        // Ensure progress is valid number between 0 and 1
+        if progress.isNaN || progress.isInfinite { return 0 }
+        return max(0.0, min(1.0, progress))
     }
     
     var formattedLevel: String {

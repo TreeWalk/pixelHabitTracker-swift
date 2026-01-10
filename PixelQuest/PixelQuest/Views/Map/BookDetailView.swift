@@ -2,18 +2,26 @@ import SwiftUI
 
 struct BookDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var bookStore: BookStore
-    let book: BookEntry
+    @EnvironmentObject var bookStore: SwiftDataBookStore
+    let book: BookEntryData
     
-    @State private var editedBook: BookEntry
-    @State private var isEditing = false
     @State private var showDeleteAlert = false
-    @State private var newNoteContent = ""
-    @State private var showAddNote = false
+    @State private var editedRating: Int
+    @State private var editedStatus: String
     
-    init(book: BookEntry) {
+    // Convert status string to ReadingStatus for display
+    private var readingStatus: ReadingStatus {
+        switch editedStatus {
+        case "reading": return .reading
+        case "finished": return .finished
+        default: return .wantToRead
+        }
+    }
+    
+    init(book: BookEntryData) {
         self.book = book
-        self._editedBook = State(initialValue: book)
+        self._editedRating = State(initialValue: book.rating)
+        self._editedStatus = State(initialValue: book.status)
     }
     
     var body: some View {
@@ -26,17 +34,17 @@ struct BookDetailView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         // Book Cover
-                        BookCoverView(color: editedBook.coverColor, size: 120)
+                        BookCoverView(color: .blue, size: 120)
                             .padding(.top, 20)
                         
                         // Title & Author
                         VStack(spacing: 8) {
-                            Text(editedBook.title)
+                            Text(book.title)
                                 .font(.pixel(24))
                                 .foregroundColor(Color("PixelBorder"))
                                 .multilineTextAlignment(.center)
                             
-                            Text(editedBook.author)
+                            Text(book.author)
                                 .font(.pixel(16))
                                 .foregroundColor(Color("PixelBorder").opacity(0.7))
                         }
@@ -45,12 +53,12 @@ struct BookDetailView: View {
                         HStack(spacing: 8) {
                             ForEach(1...5, id: \.self) { index in
                                 Button(action: {
-                                    editedBook.rating = index
-                                    Task { await bookStore.updateBook(editedBook) }
+                                    editedRating = index
+                                    bookStore.updateBook(book, title: book.title, author: book.author, status: editedStatus, rating: index)
                                 }) {
-                                    Image(systemName: index <= editedBook.rating ? "star.fill" : "star")
+                                    Image(systemName: index <= editedRating ? "star.fill" : "star")
                                         .font(.system(size: 24))
-                                        .foregroundColor(index <= editedBook.rating ? Color("PixelAccent") : Color.gray.opacity(0.3))
+                                        .foregroundColor(index <= editedRating ? Color("PixelAccent") : Color.gray.opacity(0.3))
                                 }
                             }
                         }
@@ -67,38 +75,38 @@ struct BookDetailView: View {
                                 Menu {
                                     ForEach(ReadingStatus.allCases, id: \.self) { status in
                                         Button(action: {
-                                            editedBook.status = status
-                                            if status == .reading && editedBook.startDate == nil {
-                                                editedBook.startDate = Date()
+                                            let newStatus: String
+                                            switch status {
+                                            case .reading: newStatus = "reading"
+                                            case .finished: newStatus = "finished"
+                                            case .wantToRead: newStatus = "wishlist"
                                             }
-                                            if status == .finished && editedBook.finishDate == nil {
-                                                editedBook.finishDate = Date()
-                                            }
-                                            Task { await bookStore.updateBook(editedBook) }
+                                            editedStatus = newStatus
+                                            bookStore.updateBook(book, title: book.title, author: book.author, status: newStatus, rating: editedRating)
                                         }) {
                                             Label(status.rawValue, systemImage: status.icon)
                                         }
                                     }
                                 } label: {
                                     HStack(spacing: 6) {
-                                        Image(systemName: editedBook.status.icon)
-                                        Text(editedBook.status.rawValue)
+                                        Image(systemName: readingStatus.icon)
+                                        Text(readingStatus.rawValue)
                                             .font(.pixel(14))
                                         Image(systemName: "chevron.down")
                                             .font(.system(size: 10))
                                     }
-                                    .foregroundColor(Color(editedBook.status.color))
+                                    .foregroundColor(Color(readingStatus.color))
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(Color(editedBook.status.color).opacity(0.1))
-                                    .pixelBorderSmall(color: Color(editedBook.status.color))
+                                    .background(Color(readingStatus.color).opacity(0.1))
+                                    .pixelBorderSmall(color: Color(readingStatus.color))
                                 }
                             }
                             
                             Divider()
                             
                             // Dates
-                            if let startDate = editedBook.startDate {
+                            if let startDate = book.startDate {
                                 HStack {
                                     Image(systemName: "calendar")
                                         .foregroundColor(Color("PixelBlue"))
@@ -112,7 +120,7 @@ struct BookDetailView: View {
                                 }
                             }
                             
-                            if let finishDate = editedBook.finishDate {
+                            if let finishDate = book.finishDate {
                                 HStack {
                                     Image(systemName: "checkmark.circle")
                                         .foregroundColor(Color("PixelGreen"))
@@ -131,49 +139,27 @@ struct BookDetailView: View {
                         .background(Color.white)
                         .pixelBorderSmall()
                         
-                        // Notes Section
-                        VStack(spacing: 12) {
-                            HStack {
-                                Image(systemName: "note.text")
-                                    .foregroundColor(Color("PixelBlue"))
-                                Text("读书笔记")
-                                    .font(.pixel(16))
-                                    .foregroundColor(Color("PixelBorder"))
-                                Spacer()
+                        // Notes display (simplified - just show notes string if exists)
+                        if let notes = book.notes, !notes.isEmpty {
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "note.text")
+                                        .foregroundColor(Color("PixelBlue"))
+                                    Text("读书笔记")
+                                        .font(.pixel(16))
+                                        .foregroundColor(Color("PixelBorder"))
+                                    Spacer()
+                                }
                                 
-                                Button(action: { showAddNote = true }) {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "plus")
-                                        Text("添加")
-                                            .font(.pixel(12))
-                                    }
-                                    .foregroundColor(Color("PixelBlue"))
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(Color("PixelBlue").opacity(0.1))
-                                    .pixelBorderSmall(color: Color("PixelBlue"))
-                                }
-                            }
-                            
-                            let bookNotes = bookStore.notesFor(bookId: book.id)
-                            
-                            if bookNotes.isEmpty {
-                                Text("还没有笔记，点击上方添加")
+                                Text(notes)
                                     .font(.pixel(12))
-                                    .foregroundColor(Color("PixelBorder").opacity(0.5))
-                                    .padding(.vertical, 20)
-                            } else {
-                                ForEach(bookNotes) { note in
-                                    NoteCard(note: note) {
-                                        Task { await bookStore.deleteNote(note) }
-                                    }
-                                }
+                                    .foregroundColor(Color("PixelBorder"))
                             }
+                            .padding()
+                            .frame(width: contentWidth, alignment: .leading)
+                            .background(Color.white)
+                            .pixelBorderSmall()
                         }
-                        .padding()
-                        .frame(width: contentWidth)
-                        .background(Color.white)
-                        .pixelBorderSmall()
                         
                         // Delete Button
                         Button(action: { showDeleteAlert = true }) {
@@ -214,22 +200,14 @@ struct BookDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $showAddNote) {
-            AddNoteView(bookId: book.id)
-        }
         .alert("确定删除？", isPresented: $showDeleteAlert) {
             Button("取消", role: .cancel) { }
             Button("删除", role: .destructive) {
-                Task {
-                    await bookStore.deleteBook(book)
-                    dismiss()
-                }
+                bookStore.deleteBook(book)
+                dismiss()
             }
         } message: {
             Text("删除后将无法恢复")
-        }
-        .onAppear {
-            Task { await bookStore.fetchNotes(for: book.id) }
         }
     }
     
@@ -237,124 +215,5 @@ struct BookDetailView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
-    }
-}
-
-// MARK: - Note Card
-
-struct NoteCard: View {
-    let note: ReadingNote
-    let onDelete: () -> Void
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                if let page = note.page {
-                    Text("P.\(page)")
-                        .font(.pixel(10))
-                        .foregroundColor(Color("PixelBlue"))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color("PixelBlue").opacity(0.1))
-                        .cornerRadius(4)
-                }
-                
-                Spacer()
-                
-                Text(formatDate(note.date))
-                    .font(.pixel(10))
-                    .foregroundColor(Color("PixelBorder").opacity(0.5))
-                
-                Button(action: onDelete) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.gray.opacity(0.5))
-                }
-            }
-            
-            Text(note.content)
-                .font(.pixel(12))
-                .foregroundColor(Color("PixelBorder"))
-                .lineLimit(nil)
-        }
-        .padding()
-        .background(Color("PixelBg"))
-        .cornerRadius(8)
-    }
-    
-    func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd"
-        return formatter.string(from: date)
-    }
-}
-
-// MARK: - Add Note View
-
-struct AddNoteView: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var bookStore: BookStore
-    let bookId: UUID
-    
-    @State private var content = ""
-    @State private var pageText = ""
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                // Page Input (Optional)
-                HStack {
-                    Text("页码（可选）")
-                        .font(.pixel(14))
-                        .foregroundColor(Color("PixelBorder"))
-                    Spacer()
-                    TextField("", text: $pageText)
-                        .keyboardType(.numberPad)
-                        .font(.pixel(14))
-                        .frame(width: 80)
-                        .padding(8)
-                        .background(Color("PixelBg"))
-                        .pixelBorderSmall()
-                }
-                .padding(.horizontal)
-                
-                // Content Input
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("笔记内容")
-                        .font(.pixel(14))
-                        .foregroundColor(Color("PixelBorder"))
-                    
-                    TextEditor(text: $content)
-                        .font(.pixel(14))
-                        .frame(minHeight: 150)
-                        .padding(8)
-                        .background(Color("PixelBg"))
-                        .pixelBorderSmall()
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-            }
-            .padding(.top, 20)
-            .navigationTitle("添加笔记")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
-                        .font(.pixel(14))
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        let page = Int(pageText)
-                        Task {
-                            await bookStore.addNote(bookId: bookId, content: content, page: page)
-                            dismiss()
-                        }
-                    }
-                    .font(.pixel(14))
-                    .disabled(content.isEmpty)
-                }
-            }
-        }
     }
 }

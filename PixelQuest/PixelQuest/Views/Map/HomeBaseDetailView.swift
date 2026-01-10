@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeBaseDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var sleepStore: SleepStore
+    @EnvironmentObject var sleepStore: SwiftDataSleepStore
     @EnvironmentObject var healthKitManager: HealthKitManager
     @EnvironmentObject var localizationManager: LocalizationManager
     let location: Location
@@ -257,9 +257,7 @@ struct HomeBaseDetailView: View {
             }
         }
         .onAppear {
-            Task {
-                await sleepStore.fetchEntries()
-            }
+            // Data is loaded automatically on configure
         }
     }
     
@@ -337,7 +335,7 @@ struct HomeBaseDetailView: View {
 // MARK: - Week Sleep Chart
 
 struct WeekSleepChart: View {
-    let entries: [SleepEntry]
+    let entries: [SleepEntryData]
     
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
@@ -362,7 +360,7 @@ struct WeekSleepChart: View {
     struct DayData: Hashable {
         let date: Date
         let label: String
-        let entry: SleepEntry?
+        let entry: SleepEntryData?
         let isToday: Bool
     }
     
@@ -386,13 +384,13 @@ struct WeekSleepChart: View {
         }
     }
     
-    func barHeight(for entry: SleepEntry?) -> CGFloat {
+    func barHeight(for entry: SleepEntryData?) -> CGFloat {
         guard let entry = entry else { return 10 }
         // 8小时 = 100pt, 最大 120pt
         return min(CGFloat(entry.durationHours) * 12.5, 100)
     }
     
-    func barColor(for entry: SleepEntry?) -> Color {
+    func barColor(for entry: SleepEntryData?) -> Color {
         guard let entry = entry else { return Color.gray.opacity(0.3) }
         switch entry.quality {
         case 1: return Color.red.opacity(0.7)

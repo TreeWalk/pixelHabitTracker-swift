@@ -1,49 +1,98 @@
-# PixelQuest - Swift
+# PixelQuest (iOS)
 
-A pixel-art style gamified habit tracker and finance management app for iOS, built with SwiftUI.
+PixelQuest 是一款结合了 **RPG 游戏化元素** 的习惯养成与生活管理 iOS 应用。它采用复古像素风格设计，将枯燥的日常任务转化为英雄的成长之旅。
 
-## Features
+本项目采用纯原生 **SwiftUI** 构建，使用 **SwiftData** 进行本地数据持久化，注重流畅的交互体验和沉浸式的游戏氛围。
 
-- **Gamified Habits**: Turn your daily habits into RPG quests (Daily Quests).
-- **Pixel Art Style**: Retro 8-bit aesthetic with custom fonts (VT323) and UI components.
-- **World Map**: Explore different locations (Home Base, Gym, Library, Company) representing different life areas.
-- **Finance Management**: 
-  - Track income and expenses.
-  - Manage multiple wallets (Cash, Bank Card, WeChat, Alipay).
-  - Reconcile balances with a realistic receipt interface.
-  - Local data persistence using SwiftData.
-- **Item Collection**: Collect items with different rarities.
-- **Library**: Track your reading progress and notes.
-- **Internationalization**: Support for English and Simplified Chinese.
+---
 
-## Tech Stack
+## 🌟 核心功能模块 (Core Modules)
 
-- **Language**: Swift 5
-- **Framework**: SwiftUI
-- **Persistence**: SwiftData (iOS 17+)
-- **Backend (Legacy/Optional)**: Supabase (migrating to local storage)
+### 1. ⚔️ 每日任务 (Quests System)
+任务系统是游戏的核心循环，用于管理日常习惯和待办事项。
+*   **五行任务分类**：任务基于五行属性分类，完成不同任务提升对应的角色属性：
+    *   🔵 **Health (水/Water)**：喝水、早睡等健康习惯 -> 提升 **VIT (活力)**
+    *   🟢 **Intellect (木/Wood)**：阅读、学习 -> 提升 **INT (智力)**
+    *   🔴 **Strength (火/Fire)**：运动、健身 -> 提升 **STR (力量)**
+    *   🟤 **Spirit (土/Earth)**：冥想、反思 -> 提升 **总完成数**
+    *   🟡 **Skill (金/Metal)**：编程、工作技能 -> 提升 **财富**
+*   **XP 与升级**：完成任务获得经验值 (XP)，累计经验值提升角色等级，解锁新称号（如 Novice, Apprentice, Master）。
+*   **周期性任务**：支持设置每日、每周、每月重复任务，自动重置进度。
+*   **即时交互**：优化的交互体验，点击即完成，支持撤销。
 
-## Requirements
+### 2. 🗺️ 地图探索 (World Map)
+地图是生活区域的可视化入口，不同的地点对应不同的功能模块：
+*   **🏠 Home Base (大本营)**：查看角色状态、睡眠记录和总体概览。
+*   **💪 Gym (健身房)**：
+    *   记录运动日志 (Exercise Log)。
+    *   统计每周运动时长，直接关联角色的 **STR (力量)** 属性。
+*   **📚 Library (图书馆)**：
+    *   书籍管理系统：由于“阅读”是提升智力的关键，这里管理“想读”、“在读”和“已读”的书籍。
+    *   阅读笔记：记录阅读感悟。
+    *   关联角色的 **INT (智力)** 属性。
+*   **🏢 Company (公司/工作)**：
+    *   财务管理 (Finance)：记录收入与支出。
+    *   资产大盘：管理现金、银行卡、微信/支付宝等账户。
+    *   净资产直接决定角色的 **GOLD (财富)** 属性。
 
-- iOS 17.0+
-- Xcode 15.0+
+### 3. 👤 角色状态 (Character Status)
+角色的数字化投影，将你在现实生活中的努力转化为可见的游戏数值。
+*   **五行属性面板**：直观展示 Metal, Wood, Water, Fire, Earth 五种属性的当前数值。
+*   **等级系统**：从 Lv.1 开始，随着 XP 积累不断升级，获得更高级的职业称号。
+*   **数据可视化**：
+    *   **热力图 (Heatmap)**：展示过去一年的活跃度。
+    *   **任务分布图**：分析你在哪类任务上投入最多精力。
 
-## Setup
+### 4. 🎒 物品与背包 (Inventory)
+*   **物品收集**：完成任务或达成成就有几率获得虚拟物品。
+*   **稀有度系统**：物品分为 Common (普通), Rare (稀有), Epic (史诗), Legendary (传说)。
+*   **网格背包**：经典的 RPG 背包界面，查看和管理你的战利品。
 
-1. Clone the repository.
-2. Open `PixelQuest/PixelQuest.xcodeproj` in Xcode.
-3. Ensure you have the necessary signing capabilities configured.
-4. Build and run on a simulator or device.
+### 5. ⚙️ 系统设置 (Settings)
+*   **Nintendo 风格 UI**：完全重制的设置界面，致敬 Switch 的卡片式交互与音效。
+*   **个性化定制**：
+    *   **多语言支持**：无缝切换 英语/简体中文。
+    *   **音效控制**：开启/关闭复古游戏音效。
+*   **数据管理**：支持数据导出与重置，保障数据主权。
 
-## Project Structure
+---
 
-- `PixelQuest/`: Main app source code.
-  - `Views/`: SwiftUI views organized by feature.
-  - `ViewModels/`: State management (migrating to SwiftData).
-  - `Models/`: Data models (SwiftData `@Model` classes).
-  - `Resources/`: Assets, localization files, and fonts.
-  - `Managers/`: Shared services (Localization, Data).
+## 🛠 技术栈 (Tech Stack)
 
-## License
+*   **UI 框架**: SwiftUI (iOS 17+)
+*   **数据持久化**: SwiftData (不再依赖 Supabase，完全本地化，隐私安全)
+*   **架构模式**: MVVM (Model-View-ViewModel)
+*   **设计资源**:
+    *   **字体**: VT323 (像素风格字体)
+    *   **图标**: SF Symbols + 自定义像素图标
+*   **性能优化**:
+    *   使用 `LazyVStack` 处理长列表。
+    *   `Debounce` (防抖) 处理高频数据更新。
+    *   后台异步计算统计数据，防止阻塞主线程。
 
-[License Name]
+## 📂 项目结构
+
+```
+PixelQuest/
+├── App/                # 应用入口与生命周期
+├── Models/             # SwiftData 数据模型 (QuestData, ItemData 等)
+├── Views/              # SwiftUI 视图组件
+│   ├── Quests/         # 任务列表相关视图
+│   ├── Map/            # 地图与地点详情视图
+│   ├── Settings/       # 设置与角色状态视图
+│   └── Components/     # 通用 UI 组件 (RetroButton, PixelCard 等)
+├── ViewModels/         # 业务逻辑与数据存储 (SwiftDataQuestStore 等)
+├── Services/           # 核心服务 (PlayerStatsService)
+└── Resources/          # 资源文件 (Localizable.strings, Assets, Fonts)
+```
+
+## 🚀 快速开始
+
+1.  确保安装 **Xcode 15+** (支持 iOS 17 SDK)。
+2.  克隆项目到本地。
+3.  打开 `PixelQuest/PixelQuest.xcodeproj`。
+4.  选择模拟器 (如 iPhone 15 Pro) 并运行 (`Cmd + R`)。
+
+---
+
+> "Gamify your life, one pixel at a time."

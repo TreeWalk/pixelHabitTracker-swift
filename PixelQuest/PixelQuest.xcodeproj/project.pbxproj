@@ -15,27 +15,19 @@
 		006 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106 /* Item.swift */; };
 		007 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107 /* Location.swift */; };
 		008 /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108 /* LogEntry.swift */; };
-		009 /* QuestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109 /* QuestStore.swift */; };
-		010 /* ItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110 /* ItemStore.swift */; };
-		011 /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111 /* LogStore.swift */; };
 		012 /* QuestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112 /* QuestsView.swift */; };
 		013 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113 /* MapView.swift */; };
 		014 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114 /* ItemsView.swift */; };
 		015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* SettingsView.swift */; };
-		2338B5DF2F051CBA0099E70B /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 2338B5DE2F051CBA0099E70B /* Supabase */; };
 		23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298002F08F1E100C1B539 /* GymDetailView.swift */; };
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
-		23D298052F08F23200C1B539 /* ExerciseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298042F08F23200C1B539 /* ExerciseStore.swift */; };
-		23D298072F08F23C00C1B539 /* SleepStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298062F08F23C00C1B539 /* SleepStore.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
 		23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2980A2F08F25600C1B539 /* SleepEntry.swift */; };
 		23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2980C2F08F26600C1B539 /* Font+Pixel.swift */; };
 		23D298112F08F28C00C1B539 /* VT323-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23D2980F2F08F28C00C1B539 /* VT323-Regular.ttf */; };
 		23D298162F08F2B600C1B539 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298142F08F2B600C1B539 /* HealthKitManager.swift */; };
-		23D298182F08F2D000C1B539 /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298172F08F2D000C1B539 /* SupabaseConfig.swift */; };
 		23D2981D2F090DC600C1B539 /* BookEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2981C2F090DC600C1B539 /* BookEntry.swift */; };
 		23D2981F2F090DD000C1B539 /* FinanceEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2981E2F090DD000C1B539 /* FinanceEntry.swift */; };
-		23D298212F090DED00C1B539 /* BookStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298202F090DED00C1B539 /* BookStore.swift */; };
 		23D298232F090E0900C1B539 /* AddBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298222F090E0900C1B539 /* AddBookView.swift */; };
 		23D298252F090E1700C1B539 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298242F090E1700C1B539 /* BookDetailView.swift */; };
 		23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298262F090E7E00C1B539 /* CompanyDetailView.swift */; };
@@ -65,6 +57,15 @@
 		23D2986C2F0E1C8D00C1B539 /* QuestLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2986B2F0E1C8D00C1B539 /* QuestLogView.swift */; };
 		23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */; };
 		23E228362F0EA0020068CEFC /* ItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228352F0EA0020068CEFC /* ItemData.swift */; };
+		23E228382F1001590068CEFC /* SwiftDataSleepStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228372F1001590068CEFC /* SwiftDataSleepStore.swift */; };
+		23E2283A2F1001600068CEFC /* SwiftDataQuestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228392F1001600068CEFC /* SwiftDataQuestStore.swift */; };
+		23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2283B2F10016A0068CEFC /* SwiftDataLogStore.swift */; };
+		23E2283E2F1001740068CEFC /* SwiftDataExerciseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2283D2F1001740068CEFC /* SwiftDataExerciseStore.swift */; };
+		23E228402F1001800068CEFC /* SwiftDataBookStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2283F2F1001800068CEFC /* SwiftDataBookStore.swift */; };
+		23E228422F1001940068CEFC /* SleepData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228412F1001940068CEFC /* SleepData.swift */; };
+		23E228442F10019B0068CEFC /* LogData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228432F10019B0068CEFC /* LogData.swift */; };
+		23E228462F1001A20068CEFC /* ExerciseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228452F1001A20068CEFC /* ExerciseData.swift */; };
+		23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228472F1079110068CEFC /* GameStyleSettingsComponents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,9 +78,6 @@
 		106 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		107 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		108 /* LogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
-		109 /* QuestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStore.swift; sourceTree = "<group>"; };
-		110 /* ItemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemStore.swift; sourceTree = "<group>"; };
-		111 /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
 		112 /* QuestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsView.swift; sourceTree = "<group>"; };
 		113 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		114 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
@@ -87,17 +85,13 @@
 		23D297F92F08D94400C1B539 /* PixelQuest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PixelQuest.entitlements; sourceTree = "<group>"; };
 		23D298002F08F1E100C1B539 /* GymDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymDetailView.swift; sourceTree = "<group>"; };
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
-		23D298042F08F23200C1B539 /* ExerciseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseStore.swift; sourceTree = "<group>"; };
-		23D298062F08F23C00C1B539 /* SleepStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepStore.swift; sourceTree = "<group>"; };
 		23D298082F08F24B00C1B539 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		23D2980A2F08F25600C1B539 /* SleepEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepEntry.swift; sourceTree = "<group>"; };
 		23D2980C2F08F26600C1B539 /* Font+Pixel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Pixel.swift"; sourceTree = "<group>"; };
 		23D2980F2F08F28C00C1B539 /* VT323-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "VT323-Regular.ttf"; sourceTree = "<group>"; };
 		23D298142F08F2B600C1B539 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
-		23D298172F08F2D000C1B539 /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 		23D2981C2F090DC600C1B539 /* BookEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookEntry.swift; sourceTree = "<group>"; };
 		23D2981E2F090DD000C1B539 /* FinanceEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceEntry.swift; sourceTree = "<group>"; };
-		23D298202F090DED00C1B539 /* BookStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStore.swift; sourceTree = "<group>"; };
 		23D298222F090E0900C1B539 /* AddBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookView.swift; sourceTree = "<group>"; };
 		23D298242F090E1700C1B539 /* BookDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailView.swift; sourceTree = "<group>"; };
 		23D298262F090E7E00C1B539 /* CompanyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDetailView.swift; sourceTree = "<group>"; };
@@ -128,6 +122,15 @@
 		23D2986B2F0E1C8D00C1B539 /* QuestLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestLogView.swift; sourceTree = "<group>"; };
 		23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataItemStore.swift; sourceTree = "<group>"; };
 		23E228352F0EA0020068CEFC /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
+		23E228372F1001590068CEFC /* SwiftDataSleepStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataSleepStore.swift; sourceTree = "<group>"; };
+		23E228392F1001600068CEFC /* SwiftDataQuestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataQuestStore.swift; sourceTree = "<group>"; };
+		23E2283B2F10016A0068CEFC /* SwiftDataLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataLogStore.swift; sourceTree = "<group>"; };
+		23E2283D2F1001740068CEFC /* SwiftDataExerciseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataExerciseStore.swift; sourceTree = "<group>"; };
+		23E2283F2F1001800068CEFC /* SwiftDataBookStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataBookStore.swift; sourceTree = "<group>"; };
+		23E228412F1001940068CEFC /* SleepData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepData.swift; sourceTree = "<group>"; };
+		23E228432F10019B0068CEFC /* LogData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogData.swift; sourceTree = "<group>"; };
+		23E228452F1001A20068CEFC /* ExerciseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseData.swift; sourceTree = "<group>"; };
+		23E228472F1079110068CEFC /* GameStyleSettingsComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStyleSettingsComponents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +138,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2338B5DF2F051CBA0099E70B /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +220,9 @@
 		23D298512F0C0BA800C1B539 /* SwiftData */ = {
 			isa = PBXGroup;
 			children = (
+				23E228452F1001A20068CEFC /* ExerciseData.swift */,
+				23E228432F10019B0068CEFC /* LogData.swift */,
+				23E228412F1001940068CEFC /* SleepData.swift */,
 				23D2984D2F0C0BA800C1B539 /* BookData.swift */,
 				23D2984E2F0C0BA800C1B539 /* FinanceData.swift */,
 				23D298502F0C0BA800C1B539 /* QuestData.swift */,
@@ -249,7 +254,6 @@
 			children = (
 				23D2983A2F0BE43B00C1B539 /* Resources */,
 				23D298352F0BE41400C1B539 /* Managers */,
-				23D298172F08F2D000C1B539 /* SupabaseConfig.swift */,
 				23D298152F08F2B600C1B539 /* Services */,
 				23D298102F08F28C00C1B539 /* Fonts */,
 				23D2980D2F08F26600C1B539 /* Extensions */,
@@ -296,15 +300,14 @@
 		304 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				23E2283F2F1001800068CEFC /* SwiftDataBookStore.swift */,
+				23E2283D2F1001740068CEFC /* SwiftDataExerciseStore.swift */,
+				23E2283B2F10016A0068CEFC /* SwiftDataLogStore.swift */,
+				23E228392F1001600068CEFC /* SwiftDataQuestStore.swift */,
+				23E228372F1001590068CEFC /* SwiftDataSleepStore.swift */,
 				23D2986F2F0E7C9F00C1B539 /* SwiftDataItemStore.swift */,
 				23D298562F0C0BE700C1B539 /* SwiftDataFinanceStore.swift */,
 				23D2982C2F090E9D00C1B539 /* FinanceStore.swift */,
-				23D298202F090DED00C1B539 /* BookStore.swift */,
-				23D298062F08F23C00C1B539 /* SleepStore.swift */,
-				23D298042F08F23200C1B539 /* ExerciseStore.swift */,
-				109 /* QuestStore.swift */,
-				110 /* ItemStore.swift */,
-				111 /* LogStore.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 		310 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				23E228472F1079110068CEFC /* GameStyleSettingsComponents.swift */,
 				23D298652F0D632D00C1B539 /* CharacterStatusView.swift */,
 				115 /* SettingsView.swift */,
 			);
@@ -421,7 +425,6 @@
 			);
 			mainGroup = 300;
 			packageReferences = (
-				2338B5DA2F05176A0099E70B /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			productRefGroup = 302 /* Products */;
 			projectDirPath = "";
@@ -459,9 +462,11 @@
 				005 /* Quest.swift in Sources */,
 				23D2985D2F0D31EA00C1B539 /* AssetTab.swift in Sources */,
 				23D298292F090E8800C1B539 /* LibraryDetailView.swift in Sources */,
+				23E2283E2F1001740068CEFC /* SwiftDataExerciseStore.swift in Sources */,
 				23D2986C2F0E1C8D00C1B539 /* QuestLogView.swift in Sources */,
-				23D298182F08F2D000C1B539 /* SupabaseConfig.swift in Sources */,
 				23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */,
+				23E228422F1001940068CEFC /* SleepData.swift in Sources */,
+				23E2283A2F1001600068CEFC /* SwiftDataQuestStore.swift in Sources */,
 				23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */,
 				23D298232F090E0900C1B539 /* AddBookView.swift in Sources */,
 				23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */,
@@ -472,22 +477,21 @@
 				23D298532F0C0BA800C1B539 /* BookData.swift in Sources */,
 				23D298682F0D634A00C1B539 /* PlayerStatsService.swift in Sources */,
 				23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */,
+				23E228442F10019B0068CEFC /* LogData.swift in Sources */,
 				23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */,
 				23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */,
+				23E228382F1001590068CEFC /* SwiftDataSleepStore.swift in Sources */,
+				23E228462F1001A20068CEFC /* ExerciseData.swift in Sources */,
 				23D2982D2F090E9D00C1B539 /* FinanceStore.swift in Sources */,
 				23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */,
 				23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */,
 				007 /* Location.swift in Sources */,
 				23D298662F0D632D00C1B539 /* CharacterStatusView.swift in Sources */,
 				008 /* LogEntry.swift in Sources */,
-				009 /* QuestStore.swift in Sources */,
 				23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */,
-				23D298212F090DED00C1B539 /* BookStore.swift in Sources */,
 				23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */,
-				010 /* ItemStore.swift in Sources */,
 				23D298592F0D304600C1B539 /* AssetData.swift in Sources */,
 				23D298312F0A9C2A00C1B539 /* QuickEntrySheet.swift in Sources */,
-				011 /* LogStore.swift in Sources */,
 				012 /* QuestsView.swift in Sources */,
 				23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */,
 				013 /* MapView.swift in Sources */,
@@ -495,15 +499,16 @@
 				23D2981F2F090DD000C1B539 /* FinanceEntry.swift in Sources */,
 				23D298252F090E1700C1B539 /* BookDetailView.swift in Sources */,
 				23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */,
-				23D298052F08F23200C1B539 /* ExerciseStore.swift in Sources */,
+				23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */,
+				23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */,
 				23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */,
 				014 /* ItemsView.swift in Sources */,
 				23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */,
+				23E228402F1001800068CEFC /* SwiftDataBookStore.swift in Sources */,
 				015 /* SettingsView.swift in Sources */,
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,
-				23D298072F08F23C00C1B539 /* SleepStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -741,25 +746,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2338B5DA2F05176A0099E70B /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2338B5DE2F051CBA0099E70B /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2338B5DA2F05176A0099E70B /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 600 /* Project object */;
 }

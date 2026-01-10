@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AddBookView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var bookStore: BookStore
+    @EnvironmentObject var bookStore: SwiftDataBookStore
     
     @State private var title = ""
     @State private var author = ""
@@ -154,15 +154,22 @@ struct AddBookView: View {
     
     func saveBook() {
         isSaving = true
-        Task {
-            await bookStore.addBook(
-                title: title,
-                author: author,
-                status: status,
-                rating: rating,
-                coverColor: coverColor
-            )
-            dismiss()
+        
+        // Convert ReadingStatus enum to status string expected by SwiftDataBookStore
+        let statusString: String
+        switch status {
+        case .reading: statusString = "reading"
+        case .finished: statusString = "finished"
+        case .wantToRead: statusString = "wishlist"
         }
+        
+        bookStore.addBook(
+            title: title,
+            author: author,
+            status: statusString,
+            rating: rating,
+            coverIcon: "book.fill"
+        )
+        dismiss()
     }
 }

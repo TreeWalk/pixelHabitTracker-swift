@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct CharacterStatusView: View {
-    @EnvironmentObject var questStore: QuestStore
-    @EnvironmentObject var bookStore: BookStore
-    @EnvironmentObject var exerciseStore: ExerciseStore
+    @EnvironmentObject var questStore: SwiftDataQuestStore
+    @EnvironmentObject var bookStore: SwiftDataBookStore
+    @EnvironmentObject var exerciseStore: SwiftDataExerciseStore
     @EnvironmentObject var financeStore: SwiftDataFinanceStore
     @EnvironmentObject var itemStore: SwiftDataItemStore
     
@@ -110,7 +110,7 @@ struct CharacterStatusView: View {
                         // 进度
                         RoundedRectangle(cornerRadius: 2)
                             .fill(Color("PixelBlue"))
-                            .frame(width: geometry.size.width * statsService.xpProgress, height: 12)
+                            .frame(width: max(0, geometry.size.width * statsService.xpProgress), height: 12)
                     }
                 }
                 .frame(height: 12)
@@ -130,40 +130,54 @@ struct CharacterStatusView: View {
                 .foregroundColor(Color("PixelBorder"))
                 .frame(maxWidth: .infinity, alignment: .leading)
             
+            // 五行属性面板 - Five Elements Stats Panel
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 12) {
+                // 火 (Fire) - 运动/力量
                 StatCard(
                     icon: "flame.fill",
-                    name: "STR",
+                    name: "火",
                     value: statsService.strength,
                     color: Color("PixelRed"),
-                    description: "character_str_desc".localized
+                    description: "character_fire_desc".localized
                 )
                 
+                // 木 (Wood) - 阅读/智力
                 StatCard(
                     icon: "leaf.fill",
-                    name: "INT",
+                    name: "木",
                     value: statsService.intelligence,
                     color: Color("PixelGreen"),
-                    description: "character_int_desc".localized
+                    description: "character_wood_desc".localized
                 )
                 
+                // 水 (Water) - 睡眠/活力
                 StatCard(
                     icon: "drop.fill",
-                    name: "VIT",
+                    name: "水",
                     value: statsService.vitality,
                     color: Color("PixelBlue"),
-                    description: "character_vit_desc".localized
+                    description: "character_water_desc".localized
                 )
                 
+                // 金 (Metal) - 理财/财富
                 StatCard(
                     icon: "circle.hexagongrid.fill",
-                    name: "GOLD",
+                    name: "金",
                     value: statsService.wealth,
                     color: Color("PixelAccent"),
-                    description: "character_gold_desc".localized
+                    description: "character_metal_desc".localized
+                )
+                
+                // 土 (Earth) - 习惯基石 (跨两列显示)
+                StatCard(
+                    icon: "mountain.2.fill",
+                    name: "土",
+                    value: statsService.totalQuests,
+                    color: Color("PixelWood"),
+                    description: "character_earth_desc".localized
                 )
             }
         }
@@ -316,54 +330,28 @@ struct InventoryDataSlot: View {
 
 struct SystemSettingsSheet: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject private var localizationManager = LocalizationManager.shared
     
     var body: some View {
         NavigationView {
-            ZStack {
-                Color("PixelBg").ignoresSafeArea()
-                
-                VStack(spacing: 20) {
-                    // Language Picker
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("settings_language".localized)
-                            .font(.pixel(16))
-                            .foregroundColor(Color("PixelBorder"))
-                        
-                        Picker("settings_language".localized, selection: $localizationManager.currentLanguage) {
-                            Text("language_english".localized).tag("en")
-                            Text("language_chinese".localized).tag("zh-Hans")
+            SettingsView()
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("done".localized) {
+                            dismiss()
                         }
-                        .pickerStyle(.segmented)
+                        .font(.pixel(16))
                     }
-                    .padding()
-                    .background(Color.white)
-                    .pixelBorderSmall()
-                    
-                    Spacer()
                 }
-                .padding()
-            }
-            .navigationTitle("character_system_settings".localized)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("done".localized) {
-                        dismiss()
-                    }
-                    .font(.pixel(16))
-                }
-            }
         }
     }
 }
 
 #Preview {
     CharacterStatusView()
-        .environmentObject(QuestStore())
-        .environmentObject(BookStore())
-        .environmentObject(ExerciseStore())
+        .environmentObject(SwiftDataQuestStore())
+        .environmentObject(SwiftDataBookStore())
+        .environmentObject(SwiftDataExerciseStore())
         .environmentObject(SwiftDataFinanceStore())
-        .environmentObject(ItemStore())
+        .environmentObject(SwiftDataItemStore())
 }
 

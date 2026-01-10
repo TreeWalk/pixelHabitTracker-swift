@@ -2,12 +2,12 @@ import SwiftUI
 
 struct GymDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var exerciseStore: ExerciseStore
+    @EnvironmentObject var exerciseStore: SwiftDataExerciseStore
     @EnvironmentObject var healthKitManager: HealthKitManager
     @EnvironmentObject var localizationManager: LocalizationManager
     let location: Location
     
-    @State private var selectedType: ExerciseEntry.ExerciseType = .running
+    @State private var selectedType: ExerciseType = .running
     @State private var duration: Int = 30
     @State private var calories: Int = 200
     @State private var isSaving = false
@@ -92,7 +92,7 @@ struct GymDetailView: View {
                                     
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 10) {
-                                            ForEach(ExerciseEntry.ExerciseType.allCases, id: \.self) { type in
+                                            ForEach(ExerciseType.allCases, id: \.self) { type in
                                                 Button(action: { selectedType = type }) {
                                                     VStack(spacing: 6) {
                                                         Image(systemName: type.icon)
@@ -304,18 +304,14 @@ struct GymDetailView: View {
             }
         }
         .onAppear {
-            Task {
-                await exerciseStore.fetchEntries()
-            }
+            // Data is loaded automatically on configure
         }
     }
     
     func saveExercise() {
         isSaving = true
-        Task {
-            await exerciseStore.addEntry(type: selectedType, duration: duration, calories: calories)
-            isSaving = false
-        }
+        exerciseStore.addEntry(type: selectedType, duration: duration, calories: calories)
+        isSaving = false
     }
     
     func formatDuration(_ minutes: Int) -> String {
@@ -371,12 +367,17 @@ struct ExerciseStatCard: View {
 // MARK: - Exercise Entry Row
 
 struct ExerciseEntryRow: View {
-    let entry: ExerciseEntry
+    let entry: ExerciseEntryData
+    
+    // Convert String type to ExerciseType enum
+    private var exerciseType: ExerciseType {
+        ExerciseType(rawValue: entry.type) ?? .running
+    }
     
     var body: some View {
         HStack(spacing: 12) {
             // Type Icon
-            Image(systemName: entry.type.icon)
+            Image(systemName: exerciseType.icon)
                 .font(.system(size: 24))
                 .foregroundColor(Color("PixelBlue"))
                 .frame(width: 44, height: 44)
@@ -385,7 +386,7 @@ struct ExerciseEntryRow: View {
             
             // Details
             VStack(alignment: .leading, spacing: 4) {
-                Text(entry.type.rawValue)
+                Text(exerciseType.rawValue)
                     .font(.pixel(16))
                     .foregroundColor(Color("PixelBorder"))
                 

@@ -15,7 +15,20 @@
 
 /* Settings */
 "settings_title" = "SETTINGS";
+"settings_subtitle" = "Customize your game";
 "settings_language" = "Language";
+"settings_game" = "Game Settings";
+"settings_sound" = "Sound Effects";
+"settings_notifications" = "Notifications";
+"settings_data" = "Data Management";
+"settings_export" = "Export Data";
+"settings_export_desc" = "Save to local";
+"settings_reset" = "Reset Data";
+"settings_reset_desc" = "Clear all progress";
+"settings_about" = "About";
+"settings_rate" = "Rate App";
+"settings_help" = "Help & Feedback";
+"settings_version" = "Version";
 "settings_work_in_progress" = "WORK IN PROGRESS...";
 "language_english" = "English";
 "language_chinese" = "中文";
@@ -185,11 +198,12 @@
 /* Character Status */
 "character_adventurer" = "Adventurer";
 "character_title" = "Explorer";
-"character_stats" = "STATS";
-"character_str_desc" = "From weekly exercise";
-"character_int_desc" = "From reading books";
-"character_vit_desc" = "From quest completion";
-"character_gold_desc" = "From net worth";
+"character_stats" = "FIVE ELEMENTS";
+"character_fire_desc" = "From weekly exercise";
+"character_wood_desc" = "From reading books";
+"character_water_desc" = "From quest completion";
+"character_metal_desc" = "From net worth";
+"character_earth_desc" = "From completed quests";
 "character_inventory" = "INVENTORY";
 "character_inventory_hint" = "Collect items from your quests";
 "character_system_settings" = "System Settings";
