@@ -24,6 +24,16 @@ enum ElementType: String, CaseIterable {
         }
     }
     
+    var pixelIcon: String {
+        switch self {
+        case .fire: return "pixel_strength"
+        case .wood: return "pixel_book"
+        case .water: return "pixel_sleep"
+        case .metal: return "pixel_money"
+        case .earth: return "pixel_todo"
+        }
+    }
+    
     var color: Color {
         switch self {
         case .fire: return Color("PixelRed")
@@ -57,20 +67,11 @@ struct FiveElementCard: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack(alignment: .center, spacing: 12) {
-                // Pixel icon container (square, no rounded corners)
-                ZStack {
-                    Rectangle()
-                        .fill(element.color.opacity(0.2))
-                        .frame(width: 48, height: 48)
-                    
-                    Image(systemName: element.icon)
-                        .foregroundStyle(element.color)
-                        .font(.title2)
-                }
-                .overlay(
-                    Rectangle()
-                        .stroke(element.color.opacity(0.5), lineWidth: 2)
-                )
+                // Pixel icon - no background container
+                Image(element.pixelIcon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 36, height: 36)
                 
                 // Content
                 VStack(alignment: .leading, spacing: 6) {

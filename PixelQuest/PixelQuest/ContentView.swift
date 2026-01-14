@@ -70,24 +70,24 @@ struct ContentView: View {
                         }
                     }
                 
-                // Sub-menu buttons
+                // Sub-menu buttons with pixel icons
                 VStack(spacing: 20) {
                     HStack(spacing: 30) {
-                        fabActionButton(icon: "moon.fill", color: .blue, label: "Sleep") {
+                        fabActionButton(pixelIcon: "pixel_sleep", color: .blue, label: "Sleep") {
                             showSleepSheet = true
                             isFabMenuOpen = false
                         }
-                        fabActionButton(icon: "figure.run", color: .red, label: "Sport") {
+                        fabActionButton(pixelIcon: "pixel_strength", color: .red, label: "Sport") {
                             showSportSheet = true
                             isFabMenuOpen = false
                         }
                     }
                     HStack(spacing: 30) {
-                        fabActionButton(icon: "book.fill", color: .green, label: "Read") {
+                        fabActionButton(pixelIcon: "pixel_book", color: .green, label: "Read") {
                             showReadSheet = true
                             isFabMenuOpen = false
                         }
-                        fabActionButton(icon: "yensign.circle.fill", color: .orange, label: "Bill") {
+                        fabActionButton(pixelIcon: "pixel_money", color: .orange, label: "Bill") {
                             showBillSheet = true
                             isFabMenuOpen = false
                         }
@@ -97,7 +97,7 @@ struct ContentView: View {
                 .opacity(isFabMenuOpen ? 1 : 0)
             }
             
-            // Main FAB Button
+            // Main FAB Button (Pixel Style)
             Button(action: {
                 Self.hapticGenerator.impactOccurred()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -109,7 +109,11 @@ struct ContentView: View {
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color("PixelAccent"))
-                    .clipShape(Circle())
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color(red: 0.15, green: 0.15, blue: 0.15), lineWidth: 3)
+                    )
                     .shadow(color: Color("PixelAccent").opacity(0.4), radius: 8, y: 4)
                     .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
             }
@@ -140,18 +144,24 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - FAB Action Button
-    private func fabActionButton(icon: String, color: Color, label: String, action: @escaping () -> Void) -> some View {
+    // MARK: - FAB Action Button (Pixel Style)
+    private func fabActionButton(pixelIcon: String, color: Color, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 8) {
                 ZStack {
-                    Circle()
+                    // Pixel-style rounded rectangle with black border (NES controller style)
+                    RoundedRectangle(cornerRadius: 6)
                         .fill(color)
                         .frame(width: 56, height: 56)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color(red: 0.15, green: 0.15, blue: 0.15), lineWidth: 3)
+                        )
                     
-                    Image(systemName: icon)
-                        .font(.system(size: 24))
-                        .foregroundStyle(.white)
+                    Image(pixelIcon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
                 }
                 
                 Text(label)
