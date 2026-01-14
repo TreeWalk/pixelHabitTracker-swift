@@ -9,15 +9,17 @@ class SwiftDataQuestStore: ObservableObject {
     @Published var questLog: [QuestLogData] = []
     @Published var isLoading = false
     @Published var error: String?
-    
+
     // MARK: - Cached Statistics (Performance Optimization)
+    @Published private(set) var activeQuests: [QuestData] = []
+    @Published private(set) var completedQuests: [QuestData] = []
     private(set) var cachedStreak: Int = 0
     private(set) var cachedHeatmapData: [Date: Int] = [:]
     private(set) var cachedTypeDistribution: [String: Int] = [:]
     
     // MARK: - Configure
-    
-    func configure(modelContext: ModelContext) {
+
+    func configure(modelContext: ModelContext) async {
         self.modelContext = modelContext
         loadData()
     }
@@ -30,13 +32,16 @@ class SwiftDataQuestStore: ObservableObject {
         do {
             let questDescriptor = FetchDescriptor<QuestData>(sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
             quests = try context.fetch(questDescriptor)
-            
+
             let logDescriptor = FetchDescriptor<QuestLogData>(sortBy: [SortDescriptor(\.completedAt, order: .reverse)])
             questLog = try context.fetch(logDescriptor)
-            
+
+            // Update cached quest lists
+            updateQuestLists()
+
             // Rebuild cache after data is loaded (async to not block main thread)
-            Task { @MainActor in
-                rebuildCache()
+            Task.detached { @MainActor [weak self] in
+                await self?.rebuildCacheAsync()
             }
         } catch {
             self.error = "加载任务失败: \(error.localizedDescription)"
@@ -44,15 +49,7 @@ class SwiftDataQuestStore: ObservableObject {
     }
     
     // MARK: - Computed Properties
-    
-    var activeQuests: [QuestData] {
-        quests.filter { !$0.completed }
-    }
-    
-    var completedQuests: [QuestData] {
-        quests.filter { $0.completed }
-    }
-    
+
     var totalGold: Int {
         quests.filter { $0.completed }.reduce(0) { $0 + $1.xp }
     }
@@ -97,7 +94,7 @@ class SwiftDataQuestStore: ObservableObject {
     func toggleQuest(_ quest: QuestData) {
         let wasCompleted = quest.completed
         quest.completed.toggle()
-        
+
         if !wasCompleted, let context = modelContext {
             let log = QuestLogData(
                 questTitle: quest.title,
@@ -107,44 +104,79 @@ class SwiftDataQuestStore: ObservableObject {
             context.insert(log)
             questLog.insert(log, at: 0)
         }
-        
+
         try? modelContext?.save()
+
+        // Update cached lists
+        updateQuestLists()
     }
-    
+
     func addQuest(title: String, xp: Int, type: String, recurrence: String = "daily") {
         guard let context = modelContext else { return }
-        
+
         let quest = QuestData(title: title, xp: xp, type: type, recurrence: recurrence)
         context.insert(quest)
         quests.insert(quest, at: 0)
-        
+
         try? context.save()
+
+        // Update cached lists
+        updateQuestLists()
     }
-    
+
     func deleteQuest(_ quest: QuestData) {
         guard let context = modelContext else { return }
-        
+
         context.delete(quest)
         quests.removeAll { $0.title == quest.title }
-        
+
         try? context.save()
+
+        // Update cached lists
+        updateQuestLists()
     }
-    
+
     func resetQuests() {
         for quest in quests {
             quest.completed = false
         }
         try? modelContext?.save()
+
+        // Update cached lists
+        updateQuestLists()
+    }
+
+    // MARK: - Cache Management
+
+    private func updateQuestLists() {
+        activeQuests = quests.filter { !$0.completed }
+        completedQuests = quests.filter { $0.completed }
     }
     
     // MARK: - Cache Rebuild
-    
-    private func rebuildCache() {
-        cachedStreak = calculateStreak()
-        cachedHeatmapData = calculateHeatmapData()
-        cachedTypeDistribution = calculateTypeDistribution()
+
+    private func rebuildCacheAsync() async {
+        // Run heavy calculations in background
+        let streak = await Task.detached {
+            await self.calculateStreak()
+        }.value
+
+        let heatmap = await Task.detached {
+            await self.calculateHeatmapData()
+        }.value
+
+        let distribution = await Task.detached {
+            await self.calculateTypeDistribution()
+        }.value
+
+        // Update on main actor
+        await MainActor.run {
+            self.cachedStreak = streak
+            self.cachedHeatmapData = heatmap
+            self.cachedTypeDistribution = distribution
+        }
     }
-    
+
     private func calculateStreak() -> Int {
         let calendar = Calendar.current
         var streak = 0

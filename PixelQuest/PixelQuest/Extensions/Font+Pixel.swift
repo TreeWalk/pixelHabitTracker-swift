@@ -39,22 +39,24 @@ extension View {
         self.shadow(color: color.opacity(0.15), radius: radius, x: x, y: y)
     }
     
-    /// Applies pixel-style border
+    /// Applies pixel-style border (optimized for performance)
     func pixelBorder(color: Color = Color("PixelBorder"), lineWidth: CGFloat = 4) -> some View {
         self
             .overlay(
                 Rectangle()
                     .stroke(color, lineWidth: lineWidth)
             )
+            .compositingGroup()
     }
-    
-    /// Applies pixel-style small border
+
+    /// Applies pixel-style small border (optimized for performance)
     func pixelBorderSmall(color: Color = Color("PixelBorder")) -> some View {
         self
             .overlay(
                 Rectangle()
                     .stroke(color, lineWidth: 2)
             )
+            .compositingGroup()
     }
 }
 

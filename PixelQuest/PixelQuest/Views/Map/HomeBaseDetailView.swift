@@ -286,7 +286,7 @@ struct HomeBaseDetailView: View {
     
     func saveSleep() {
         isSaving = true
-        Task {
+        Task { @MainActor in
             // 如果有同步的数据，使用同步的数据
             if let sleepData = syncedSleepData {
                 await sleepStore.addEntryWithHealthKitData(
@@ -305,10 +305,10 @@ struct HomeBaseDetailView: View {
             isSaving = false
         }
     }
-    
+
     func syncFromHealthKit() {
         isSyncing = true
-        Task {
+        Task { @MainActor in
             // 先请求授权
             let authorized = await healthKitManager.requestAuthorization()
             guard authorized else {

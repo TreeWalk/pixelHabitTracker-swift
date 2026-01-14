@@ -11,7 +11,7 @@ class SwiftDataLogStore: ObservableObject {
     
     // MARK: - Configure
     
-    func configure(modelContext: ModelContext) {
+    func configure(modelContext: ModelContext) async {
         self.modelContext = modelContext
         loadData()
     }

@@ -66,6 +66,14 @@
 		23E228442F10019B0068CEFC /* LogData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228432F10019B0068CEFC /* LogData.swift */; };
 		23E228462F1001A20068CEFC /* ExerciseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228452F1001A20068CEFC /* ExerciseData.swift */; };
 		23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228472F1079110068CEFC /* GameStyleSettingsComponents.swift */; };
+		23E2284C2F1257B70068CEFC /* FiveElementCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2284A2F1257B70068CEFC /* FiveElementCard.swift */; };
+		23E2284D2F1257B70068CEFC /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228492F1257B70068CEFC /* DashboardView.swift */; };
+		23E228512F1257C20068CEFC /* WorldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2284F2F1257C20068CEFC /* WorldView.swift */; };
+		23E228552F1257D70068CEFC /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228532F1257D70068CEFC /* AssetsView.swift */; };
+		23E2285A2F129D6C0068CEFC /* QuickReadSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228572F129D6C0068CEFC /* QuickReadSheet.swift */; };
+		23E2285B2F129D6C0068CEFC /* QuickExerciseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */; };
+		23E2285C2F129D6C0068CEFC /* QuickSleepSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */; };
+		23E228612F129DD50068CEFC /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228602F129DD50068CEFC /* SplashView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,6 +139,14 @@
 		23E228432F10019B0068CEFC /* LogData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogData.swift; sourceTree = "<group>"; };
 		23E228452F1001A20068CEFC /* ExerciseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseData.swift; sourceTree = "<group>"; };
 		23E228472F1079110068CEFC /* GameStyleSettingsComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStyleSettingsComponents.swift; sourceTree = "<group>"; };
+		23E228492F1257B70068CEFC /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		23E2284A2F1257B70068CEFC /* FiveElementCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveElementCard.swift; sourceTree = "<group>"; };
+		23E2284F2F1257C20068CEFC /* WorldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldView.swift; sourceTree = "<group>"; };
+		23E228532F1257D70068CEFC /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
+		23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickExerciseSheet.swift; sourceTree = "<group>"; };
+		23E228572F129D6C0068CEFC /* QuickReadSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickReadSheet.swift; sourceTree = "<group>"; };
+		23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSleepSheet.swift; sourceTree = "<group>"; };
+		23E228602F129DD50068CEFC /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +255,41 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		23E2284B2F1257B70068CEFC /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				23E228492F1257B70068CEFC /* DashboardView.swift */,
+				23E2284A2F1257B70068CEFC /* FiveElementCard.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		23E228502F1257C20068CEFC /* World */ = {
+			isa = PBXGroup;
+			children = (
+				23E2284F2F1257C20068CEFC /* WorldView.swift */,
+			);
+			path = World;
+			sourceTree = "<group>";
+		};
+		23E228542F1257D70068CEFC /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				23E228532F1257D70068CEFC /* AssetsView.swift */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		23E228592F129D6C0068CEFC /* QuickEntry */ = {
+			isa = PBXGroup;
+			children = (
+				23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */,
+				23E228572F129D6C0068CEFC /* QuickReadSheet.swift */,
+				23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */,
+			);
+			path = QuickEntry;
+			sourceTree = "<group>";
+		};
 		300 = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +366,11 @@
 		305 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				23E228602F129DD50068CEFC /* SplashView.swift */,
+				23E228592F129D6C0068CEFC /* QuickEntry */,
+				23E228542F1257D70068CEFC /* Assets */,
+				23E228502F1257C20068CEFC /* World */,
+				23E2284B2F1257B70068CEFC /* Dashboard */,
 				23D298632F0D36EE00C1B539 /* Components */,
 				307 /* Quests */,
 				308 /* Map */,
@@ -407,7 +463,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					400 = {
 						CreatedOnToolsVersion = 15.0;
@@ -471,6 +527,8 @@
 				23D298232F090E0900C1B539 /* AddBookView.swift in Sources */,
 				23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */,
 				23D2981D2F090DC600C1B539 /* BookEntry.swift in Sources */,
+				23E2284C2F1257B70068CEFC /* FiveElementCard.swift in Sources */,
+				23E2284D2F1257B70068CEFC /* DashboardView.swift in Sources */,
 				006 /* Item.swift in Sources */,
 				23D2986A2F0E18A400C1B539 /* PixelDatePicker.swift in Sources */,
 				23D298162F08F2B600C1B539 /* HealthKitManager.swift in Sources */,
@@ -480,6 +538,7 @@
 				23E228442F10019B0068CEFC /* LogData.swift in Sources */,
 				23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */,
 				23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */,
+				23E228512F1257C20068CEFC /* WorldView.swift in Sources */,
 				23E228382F1001590068CEFC /* SwiftDataSleepStore.swift in Sources */,
 				23E228462F1001A20068CEFC /* ExerciseData.swift in Sources */,
 				23D2982D2F090E9D00C1B539 /* FinanceStore.swift in Sources */,
@@ -490,6 +549,9 @@
 				008 /* LogEntry.swift in Sources */,
 				23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */,
 				23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */,
+				23E2285A2F129D6C0068CEFC /* QuickReadSheet.swift in Sources */,
+				23E2285B2F129D6C0068CEFC /* QuickExerciseSheet.swift in Sources */,
+				23E2285C2F129D6C0068CEFC /* QuickSleepSheet.swift in Sources */,
 				23D298592F0D304600C1B539 /* AssetData.swift in Sources */,
 				23D298312F0A9C2A00C1B539 /* QuickEntrySheet.swift in Sources */,
 				012 /* QuestsView.swift in Sources */,
@@ -497,6 +559,7 @@
 				013 /* MapView.swift in Sources */,
 				23D2985F2F0D31F300C1B539 /* AssetUpdateSheet.swift in Sources */,
 				23D2981F2F090DD000C1B539 /* FinanceEntry.swift in Sources */,
+				23E228552F1257D70068CEFC /* AssetsView.swift in Sources */,
 				23D298252F090E1700C1B539 /* BookDetailView.swift in Sources */,
 				23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */,
 				23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */,
@@ -509,6 +572,7 @@
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,
+				23E228612F129DD50068CEFC /* SplashView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,6 +612,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -578,6 +643,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SXY294L37Q;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -601,6 +667,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -611,6 +678,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -641,6 +709,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SXY294L37Q;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -657,6 +726,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -671,7 +741,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PixelQuest/Preview Content\"";
-				DEVELOPMENT_TEAM = SXY294L37Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PixelQuest/Info.plist;
@@ -702,7 +771,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PixelQuest/Preview Content\"";
-				DEVELOPMENT_TEAM = SXY294L37Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PixelQuest/Info.plist;

@@ -15,273 +15,272 @@ struct GymDetailView: View {
     @State private var syncedWorkouts: [WorkoutData] = []
     
     var body: some View {
-        GeometryReader { geometry in
-            let contentWidth = geometry.size.width - 32
-            
-            ZStack {
-                Color("PixelBg").ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Banner
-                        if let banner = location.banner {
-                            Image(banner)
-                                .resizable()
-                                .interpolation(.none)
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: contentWidth, height: 180)
-                                .clipped()
-                                .pixelBorderSmall()
+        ZStack {
+            Color("PixelBg").ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Banner
+                    if let banner = location.banner {
+                        Image(banner)
+                            .resizable()
+                            .interpolation(.none)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 180)
+                            .clipped()
+                            .pixelBorderSmall()
+                            .padding(.horizontal, 16)
+                    }
+
+                    // Exercise Log Section
+                    VStack(spacing: 16) {
+                        // Section Title
+                        HStack(spacing: 8) {
+                            Image(systemName: "dumbbell.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color("PixelBlue"))
+                            Rectangle()
+                                .fill(Color("PixelBlue"))
+                                .frame(width: 4, height: 20)
+                            Text("exercise_log".localized)
+                                .font(.pixel(20))
+                                .foregroundColor(Color("PixelBorder"))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        
+                        // HealthKit Sync Button
+                        Button(action: syncFromHealthKit) {
+                            HStack(spacing: 8) {
+                                if isSyncing {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                } else {
+                                    Image(systemName: "heart.fill")
+                                }
+                                Text(isSyncing ? "sleep_syncing".localized : "sleep_sync_health".localized)
+                                    .font(.pixel(14))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(Color.red.opacity(0.8))
+                            .pixelBorderSmall(color: Color.red)
+                        }
+                        .disabled(isSyncing)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.horizontal, 16)
+                        
+                        // Synced Workouts from HealthKit
+                        if !syncedWorkouts.isEmpty {
+                            VStack(spacing: 8) {
+                                ForEach(syncedWorkouts) { workout in
+                                    HealthKitWorkoutRow(workout: workout)
+                                        .padding(.horizontal, 16)
+                                }
+                            }
                         }
                         
-                        // Exercise Log Section
+                        // Exercise Type Picker
                         VStack(spacing: 16) {
-                            // Section Title
-                            HStack(spacing: 8) {
-                                Image(systemName: "dumbbell.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(Color("PixelBlue"))
-                                Rectangle()
-                                    .fill(Color("PixelBlue"))
-                                    .frame(width: 4, height: 20)
-                                Text("exercise_log".localized)
-                                    .font(.pixel(20))
-                                    .foregroundColor(Color("PixelBorder"))
-                                Spacer()
-                            }
-                            .frame(width: contentWidth, alignment: .leading)
-                            
-                            // HealthKit Sync Button
-                            Button(action: syncFromHealthKit) {
-                                HStack(spacing: 8) {
-                                    if isSyncing {
-                                        ProgressView()
-                                            .scaleEffect(0.8)
-                                    } else {
-                                        Image(systemName: "heart.fill")
-                                    }
-                                    Text(isSyncing ? "sleep_syncing".localized : "sleep_sync_health".localized)
-                                        .font(.pixel(14))
-                                }
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
-                                .background(Color.red.opacity(0.8))
-                                .pixelBorderSmall(color: Color.red)
-                            }
-                            .disabled(isSyncing)
-                            .frame(width: contentWidth, alignment: .trailing)
-                            
-                            // Synced Workouts from HealthKit
-                            if !syncedWorkouts.isEmpty {
-                                VStack(spacing: 8) {
-                                    ForEach(syncedWorkouts) { workout in
-                                        HealthKitWorkoutRow(workout: workout)
-                                            .frame(width: contentWidth)
-                                    }
-                                }
-                            }
-                            
-                            // Exercise Type Picker
-                            VStack(spacing: 16) {
-                                // Type Selection
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("exercise_type".localized)
-                                        .font(.pixel(14))
-                                        .foregroundColor(Color("PixelBorder").opacity(0.7))
-                                    
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        HStack(spacing: 10) {
-                                            ForEach(ExerciseType.allCases, id: \.self) { type in
-                                                Button(action: { selectedType = type }) {
-                                                    VStack(spacing: 6) {
-                                                        Image(systemName: type.icon)
-                                                            .font(.system(size: 20))
-                                                        Text(type.rawValue)
-                                                            .font(.pixel(12))
-                                                    }
-                                                    .foregroundColor(selectedType == type ? .white : Color("PixelBorder"))
-                                                    .padding(.horizontal, 12)
-                                                    .padding(.vertical, 10)
-                                                    .background(selectedType == type ? Color("PixelBlue") : Color.white)
-                                                    .pixelBorderSmall(color: selectedType == type ? Color("PixelBlue") : Color("PixelBorder"))
+                            // Type Selection
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("exercise_type".localized)
+                                    .font(.pixel(14))
+                                    .foregroundColor(Color("PixelBorder").opacity(0.7))
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 10) {
+                                        ForEach(ExerciseType.allCases, id: \.self) { type in
+                                            Button(action: { selectedType = type }) {
+                                                VStack(spacing: 6) {
+                                                    Image(systemName: type.icon)
+                                                        .font(.system(size: 20))
+                                                    Text(type.rawValue)
+                                                        .font(.pixel(12))
                                                 }
+                                                .foregroundColor(selectedType == type ? .white : Color("PixelBorder"))
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 10)
+                                                .background(selectedType == type ? Color("PixelBlue") : Color.white)
+                                                .pixelBorderSmall(color: selectedType == type ? Color("PixelBlue") : Color("PixelBorder"))
                                             }
                                         }
                                     }
                                 }
-                                
-                                Divider()
-                                
-                                // Duration Input
-                                HStack {
-                                    Image(systemName: "timer")
-                                        .foregroundColor(Color("PixelBlue"))
-                                    Text("exercise_duration".localized)
-                                        .font(.pixel(16))
-                                        .foregroundColor(Color("PixelBorder"))
-                                    Spacer()
-                                    
-                                    HStack(spacing: 8) {
-                                        Button(action: { if duration > 5 { duration -= 5 } }) {
-                                            Image(systemName: "minus")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color("PixelBorder"))
-                                                .frame(width: 28, height: 28)
-                                                .background(Color("PixelAccent"))
-                                                .pixelBorderSmall()
-                                        }
-                                        
-                                        Text("\(duration)")
-                                            .font(.pixel(18))
-                                            .foregroundColor(Color("PixelBlue"))
-                                            .frame(width: 50)
-                                        
-                                        Button(action: { duration += 5 }) {
-                                            Image(systemName: "plus")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color("PixelBorder"))
-                                                .frame(width: 28, height: 28)
-                                                .background(Color("PixelAccent"))
-                                                .pixelBorderSmall()
-                                        }
-                                        
-                                        Text("min")
-                                            .font(.pixel(14))
-                                            .foregroundColor(Color("PixelBorder").opacity(0.7))
-                                    }
-                                }
-                                
-                                Divider()
-                                
-                                // Calories Input
-                                HStack {
-                                    Image(systemName: "flame.fill")
-                                        .foregroundColor(Color("PixelRed"))
-                                    Text("exercise_calories".localized)
-                                        .font(.pixel(16))
-                                        .foregroundColor(Color("PixelBorder"))
-                                    Spacer()
-                                    
-                                    HStack(spacing: 8) {
-                                        Button(action: { if calories > 10 { calories -= 10 } }) {
-                                            Image(systemName: "minus")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color("PixelBorder"))
-                                                .frame(width: 28, height: 28)
-                                                .background(Color("PixelAccent"))
-                                                .pixelBorderSmall()
-                                        }
-                                        
-                                        Text("\(calories)")
-                                            .font(.pixel(18))
-                                            .foregroundColor(Color("PixelRed"))
-                                            .frame(width: 60)
-                                        
-                                        Button(action: { calories += 10 }) {
-                                            Image(systemName: "plus")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color("PixelBorder"))
-                                                .frame(width: 28, height: 28)
-                                                .background(Color("PixelAccent"))
-                                                .pixelBorderSmall()
-                                        }
-                                        
-                                        Text("kcal")
-                                            .font(.pixel(14))
-                                            .foregroundColor(Color("PixelBorder").opacity(0.7))
-                                    }
-                                }
                             }
-                            .padding()
-                            .frame(width: contentWidth)
-                            .background(Color.white)
-                            .pixelBorderSmall()
                             
-                            // Save Button
-                            Button(action: saveExercise) {
+                            Divider()
+                            
+                            // Duration Input
+                            HStack {
+                                Image(systemName: "timer")
+                                    .foregroundColor(Color("PixelBlue"))
+                                Text("exercise_duration".localized)
+                                    .font(.pixel(16))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                                
                                 HStack(spacing: 8) {
-                                    if isSaving {
-                                        ProgressView()
-                                            .scaleEffect(0.8)
+                                    Button(action: { if duration > 5 { duration -= 5 } }) {
+                                        Image(systemName: "minus")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color("PixelBorder"))
+                                            .frame(width: 28, height: 28)
+                                            .background(Color("PixelAccent"))
+                                            .pixelBorderSmall()
                                     }
-                                    Image(systemName: "plus.circle.fill")
-                                    Text("exercise_record".localized)
+                                    
+                                    Text("\(duration)")
                                         .font(.pixel(18))
+                                        .foregroundColor(Color("PixelBlue"))
+                                        .frame(width: 50)
+                                    
+                                    Button(action: { duration += 5 }) {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color("PixelBorder"))
+                                            .frame(width: 28, height: 28)
+                                            .background(Color("PixelAccent"))
+                                            .pixelBorderSmall()
+                                    }
+                                    
+                                    Text("min")
+                                        .font(.pixel(14))
+                                        .foregroundColor(Color("PixelBorder").opacity(0.7))
                                 }
-                                .foregroundColor(Color("PixelBorder"))
-                                .frame(width: contentWidth)
-                                .padding(.vertical, 14)
-                                .background(Color("PixelAccent"))
-                                .pixelBorderSmall()
                             }
-                            .disabled(isSaving)
+                            
+                            Divider()
+                            
+                            // Calories Input
+                            HStack {
+                                Image(systemName: "flame.fill")
+                                    .foregroundColor(Color("PixelRed"))
+                                Text("exercise_calories".localized)
+                                    .font(.pixel(16))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                                
+                                HStack(spacing: 8) {
+                                    Button(action: { if calories > 10 { calories -= 10 } }) {
+                                        Image(systemName: "minus")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color("PixelBorder"))
+                                            .frame(width: 28, height: 28)
+                                            .background(Color("PixelAccent"))
+                                            .pixelBorderSmall()
+                                    }
+                                    
+                                    Text("\(calories)")
+                                        .font(.pixel(18))
+                                        .foregroundColor(Color("PixelRed"))
+                                        .frame(width: 60)
+                                    
+                                    Button(action: { calories += 10 }) {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color("PixelBorder"))
+                                            .frame(width: 28, height: 28)
+                                            .background(Color("PixelAccent"))
+                                            .pixelBorderSmall()
+                                    }
+                                    
+                                    Text("kcal")
+                                        .font(.pixel(14))
+                                        .foregroundColor(Color("PixelBorder").opacity(0.7))
+                                }
+                            }
                         }
+                        .padding()
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                        .padding(.horizontal, 16)
+
+                        // Save Button
+                        Button(action: saveExercise) {
+                            HStack(spacing: 8) {
+                                if isSaving {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                }
+                                Image(systemName: "plus.circle.fill")
+                                Text("exercise_record".localized)
+                                    .font(.pixel(18))
+                            }
+                            .foregroundColor(Color("PixelBorder"))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color("PixelAccent"))
+                            .pixelBorderSmall()
+                        }
+                        .disabled(isSaving)
+                        .padding(.horizontal, 16)
+                    }
+
+                    // Weekly Stats Section
+                    VStack(spacing: 16) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "chart.bar.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color("PixelBlue"))
+                            Rectangle()
+                                .fill(Color("PixelBlue"))
+                                .frame(width: 4, height: 20)
+                            Text("exercise_week_stats".localized)
+                                .font(.pixel(20))
+                                .foregroundColor(Color("PixelBorder"))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
                         
-                        // Weekly Stats Section
+                        // Stats Cards
+                        HStack(spacing: 12) {
+                            ExerciseStatCard(
+                                icon: "timer",
+                                value: formatDuration(exerciseStore.weekTotalDuration),
+                                label: "exercise_total_duration".localized,
+                                color: Color("PixelBlue")
+                            )
+                            .frame(maxWidth: .infinity)
+                            
+                            ExerciseStatCard(
+                                icon: "flame.fill",
+                                value: "\(exerciseStore.weekTotalCalories)",
+                                label: "exercise_total_calories".localized,
+                                color: Color("PixelRed")
+                            )
+                            .frame(maxWidth: .infinity)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+
+                    // Today's Records Section
+                    if !exerciseStore.todayEntries.isEmpty {
                         VStack(spacing: 16) {
                             HStack(spacing: 8) {
-                                Image(systemName: "chart.bar.fill")
+                                Image(systemName: "list.bullet")
                                     .font(.system(size: 18))
                                     .foregroundColor(Color("PixelBlue"))
                                 Rectangle()
                                     .fill(Color("PixelBlue"))
                                     .frame(width: 4, height: 20)
-                                Text("exercise_week_stats".localized)
+                                Text("今日记录")
                                     .font(.pixel(20))
                                     .foregroundColor(Color("PixelBorder"))
                                 Spacer()
                             }
-                            .frame(width: contentWidth, alignment: .leading)
+                            .padding(.horizontal, 16)
                             
-                            // Stats Cards
-                            HStack(spacing: 12) {
-                                ExerciseStatCard(
-                                    icon: "timer",
-                                    value: formatDuration(exerciseStore.weekTotalDuration),
-                                    label: "exercise_total_duration".localized,
-                                    color: Color("PixelBlue")
-                                )
-                                .frame(maxWidth: .infinity)
-                                
-                                ExerciseStatCard(
-                                    icon: "flame.fill",
-                                    value: "\(exerciseStore.weekTotalCalories)",
-                                    label: "exercise_total_calories".localized,
-                                    color: Color("PixelRed")
-                                )
-                                .frame(maxWidth: .infinity)
-                            }
-                            .frame(width: contentWidth)
-                        }
-                        
-                        // Today's Records Section
-                        if !exerciseStore.todayEntries.isEmpty {
-                            VStack(spacing: 16) {
-                                HStack(spacing: 8) {
-                                    Image(systemName: "list.bullet")
-                                        .font(.system(size: 18))
-                                        .foregroundColor(Color("PixelBlue"))
-                                    Rectangle()
-                                        .fill(Color("PixelBlue"))
-                                        .frame(width: 4, height: 20)
-                                    Text("今日记录")
-                                        .font(.pixel(20))
-                                        .foregroundColor(Color("PixelBorder"))
-                                    Spacer()
-                                }
-                                .frame(width: contentWidth, alignment: .leading)
-                                
-                                ForEach(exerciseStore.todayEntries) { entry in
-                                    ExerciseEntryRow(entry: entry)
-                                        .frame(width: contentWidth)
-                                }
+                            ForEach(exerciseStore.todayEntries) { entry in
+                                ExerciseEntryRow(entry: entry)
+                                    .padding(.horizontal, 16)
                             }
                         }
                     }
-                    .frame(width: geometry.size.width)
-                    .padding(.vertical, 16)
                 }
+                .padding(.vertical, 16)
             }
         }
         .navigationTitle(location.name)

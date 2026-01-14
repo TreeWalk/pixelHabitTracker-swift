@@ -199,8 +199,8 @@ struct PixelTimePicker: View {
             selectedHour = calendar.component(.hour, from: selection)
             selectedMinute = calendar.component(.minute, from: selection)
         }
-        .onChange(of: selectedHour) { _ in updateSelection() }
-        .onChange(of: selectedMinute) { _ in updateSelection() }
+        .onChange(of: selectedHour) { _, _ in updateSelection() }
+        .onChange(of: selectedMinute) { _, _ in updateSelection() }
     }
     
     private func updateSelection() {
@@ -256,17 +256,17 @@ struct PixelWheelPicker: View {
             }
             .scrollTargetBehavior(.viewAligned)
             .scrollPosition(id: $scrollID)
-            .onChange(of: scrollID) {
-                if let id = scrollID {
+            .onChange(of: scrollID) { _, newValue in
+                if let id = newValue {
                     selection = id
                 }
             }
             .onAppear {
                 scrollID = selection
             }
-            .onChange(of: selection) {
-                if scrollID != selection {
-                    scrollID = selection
+            .onChange(of: selection) { _, newValue in
+                if scrollID != newValue {
+                    scrollID = newValue
                 }
             }
         }

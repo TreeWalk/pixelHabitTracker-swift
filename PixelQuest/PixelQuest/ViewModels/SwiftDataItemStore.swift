@@ -10,8 +10,8 @@ class SwiftDataItemStore: ObservableObject {
     @Published var error: String?
     
     // MARK: - 配置 ModelContext
-    
-    func configure(modelContext: ModelContext) {
+
+    func configure(modelContext: ModelContext) async {
         self.modelContext = modelContext
         loadData()
     }

@@ -18,7 +18,7 @@ class SwiftDataFinanceStore: ObservableObject {
     
     // MARK: - 配置 ModelContext
     
-    func configure(modelContext: ModelContext) {
+    func configure(modelContext: ModelContext) async {
         self.modelContext = modelContext
         loadData()
         initializeDefaultWallets()

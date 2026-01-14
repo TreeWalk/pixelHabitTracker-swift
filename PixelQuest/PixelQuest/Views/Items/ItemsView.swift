@@ -494,7 +494,7 @@ struct AddItemSheet: View {
     let availableIcons = [
         "item_bag", "item_books", "item_car",
         "item_figure", "item_game", "item_green",
-        "item_pc", "item_phone", "item_watch"
+        "item_pc", "item_phone", "item_watch","item_p2s","item_iphone17"
     ]
     
     var body: some View {

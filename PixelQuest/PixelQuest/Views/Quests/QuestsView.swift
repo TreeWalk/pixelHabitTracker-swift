@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AudioToolbox
 
 struct QuestsView: View {
     @EnvironmentObject var questStore: SwiftDataQuestStore
@@ -8,41 +9,51 @@ struct QuestsView: View {
     @State private var showLogSheet = false
     @State private var isCompletedExpanded = true
     
+    // Static haptic generator to avoid recreation on each tap
+    private static let hapticGenerator: UIImpactFeedbackGenerator = {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.prepare()
+        return generator
+    }()
+    
     var body: some View {
         NavigationStack {
-            ZStack {
-                Color("PixelBg").ignoresSafeArea()
-                
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        // Header
-                        headerSection
-                        
-                        Rectangle()
-                            .fill(Color("PixelAccent"))
-                            .frame(height: 4)
-                            .padding(.horizontal)
-                        
-                        // Active Quests
-                        if !questStore.activeQuests.isEmpty {
-                            activeQuestsSection
-                        }
-                        
-                        // Completed Quests
-                        if !questStore.completedQuests.isEmpty {
-                            completedQuestsSection
-                        }
-                        
-                        // Empty State
-                        if questStore.quests.isEmpty {
-                            emptyStateView
-                        }
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    // Header
+                    headerSection
+                    
+                    Rectangle()
+                        .fill(Color("PixelAccent"))
+                        .frame(height: 4)
+                        .padding(.horizontal)
+                    
+                    // Active Quests
+                    if !questStore.activeQuests.isEmpty {
+                        activeQuestsSection
                     }
-                    .padding(.bottom, 100)
+                    
+                    // Completed Quests
+                    if !questStore.completedQuests.isEmpty {
+                        completedQuestsSection
+                    }
+                    
+                    // Empty State
+                    if questStore.quests.isEmpty {
+                        emptyStateView
+                    }
                 }
-                
-                // FAB
-                fabButton
+                .padding(.bottom, 100)
+            }
+            .background(Color("PixelBg"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showAddSheet = true }) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(Color("PixelAccent"))
+                    }
+                }
             }
         }
         .sheet(isPresented: $showAddSheet) {
@@ -152,43 +163,33 @@ struct QuestsView: View {
         .padding(.vertical, 60)
     }
     
-    // MARK: - FAB Button
-    private var fabButton: some View {
-        VStack {
-            Spacer()
-            HStack {
-                Spacer()
-                Button(action: { showAddSheet = true }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
-                        .frame(width: 64, height: 64)
-                        .background(Color("PixelBlue"))
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color("PixelBorder"), lineWidth: 4)
-                        )
-                }
-                .padding(.trailing, 24)
-                .padding(.bottom, 24)
-            }
-        }
-    }
-    
     // MARK: - Toggle with Feedback
     private func toggleQuestWithFeedback(_ quest: QuestData) {
-        let feedback = UIImpactFeedbackGenerator(style: .medium)
-        feedback.impactOccurred()
+        Self.hapticGenerator.impactOccurred()
         questStore.toggleQuest(quest)
     }
 }
 
-// MARK: - Simple Quest Card (Optimized)
+// MARK: - Simple Quest Card (with Long Press Charging)
 struct SimpleQuestCard: View {
     let quest: QuestData
     var isCompleted: Bool = false
     let onToggle: () -> Void
+    
+    // Charging states
+    @State private var isCharging = false
+    @State private var chargeProgress: CGFloat = 0
+    @State private var chargeTimer: Timer?
+    
+    // Completion animation states
+    @State private var isFlashing = false
+    @State private var showFloatingXP = false
+    @State private var floatingXPOffset: CGFloat = 0
+    @State private var floatingXPOpacity: Double = 1
+    
+    // Constants
+    private let chargeDuration: Double = 0.6 // seconds to fully charge
+    private let chargeUpdateInterval: Double = 0.02 // timer interval
     
     private var questType: Quest.QuestType {
         if let type = Quest.QuestType(rawValue: quest.type) {
@@ -199,59 +200,218 @@ struct SimpleQuestCard: View {
     }
     
     var body: some View {
-        Button(action: onToggle) {
-            HStack(spacing: 12) {
-                // Color bar
-                Rectangle()
-                    .fill(Color(questType.color))
-                    .frame(width: 6)
-                
-                // Checkbox
-                ZStack {
-                    Rectangle()
-                        .fill(isCompleted ? Color("PixelGreen") : .white)
-                        .frame(width: 36, height: 36)
-                        .overlay(
-                            Rectangle()
-                                .stroke(Color("PixelBorder"), lineWidth: 3)
-                        )
-                    
+        ZStack(alignment: .topTrailing) {
+            // Main Card
+            cardContent
+                .onTapGesture {
+                    // Tap to uncheck completed quests
                     if isCompleted {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
+                        onToggle()
                     }
                 }
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { _ in
+                            if !isCompleted && !isCharging {
+                                startCharging()
+                            }
+                        }
+                        .onEnded { _ in
+                            stopCharging()
+                        }
+                )
+            
+            // Floating XP Text
+            if showFloatingXP {
+                Text("+\(quest.xp) XP")
+                    .font(.pixel(20))
+                    .foregroundColor(Color("PixelAccent"))
+                    .shadow(color: .white, radius: 2)
+                    .offset(y: floatingXPOffset)
+                    .opacity(floatingXPOpacity)
+                    .padding(.trailing, 16)
+                    .padding(.top, -10)
+            }
+        }
+    }
+    
+    private var cardContent: some View {
+        HStack(spacing: 12) {
+            // Color bar
+            Rectangle()
+                .fill(isCompleted ? Color("PixelGreen") : Color(questType.color))
+                .frame(width: 6)
+            
+            // Checkbox
+            ZStack {
+                Rectangle()
+                    .fill(isCompleted ? Color("PixelGreen") : .white)
+                    .frame(width: 36, height: 36)
                 
-                // Content
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(quest.title)
-                        .font(.pixel(18))
-                        .foregroundColor(Color("PixelBorder"))
-                        .strikethrough(isCompleted)
+                Rectangle()
+                    .stroke(isCharging ? Color("PixelAccent") : Color("PixelBorder"), lineWidth: 3)
+                    .frame(width: 36, height: 36)
+                
+                if isCompleted {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            }
+            .scaleEffect(isFlashing ? 1.2 : 1.0)
+            
+            // Content
+            VStack(alignment: .leading, spacing: 4) {
+                Text(quest.title)
+                    .font(.pixel(18))
+                    .foregroundColor(isCompleted ? Color("PixelBorder").opacity(0.5) : Color("PixelBorder"))
+                    .strikethrough(isCompleted, color: Color("PixelBorder").opacity(0.5))
+                
+                HStack(spacing: 8) {
+                    Text(quest.type.uppercased())
+                        .font(.pixel(11))
+                        .foregroundColor(Color(questType.color))
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color(questType.color).opacity(0.2))
                     
-                    HStack(spacing: 8) {
-                        Text(quest.type.uppercased())
-                            .font(.pixel(11))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color(questType.color).opacity(0.2))
-                        
+                    if !isCompleted {
                         Text("+\(quest.xp) XP")
                             .font(.pixel(14))
                             .foregroundColor(Color("PixelAccent"))
                     }
                 }
-                
-                Spacer()
             }
-            .padding(10)
-            .padding(.leading, -10)
-            .background(isCompleted ? Color("PixelGreen").opacity(0.1) : .white)
-            .pixelBorderSmall(color: isCompleted ? Color("PixelGreen") : Color("PixelBorder"))
+            
+            Spacer()
         }
-        .buttonStyle(.plain)
+        .padding(10)
+        .padding(.leading, -10)
+        .background(
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    // Base white background
+                    Color.white
+                    
+                    // Progress fill (left to right) - uses quest type color
+                    if isCharging || isCompleted {
+                        Rectangle()
+                            .fill(isCompleted ? Color("PixelGreen").opacity(0.3) : Color(questType.color).opacity(0.3))
+                            .frame(width: isCompleted ? geo.size.width : geo.size.width * chargeProgress)
+                    }
+                    
+                    // Flash overlay
+                    if isFlashing {
+                        Color("PixelAccent").opacity(0.4)
+                    }
+                }
+            }
+        )
+        .overlay(
+            Rectangle()
+                .stroke(isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : Color("PixelBorder")), lineWidth: 3)
+        )
         .opacity(isCompleted ? 0.8 : 1)
+    }
+    
+    // MARK: - Charging Logic
+    
+    private func startCharging() {
+        guard !isCompleted else { return }
+        
+        isCharging = true
+        chargeProgress = 0
+        
+        // Haptic feedback for starting
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
+        // Start timer for charging progress
+        let increment = chargeUpdateInterval / chargeDuration
+        chargeTimer = Timer.scheduledTimer(withTimeInterval: chargeUpdateInterval, repeats: true) { timer in
+            withAnimation(.linear(duration: chargeUpdateInterval)) {
+                chargeProgress += increment
+            }
+            
+            // Periodic haptic ticks while charging
+            if Int(chargeProgress * 10) != Int((chargeProgress - increment) * 10) {
+                let tickGenerator = UIImpactFeedbackGenerator(style: .light)
+                tickGenerator.impactOccurred()
+            }
+            
+            // Complete when fully charged
+            if chargeProgress >= 1.0 {
+                timer.invalidate()
+                completeQuest()
+            }
+        }
+    }
+    
+    private func stopCharging() {
+        // Cancel charging if not complete
+        chargeTimer?.invalidate()
+        chargeTimer = nil
+        
+        if chargeProgress < 1.0 {
+            withAnimation(.easeOut(duration: 0.2)) {
+                isCharging = false
+                chargeProgress = 0
+            }
+        }
+    }
+    
+    private func completeQuest() {
+        isCharging = false
+        
+        // Play completion sound
+        SoundManager.shared.playCompletionSound()
+        
+        // Flash animation
+        withAnimation(.easeInOut(duration: 0.15)) {
+            isFlashing = true
+        }
+        
+        // Show floating XP
+        showFloatingXP = true
+        floatingXPOffset = 0
+        floatingXPOpacity = 1
+        
+        withAnimation(.easeOut(duration: 0.8)) {
+            floatingXPOffset = -50
+            floatingXPOpacity = 0
+        }
+        
+        // End flash
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            withAnimation(.easeInOut(duration: 0.15)) {
+                isFlashing = false
+            }
+        }
+        
+        // Hide floating XP
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            showFloatingXP = false
+        }
+        
+        // Toggle completion
+        onToggle()
+    }
+}
+
+// MARK: - Sound Manager for 8-bit sounds
+class SoundManager {
+    static let shared = SoundManager()
+    
+    private init() {}
+    
+    func playCompletionSound() {
+        // Use system haptic as fallback for now
+        // TODO: Add actual 8-bit sound file when available
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+        
+        // Play system sound as placeholder (coin-like)
+        AudioServicesPlaySystemSound(1057) // 8-bit style system sound
     }
 }
 

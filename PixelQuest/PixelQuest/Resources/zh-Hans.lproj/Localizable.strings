@@ -13,6 +13,17 @@
 "tab_items" = "物品";
 "tab_settings" = "设置";
 
+/* Dashboard */
+"dashboard_title" = "仪表盘";
+"recent_records" = "最近记录";
+
+/* Assets */
+"assets_title" = "资产";
+"net_worth" = "净资产";
+
+/* World */
+"world_title" = "世界";
+
 /* Settings */
 "settings_title" = "系统设置";
 "settings_subtitle" = "自定义你的游戏";

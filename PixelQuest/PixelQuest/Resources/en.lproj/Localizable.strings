@@ -13,6 +13,17 @@
 "tab_items" = "ITEMS";
 "tab_settings" = "SETTINGS";
 
+/* Dashboard */
+"dashboard_title" = "DASHBOARD";
+"recent_records" = "Recent Records";
+
+/* Assets */
+"assets_title" = "ASSETS";
+"net_worth" = "Net Worth";
+
+/* World */
+"world_title" = "WORLD";
+
 /* Settings */
 "settings_title" = "SETTINGS";
 "settings_subtitle" = "Customize your game";

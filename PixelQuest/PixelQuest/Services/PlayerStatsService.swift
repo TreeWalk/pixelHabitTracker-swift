@@ -183,4 +183,15 @@ class PlayerStatsService: ObservableObject {
     var formattedXP: String {
         "\(currentXP) / \(xpToNextLevel) XP"
     }
+    
+    var currentTitle: String {
+        switch level {
+        case 1...5: return "Novice"
+        case 6...10: return "Apprentice"
+        case 11...20: return "Adventurer"
+        case 21...35: return "Skilled"
+        case 36...50: return "Expert"
+        default: return "Master"
+        }
+    }
 }
