@@ -199,71 +199,85 @@ extension View {
 
 // MARK: - Retro Dialog Border (Classic Pixel Game Style)
 
-/// A classic pixel game dialog border with stepped corner decoration and shadow
+/// A classic pixel game dialog border with stepped corner decoration
 struct RetroDialogBorder: View {
     var backgroundColor: Color = .white
     var borderColor: Color = Color("PixelBorder")
     var borderWidth: CGFloat = 3
-    var shadowOffset: CGFloat = 4
     
     var body: some View {
-        GeometryReader { geometry in
-            let w = geometry.size.width
-            let h = geometry.size.height
+        Canvas { context, size in
+            let w = size.width
+            let h = size.height
             let stepSize: CGFloat = 6
             let steps = 3
+            let bw = borderWidth
+            let half = bw / 2
             
-            ZStack {
-                // Shadow layer (black offset rectangle)
-                Rectangle()
-                    .fill(borderColor)
-                    .offset(x: shadowOffset, y: shadowOffset)
+            // 1. Fill background
+            let bgRect = CGRect(x: 0, y: 0, width: w, height: h)
+            context.fill(Path(bgRect), with: .color(backgroundColor))
+            
+            // 2. Draw main border (4 sides)
+            // Top border
+            var topPath = Path()
+            topPath.move(to: CGPoint(x: 0, y: half))
+            topPath.addLine(to: CGPoint(x: w, y: half))
+            context.stroke(topPath, with: .color(borderColor), lineWidth: bw)
+            
+            // Left border
+            var leftPath = Path()
+            leftPath.move(to: CGPoint(x: half, y: 0))
+            leftPath.addLine(to: CGPoint(x: half, y: h))
+            context.stroke(leftPath, with: .color(borderColor), lineWidth: bw)
+            
+            // Right border (stops at step area)
+            var rightPath = Path()
+            rightPath.move(to: CGPoint(x: w - half, y: 0))
+            rightPath.addLine(to: CGPoint(x: w - half, y: h - stepSize * CGFloat(steps)))
+            context.stroke(rightPath, with: .color(borderColor), lineWidth: bw)
+            
+            // Bottom border (stops at step area)
+            var bottomPath = Path()
+            bottomPath.move(to: CGPoint(x: 0, y: h - half))
+            bottomPath.addLine(to: CGPoint(x: w - stepSize * CGFloat(steps), y: h - half))
+            context.stroke(bottomPath, with: .color(borderColor), lineWidth: bw)
+            
+            // 3. Draw stepped corner decoration (stair-step pattern)
+            for i in 0..<steps {
+                let stepX = w - stepSize * CGFloat(i + 1)
+                let stepY = h - stepSize * CGFloat(steps - i)
+                let nextStepY = h - stepSize * CGFloat(steps - i - 1)
                 
-                // Main white background with border
-                Rectangle()
-                    .fill(backgroundColor)
-                    .overlay(
-                        Rectangle()
-                            .stroke(borderColor, lineWidth: borderWidth)
-                    )
+                // Horizontal step line
+                var hPath = Path()
+                hPath.move(to: CGPoint(x: w - stepSize * CGFloat(i), y: stepY - half))
+                hPath.addLine(to: CGPoint(x: stepX, y: stepY - half))
+                context.stroke(hPath, with: .color(borderColor), lineWidth: bw)
                 
-                // Right-bottom corner stepped decoration (inside the border)
-                Canvas { context, size in
-                    let cornerX = size.width - borderWidth - 2
-                    let cornerY = size.height - borderWidth - 2
-                    
-                    // Draw 3 steps of the staircase
-                    for i in 0..<steps {
-                        let x = cornerX - stepSize * CGFloat(i)
-                        let y = cornerY - stepSize * CGFloat(steps - 1 - i)
-                        
-                        // Each step is a small square
-                        let rect = CGRect(x: x, y: y, width: stepSize, height: stepSize)
-                        context.fill(Path(rect), with: .color(borderColor))
-                    }
-                }
+                // Vertical step line
+                var vPath = Path()
+                vPath.move(to: CGPoint(x: stepX - half, y: stepY))
+                vPath.addLine(to: CGPoint(x: stepX - half, y: nextStepY))
+                context.stroke(vPath, with: .color(borderColor), lineWidth: bw)
             }
         }
     }
 }
 
 extension View {
-    /// Applies classic pixel game dialog border with stepped corner decoration and shadow
+    /// Applies classic pixel game dialog border with stepped corner decoration
     func pixelDialogBorder(
         backgroundColor: Color = .white,
         borderColor: Color = Color("PixelBorder"),
-        borderWidth: CGFloat = 3,
-        shadowOffset: CGFloat = 4
+        borderWidth: CGFloat = 3
     ) -> some View {
         self
-            .padding(.trailing, shadowOffset)
-            .padding(.bottom, shadowOffset)
             .background(
                 RetroDialogBorder(
                     backgroundColor: backgroundColor,
                     borderColor: borderColor,
-                    borderWidth: borderWidth,
-                    shadowOffset: shadowOffset
+                    borderWidth: borderWidth
                 )
             )
     }

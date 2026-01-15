@@ -307,8 +307,13 @@ struct SimpleQuestCard: View {
                 }
             }
         )
-        .pixelDialogBorder(
-            borderColor: isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : Color("PixelBorder"))
+        .cozyCard(
+            backgroundColor: .white,
+            borderColor: isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : .darkCoffee),
+            borderWidth: 3,
+            cornerRadius: 12,
+            shadowColor: .darkCoffee.opacity(0.15),
+            shadowOffset: 3
         )
         .opacity(isCompleted ? 0.85 : 1)
     }
