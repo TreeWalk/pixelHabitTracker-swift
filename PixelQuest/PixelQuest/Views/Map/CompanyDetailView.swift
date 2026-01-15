@@ -353,8 +353,7 @@ struct EntryRow: View {
             }
         }
         .padding(12)
-        .background(Color.white)
-        .pixelBorderSmall()
+        .pixelDialogBorder()
     }
 }
 
@@ -523,8 +522,7 @@ struct HistoryRow: View {
                 .foregroundColor(Color("PixelGreen"))
         }
         .padding(12)
-        .background(Color.white)
-        .pixelBorderSmall()
+        .pixelDialogBorder()
     }
     
     private func formatDate(_ date: Date) -> String {

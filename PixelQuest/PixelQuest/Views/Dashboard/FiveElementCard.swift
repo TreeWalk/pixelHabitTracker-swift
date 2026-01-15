@@ -76,12 +76,8 @@ struct FiveElementCard: View {
                 // Content
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(element.name)
-                            .font(.pixel(20))
-                            .foregroundColor(element.color)
-                        
                         Text(title)
-                            .font(.pixel(14))
+                            .font(.pixel(18))
                             .foregroundColor(Color("PixelBorder"))
                         
                         Spacer()
@@ -91,22 +87,16 @@ struct FiveElementCard: View {
                             .foregroundStyle(Color("PixelBorder").opacity(0.7))
                     }
                     
-                    // Pixel progress bar (square edges)
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .fill(element.color.opacity(0.2))
-                            
-                            Rectangle()
-                                .fill(element.color)
-                                .frame(width: max(0, geo.size.width * min(1, value / max(1, maxValue))))
-                        }
-                        .overlay(
-                            Rectangle()
-                                .stroke(element.color.opacity(0.5), lineWidth: 2)
-                        )
-                    }
-                    .frame(height: 10)
+                    // Cozy segmented progress bar
+                    CozyProgressBar(
+                        value: value,
+                        maxValue: maxValue,
+                        totalBlocks: 10,
+                        filledColor: element.color,
+                        emptyColor: element.color.opacity(0.15),
+                        borderColor: .darkCoffee.opacity(0.5),
+                        height: 14
+                    )
                 }
             }
             .contentShape(Rectangle())
@@ -121,7 +111,7 @@ struct FiveElementCard: View {
             if isExpanded {
                 VStack(alignment: .leading, spacing: 8) {
                     Rectangle()
-                        .fill(Color("PixelBorder").opacity(0.2))
+                        .fill(Color.darkCoffee.opacity(0.15))
                         .frame(height: 2)
                     
                     Button(action: {
@@ -130,13 +120,13 @@ struct FiveElementCard: View {
                         HStack {
                             Text("recent_records".localized)
                                 .font(.pixel(12))
-                                .foregroundColor(Color("PixelBorder").opacity(0.7))
+                                .foregroundColor(Color.darkCoffee.opacity(0.7))
                             
                             Spacer()
                             
                             Image(systemName: "chevron.right")
                                 .font(.caption)
-                                .foregroundColor(Color("PixelBorder").opacity(0.5))
+                                .foregroundColor(Color.darkCoffee.opacity(0.5))
                         }
                     }
                     .disabled(onDetailTap == nil)
@@ -146,11 +136,7 @@ struct FiveElementCard: View {
             }
         }
         .padding()
-        .background(Color.white)
-        .overlay(
-            Rectangle()
-                .stroke(Color("PixelBorder"), lineWidth: 3)
-        )
+        .pixelDialogBorder()
     }
 }
 

@@ -18,45 +18,22 @@ struct ContentView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Main Tab View
-            TabView(selection: $selectedTab) {
-                DashboardView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "person.crop.circle")
-                            Text("Dashboard")
-                        }
-                    }
-                    .tag(0)
-                
-                QuestsView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "scroll.fill")
-                            Text("Actions")
-                        }
-                    }
-                    .tag(1)
-                
-                AssetsView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "shippingbox.fill")
-                            Text("Assets")
-                        }
-                    }
-                    .tag(2)
-                
-                WorldView()
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "map.fill")
-                            Text("World")
-                        }
-                    }
-                    .tag(3)
+            // Main Content (no native TabView)
+            Group {
+                switch selectedTab {
+                case 0:
+                    NavigationStack { DashboardView() }
+                case 1:
+                    QuestsView()
+                case 2:
+                    AssetsView()
+                case 3:
+                    WorldView()
+                default:
+                    DashboardView()
+                }
             }
-            .tint(Color("PixelAccent"))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // FAB Overlay
             if isFabMenuOpen {
@@ -73,31 +50,31 @@ struct ContentView: View {
                 // Sub-menu buttons with pixel icons
                 VStack(spacing: 20) {
                     HStack(spacing: 30) {
-                        fabActionButton(pixelIcon: "pixel_sleep", color: .blue, label: "Sleep") {
+                        fabActionButton(pixelIcon: "pixel_sleep", color: Color("PixelBlue"), label: "Sleep") {
                             showSleepSheet = true
                             isFabMenuOpen = false
                         }
-                        fabActionButton(pixelIcon: "pixel_strength", color: .red, label: "Sport") {
+                        fabActionButton(pixelIcon: "pixel_strength", color: Color("PixelRed"), label: "Sport") {
                             showSportSheet = true
                             isFabMenuOpen = false
                         }
                     }
                     HStack(spacing: 30) {
-                        fabActionButton(pixelIcon: "pixel_book", color: .green, label: "Read") {
+                        fabActionButton(pixelIcon: "pixel_book", color: Color("PixelGreen"), label: "Read") {
                             showReadSheet = true
                             isFabMenuOpen = false
                         }
-                        fabActionButton(pixelIcon: "pixel_money", color: .orange, label: "Bill") {
+                        fabActionButton(pixelIcon: "pixel_money", color: Color("PixelAccent"), label: "Bill") {
                             showBillSheet = true
                             isFabMenuOpen = false
                         }
                     }
                 }
-                .offset(y: -140)
+                .offset(y: -180)
                 .opacity(isFabMenuOpen ? 1 : 0)
             }
             
-            // Main FAB Button (Pixel Style)
+            // Main FAB Button (Cozy Style)
             Button(action: {
                 Self.hapticGenerator.impactOccurred()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -109,19 +86,21 @@ struct ContentView: View {
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color("PixelAccent"))
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(red: 0.15, green: 0.15, blue: 0.15), lineWidth: 3)
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(Color.darkCoffee, lineWidth: 3)
                     )
-                    .shadow(color: Color("PixelAccent").opacity(0.4), radius: 8, y: 4)
+                    .shadow(color: Color.darkCoffee.opacity(0.25), radius: 8, x: 0, y: 4)
                     .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
             }
-            .padding(.bottom, 60) // Above tab bar
+            .padding(.bottom, 90) // Above custom tab bar
+            
+            // Custom Floating Tab Bar
+            FloatingTabBar(selectedTab: $selectedTab)
+                .padding(.bottom, 8)
         }
-        .onAppear {
-            setupTabBarAppearance()
-        }
+        .background(Color.creamBg.ignoresSafeArea())
         // Bill Sheet
         .sheet(isPresented: $showBillSheet) {
             QuickEntrySheet()
@@ -144,19 +123,20 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - FAB Action Button (Pixel Style)
+    // MARK: - FAB Action Button (Cozy Style)
     private func fabActionButton(pixelIcon: String, color: Color, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 8) {
                 ZStack {
-                    // Pixel-style rounded rectangle with black border (NES controller style)
-                    RoundedRectangle(cornerRadius: 6)
+                    // Cozy rounded button with warm border
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(color)
                         .frame(width: 56, height: 56)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color(red: 0.15, green: 0.15, blue: 0.15), lineWidth: 3)
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(Color.darkCoffee, lineWidth: 3)
                         )
+                        .shadow(color: Color.darkCoffee.opacity(0.2), radius: 6, x: 0, y: 3)
                     
                     Image(pixelIcon)
                         .resizable()
@@ -170,19 +150,6 @@ struct ContentView: View {
             }
         }
     }
-    
-    // MARK: - Tab Bar Appearance
-    private func setupTabBarAppearance() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(named: "PixelBg")
-        
-        UITabBar.appearance().layer.borderWidth = 2
-        UITabBar.appearance().layer.borderColor = UIColor(named: "PixelBorder")?.cgColor
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-    }
 }
 
 #Preview {
@@ -191,4 +158,3 @@ struct ContentView: View {
         .environmentObject(SwiftDataItemStore())
         .environmentObject(SwiftDataLogStore())
 }
-

@@ -307,11 +307,10 @@ struct SimpleQuestCard: View {
                 }
             }
         )
-        .overlay(
-            Rectangle()
-                .stroke(isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : Color("PixelBorder")), lineWidth: 3)
+        .pixelDialogBorder(
+            borderColor: isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : Color("PixelBorder"))
         )
-        .opacity(isCompleted ? 0.8 : 1)
+        .opacity(isCompleted ? 0.85 : 1)
     }
     
     // MARK: - Charging Logic

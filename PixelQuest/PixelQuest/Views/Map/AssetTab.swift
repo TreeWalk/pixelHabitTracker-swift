@@ -251,8 +251,7 @@ struct AssetRow: View {
                     .foregroundColor(asset.isLiability ? Color("PixelRed") : Color("PixelGreen"))
             }
             .padding(12)
-            .background(Color.white)
-            .pixelBorderSmall()
+            .pixelDialogBorder()
         }
         .buttonStyle(.plain)
         .sheet(isPresented: $showEdit) {
@@ -360,8 +359,7 @@ struct HistorySnapshotRow: View {
                 .foregroundColor(.secondary)
         }
         .padding()
-        .background(Color.white)
-        .pixelBorderSmall()
+        .pixelDialogBorder()
     }
     
     private func formatDate(_ date: Date) -> String {

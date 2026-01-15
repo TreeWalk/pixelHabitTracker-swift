@@ -376,7 +376,6 @@ struct LogItemRow: View {
                 .foregroundColor(Color("PixelAccent"))
         }
         .padding(8)
-        .background(Color.white)
-        .pixelBorderSmall(color: Color("PixelBorder").opacity(0.2))
+        .pixelDialogBorder()
     }
 }

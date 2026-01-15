@@ -197,6 +197,78 @@ extension View {
     }
 }
 
+// MARK: - Retro Dialog Border (Classic Pixel Game Style)
+
+/// A classic pixel game dialog border with stepped corner decoration and shadow
+struct RetroDialogBorder: View {
+    var backgroundColor: Color = .white
+    var borderColor: Color = Color("PixelBorder")
+    var borderWidth: CGFloat = 3
+    var shadowOffset: CGFloat = 4
+    
+    var body: some View {
+        GeometryReader { geometry in
+            let w = geometry.size.width
+            let h = geometry.size.height
+            let stepSize: CGFloat = 6
+            let steps = 3
+            
+            ZStack {
+                // Shadow layer (black offset rectangle)
+                Rectangle()
+                    .fill(borderColor)
+                    .offset(x: shadowOffset, y: shadowOffset)
+                
+                // Main white background with border
+                Rectangle()
+                    .fill(backgroundColor)
+                    .overlay(
+                        Rectangle()
+                            .stroke(borderColor, lineWidth: borderWidth)
+                    )
+                
+                // Right-bottom corner stepped decoration (inside the border)
+                Canvas { context, size in
+                    let cornerX = size.width - borderWidth - 2
+                    let cornerY = size.height - borderWidth - 2
+                    
+                    // Draw 3 steps of the staircase
+                    for i in 0..<steps {
+                        let x = cornerX - stepSize * CGFloat(i)
+                        let y = cornerY - stepSize * CGFloat(steps - 1 - i)
+                        
+                        // Each step is a small square
+                        let rect = CGRect(x: x, y: y, width: stepSize, height: stepSize)
+                        context.fill(Path(rect), with: .color(borderColor))
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension View {
+    /// Applies classic pixel game dialog border with stepped corner decoration and shadow
+    func pixelDialogBorder(
+        backgroundColor: Color = .white,
+        borderColor: Color = Color("PixelBorder"),
+        borderWidth: CGFloat = 3,
+        shadowOffset: CGFloat = 4
+    ) -> some View {
+        self
+            .padding(.trailing, shadowOffset)
+            .padding(.bottom, shadowOffset)
+            .background(
+                RetroDialogBorder(
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: borderWidth,
+                    shadowOffset: shadowOffset
+                )
+            )
+    }
+}
+
 // MARK: - Dithered Background Pattern
 
 struct DitheredBackground: View {

@@ -411,8 +411,7 @@ struct ExerciseEntryRow: View {
             Spacer()
         }
         .padding()
-        .background(Color.white)
-        .pixelBorderSmall()
+        .pixelDialogBorder()
     }
 }
 
@@ -475,7 +474,6 @@ struct HealthKitWorkoutRow: View {
             Spacer()
         }
         .padding()
-        .background(Color.white)
-        .pixelBorderSmall()
+        .pixelDialogBorder()
     }
 }

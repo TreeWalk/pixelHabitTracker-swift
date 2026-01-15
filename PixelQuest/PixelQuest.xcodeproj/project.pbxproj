@@ -23,7 +23,6 @@
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
 		23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2980A2F08F25600C1B539 /* SleepEntry.swift */; };
-		23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2980C2F08F26600C1B539 /* Font+Pixel.swift */; };
 		23D298112F08F28C00C1B539 /* VT323-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23D2980F2F08F28C00C1B539 /* VT323-Regular.ttf */; };
 		23D298162F08F2B600C1B539 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298142F08F2B600C1B539 /* HealthKitManager.swift */; };
 		23D2981D2F090DC600C1B539 /* BookEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2981C2F090DC600C1B539 /* BookEntry.swift */; };
@@ -74,6 +73,9 @@
 		23E2285B2F129D6C0068CEFC /* QuickExerciseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */; };
 		23E2285C2F129D6C0068CEFC /* QuickSleepSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */; };
 		23E228612F129DD50068CEFC /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228602F129DD50068CEFC /* SplashView.swift */; };
+		23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228622F17D7830068CEFC /* DesignSystem.swift */; };
+		23E228652F191A880068CEFC /* Font+Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228642F191A880068CEFC /* Font+Pixel.swift */; };
+		23E228672F191A950068CEFC /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228662F191A950068CEFC /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,7 +97,6 @@
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
 		23D298082F08F24B00C1B539 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		23D2980A2F08F25600C1B539 /* SleepEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepEntry.swift; sourceTree = "<group>"; };
-		23D2980C2F08F26600C1B539 /* Font+Pixel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Pixel.swift"; sourceTree = "<group>"; };
 		23D2980F2F08F28C00C1B539 /* VT323-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "VT323-Regular.ttf"; sourceTree = "<group>"; };
 		23D298142F08F2B600C1B539 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		23D2981C2F090DC600C1B539 /* BookEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookEntry.swift; sourceTree = "<group>"; };
@@ -147,6 +148,9 @@
 		23E228572F129D6C0068CEFC /* QuickReadSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickReadSheet.swift; sourceTree = "<group>"; };
 		23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSleepSheet.swift; sourceTree = "<group>"; };
 		23E228602F129DD50068CEFC /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		23E228622F17D7830068CEFC /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		23E228642F191A880068CEFC /* Font+Pixel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Pixel.swift"; sourceTree = "<group>"; };
+		23E228662F191A950068CEFC /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,7 +181,6 @@
 		23D2980D2F08F26600C1B539 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				23D2980C2F08F26600C1B539 /* Font+Pixel.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 		23D298352F0BE41400C1B539 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				23E228662F191A950068CEFC /* DataManager.swift */,
 				23D298342F0BE41400C1B539 /* LocalizationManager.swift */,
 			);
 			path = Managers;
@@ -303,6 +307,8 @@
 		301 /* PixelQuest */ = {
 			isa = PBXGroup;
 			children = (
+				23E228642F191A880068CEFC /* Font+Pixel.swift */,
+				23E228622F17D7830068CEFC /* DesignSystem.swift */,
 				23D2983A2F0BE43B00C1B539 /* Resources */,
 				23D298352F0BE41400C1B539 /* Managers */,
 				23D298152F08F2B600C1B539 /* Services */,
@@ -523,7 +529,6 @@
 				23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */,
 				23E228422F1001940068CEFC /* SleepData.swift in Sources */,
 				23E2283A2F1001600068CEFC /* SwiftDataQuestStore.swift in Sources */,
-				23D2980E2F08F26600C1B539 /* Font+Pixel.swift in Sources */,
 				23D298232F090E0900C1B539 /* AddBookView.swift in Sources */,
 				23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */,
 				23D2981D2F090DC600C1B539 /* BookEntry.swift in Sources */,
@@ -548,6 +553,7 @@
 				23D298662F0D632D00C1B539 /* CharacterStatusView.swift in Sources */,
 				008 /* LogEntry.swift in Sources */,
 				23D298642F0D36EE00C1B539 /* ThermalReceiptView.swift in Sources */,
+				23E228652F191A880068CEFC /* Font+Pixel.swift in Sources */,
 				23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */,
 				23E2285A2F129D6C0068CEFC /* QuickReadSheet.swift in Sources */,
 				23E2285B2F129D6C0068CEFC /* QuickExerciseSheet.swift in Sources */,
@@ -564,12 +570,14 @@
 				23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */,
 				23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */,
 				23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */,
+				23E228672F191A950068CEFC /* DataManager.swift in Sources */,
 				23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */,
 				014 /* ItemsView.swift in Sources */,
 				23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */,
 				23E228402F1001800068CEFC /* SwiftDataBookStore.swift in Sources */,
 				015 /* SettingsView.swift in Sources */,
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
+				23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,
 				23E228612F129DD50068CEFC /* SplashView.swift in Sources */,

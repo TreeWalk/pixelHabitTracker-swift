@@ -97,11 +97,12 @@ struct WorldLocationCard: View {
                 .padding(16)
             }
             .frame(height: 160)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color("PixelBorder"), lineWidth: 3)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.darkCoffee, lineWidth: 3)
             )
+            .shadow(color: Color.darkCoffee.opacity(0.2), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(.plain)
     }
