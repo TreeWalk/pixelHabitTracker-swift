@@ -195,6 +195,107 @@ extension View {
             PixelCorners(color: color, size: size)
         )
     }
+
+    /// Simple pixel border - just a rectangle stroke, no decorations
+    func simplePixelBorder(
+        backgroundColor: Color = .white,
+        borderColor: Color = Color("PixelBorder"),
+        borderWidth: CGFloat = 3
+    ) -> some View {
+        self
+            .background(backgroundColor)
+            .overlay(
+                Rectangle()
+                    .stroke(borderColor, lineWidth: borderWidth)
+            )
+    }
+
+    /// Retro pixel card with bottom-right corner stair decoration and hard shadow
+    func retroPixelCard(
+        backgroundColor: Color = .white,
+        borderColor: Color = Color("PixelBorder"),
+        borderWidth: CGFloat = 3,
+        shadowColor: Color = Color("PixelBorder"),
+        shadowOffset: CGFloat = 4
+    ) -> some View {
+        self
+            .background(
+                RetroPixelCardBackground(
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: borderWidth
+                )
+            )
+            .offset(x: -shadowOffset, y: -shadowOffset)
+            .background(
+                Rectangle()
+                    .fill(shadowColor)
+                    .offset(x: shadowOffset, y: shadowOffset)
+            )
+    }
+}
+
+// MARK: - Retro Pixel Card Background with Corner Decoration
+
+struct RetroPixelCardBackground: View {
+    var backgroundColor: Color
+    var borderColor: Color
+    var borderWidth: CGFloat
+
+    var body: some View {
+        GeometryReader { geometry in
+            let w = geometry.size.width
+            let h = geometry.size.height
+            let blockSize: CGFloat = 6
+
+            ZStack {
+                // Main white background
+                Rectangle()
+                    .fill(backgroundColor)
+
+                // Border
+                Rectangle()
+                    .stroke(borderColor, lineWidth: borderWidth)
+
+                // Bottom-right corner stair decoration
+                VStack(spacing: 0) {
+                    Spacer()
+                    HStack(spacing: 0) {
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 0) {
+                            // 3-step stair pattern
+                            HStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                            }
+                            HStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                            }
+                            HStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                                Rectangle()
+                                    .fill(borderColor)
+                                    .frame(width: blockSize, height: blockSize)
+                            }
+                        }
+                        .padding(.trailing, 8)
+                        .padding(.bottom, 8)
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Retro Dialog Border (Classic Pixel Game Style)

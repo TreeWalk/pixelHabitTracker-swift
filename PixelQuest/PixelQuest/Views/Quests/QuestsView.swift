@@ -237,11 +237,6 @@ struct SimpleQuestCard: View {
     
     private var cardContent: some View {
         HStack(spacing: 12) {
-            // Color bar
-            Rectangle()
-                .fill(isCompleted ? Color("PixelGreen") : Color(questType.color))
-                .frame(width: 6)
-            
             // Checkbox
             ZStack {
                 Rectangle()
@@ -285,8 +280,7 @@ struct SimpleQuestCard: View {
             
             Spacer()
         }
-        .padding(10)
-        .padding(.leading, -10)
+        .padding(16)
         .background(
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -307,13 +301,12 @@ struct SimpleQuestCard: View {
                 }
             }
         )
-        .cozyCard(
+        .retroPixelCard(
             backgroundColor: .white,
-            borderColor: isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : .darkCoffee),
-            borderWidth: 3,
-            cornerRadius: 12,
-            shadowColor: .darkCoffee.opacity(0.15),
-            shadowOffset: 3
+            borderColor: isCharging ? Color(questType.color) : (isCompleted ? Color("PixelGreen") : Color("PixelBorder")),
+            borderWidth: 4,
+            shadowColor: isCharging ? Color(questType.color).opacity(0.3) : (isCompleted ? Color("PixelGreen").opacity(0.3) : Color("PixelBorder").opacity(0.3)),
+            shadowOffset: 4
         )
         .opacity(isCompleted ? 0.85 : 1)
     }
