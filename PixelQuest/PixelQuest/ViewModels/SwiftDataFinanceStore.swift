@@ -1,9 +1,11 @@
 import Foundation
 import SwiftData
+import Combine
 
 @MainActor
 class SwiftDataFinanceStore: ObservableObject {
     private var modelContext: ModelContext?
+    private var cancellables = Set<AnyCancellable>()
 
     @Published var wallets: [WalletData] = []
     @Published var snapshots: [WalletSnapshotData] = []
@@ -17,6 +19,31 @@ class SwiftDataFinanceStore: ObservableObject {
     // 上次选择的分类
     @Published var lastExpenseCategory: String = "food"
     @Published var lastIncomeCategory: String = "salary"
+
+    // MARK: - Initialization
+
+    init() {
+        setupNotificationObservers()
+    }
+
+    deinit {
+        cancellables.removeAll()
+    }
+
+    /// 监听数据变更通知（来自 App Intents 等外部来源）
+    private func setupNotificationObservers() {
+        NotificationCenter.default.publisher(for: DataChangeNotifier.financeDataDidChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// 重新加载数据（供外部通知触发）
+    func reloadData() {
+        loadData()
+    }
 
     // MARK: - Private Helpers
 

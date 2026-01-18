@@ -27,7 +27,7 @@ struct QuickExpenseIntent: AppIntent {
     func perform() async throws -> some IntentResult & ProvidesDialog {
         // 将金额转换为分（数据库存储单位）
         let amountInCents = Int(amount * 100)
-        
+
         // 创建 ModelContainer（与主 App 使用相同的配置）
         let schema = Schema([
             FinanceEntryData.self,
@@ -44,13 +44,13 @@ struct QuickExpenseIntent: AppIntent {
             ExerciseEntryData.self,
             LogEntryData.self
         ])
-        
+
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
+
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
-            
+
             // 创建新的财务记录
             let entry = FinanceEntryData(
                 amount: amountInCents,
@@ -58,14 +58,21 @@ struct QuickExpenseIntent: AppIntent {
                 category: category.categoryId,
                 note: note
             )
-            
+
             context.insert(entry)
             try context.save()
-            
+
+            // 通知主 App 刷新数据
+            DataChangeNotifier.notifyFinanceDataChanged(userInfo: [
+                "action": "add",
+                "type": "expense",
+                "amount": amountInCents
+            ])
+
             // 返回成功消息
             let formattedAmount = String(format: "%.2f", amount)
             return .result(dialog: "✅ 已记录：\(category.displayName) ¥\(formattedAmount)")
-            
+
         } catch {
             return .result(dialog: "❌ 记账失败：\(error.localizedDescription)")
         }

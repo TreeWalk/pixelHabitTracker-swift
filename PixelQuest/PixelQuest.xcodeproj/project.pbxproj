@@ -19,6 +19,7 @@
 		013 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113 /* MapView.swift */; };
 		014 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114 /* ItemsView.swift */; };
 		015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* SettingsView.swift */; };
+		23A2E9002F1D1E44008C75B1 /* DataChangeNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */; };
 		23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298002F08F1E100C1B539 /* GymDetailView.swift */; };
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
@@ -95,6 +96,7 @@
 		113 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		114 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
 		115 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeNotifier.swift; sourceTree = "<group>"; };
 		23D297F92F08D94400C1B539 /* PixelQuest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PixelQuest.entitlements; sourceTree = "<group>"; };
 		23D298002F08F1E100C1B539 /* GymDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymDetailView.swift; sourceTree = "<group>"; };
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 		23D298152F08F2B600C1B539 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */,
 				23D298672F0D634A00C1B539 /* PlayerStatsService.swift */,
 				23D298142F08F2B600C1B539 /* HealthKitManager.swift */,
 			);
@@ -600,6 +603,7 @@
 				23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,
+				23A2E9002F1D1E44008C75B1 /* DataChangeNotifier.swift in Sources */,
 				23E228612F129DD50068CEFC /* SplashView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,6 +20,9 @@ struct PixelQuestApp: App {
     @State private var isLoading = true
     @State private var loadingProgress: Double = 0.0
     @State private var loadingMessage = "Initializing..."
+
+    // Scene phase for foreground refresh
+    @Environment(\.scenePhase) private var scenePhase
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -56,7 +59,6 @@ struct PixelQuestApp: App {
             do {
                 return try ModelContainer(for: schema, configurations: [inMemoryConfiguration])
             } catch {
-                // 最终降级：创建最小配置（极少发生）
                 print("❌ 内存存储也失败: \(error)")
                 fatalError("无法初始化任何数据存储: \(error)")
             }
@@ -87,6 +89,12 @@ struct PixelQuestApp: App {
             }
             .onAppear {
                 initializeApp()
+            }
+            .onChange(of: scenePhase) { oldPhase, newPhase in
+                if newPhase == .active && !isLoading {
+                    // 从后台/快捷指令返回时刷新财务数据
+                    financeStore.reloadData()
+                }
             }
         }
         .modelContainer(sharedModelContainer)
