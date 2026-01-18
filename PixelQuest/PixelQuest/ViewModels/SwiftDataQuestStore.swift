@@ -4,11 +4,12 @@ import SwiftData
 @MainActor
 class SwiftDataQuestStore: ObservableObject {
     private var modelContext: ModelContext?
-    
+
     @Published var quests: [QuestData] = []
     @Published var questLog: [QuestLogData] = []
     @Published var isLoading = false
     @Published var error: String?
+    @Published var lastSaveError: Error?
 
     // MARK: - Cached Statistics (Performance Optimization)
     @Published private(set) var activeQuests: [QuestData] = []
@@ -16,6 +17,21 @@ class SwiftDataQuestStore: ObservableObject {
     private(set) var cachedStreak: Int = 0
     private(set) var cachedHeatmapData: [Date: Int] = [:]
     private(set) var cachedTypeDistribution: [String: Int] = [:]
+
+    // MARK: - Private Helpers
+
+    /// 统一的保存方法，带错误处理
+    private func saveContext() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+            lastSaveError = nil
+        } catch {
+            lastSaveError = error
+            self.error = "保存失败: \(error.localizedDescription)"
+            print("❌ SwiftDataQuestStore 保存失败: \(error)")
+        }
+    }
     
     // MARK: - Configure
 
@@ -105,7 +121,7 @@ class SwiftDataQuestStore: ObservableObject {
             questLog.insert(log, at: 0)
         }
 
-        try? modelContext?.save()
+        saveContext()
 
         // Update cached lists
         updateQuestLists()
@@ -118,7 +134,7 @@ class SwiftDataQuestStore: ObservableObject {
         context.insert(quest)
         quests.insert(quest, at: 0)
 
-        try? context.save()
+        saveContext()
 
         // Update cached lists
         updateQuestLists()
@@ -130,7 +146,7 @@ class SwiftDataQuestStore: ObservableObject {
         context.delete(quest)
         quests.removeAll { $0.title == quest.title }
 
-        try? context.save()
+        saveContext()
 
         // Update cached lists
         updateQuestLists()
@@ -140,7 +156,7 @@ class SwiftDataQuestStore: ObservableObject {
         for quest in quests {
             quest.completed = false
         }
-        try? modelContext?.save()
+        saveContext()
 
         // Update cached lists
         updateQuestLists()
@@ -181,12 +197,15 @@ class SwiftDataQuestStore: ObservableObject {
         let calendar = Calendar.current
         var streak = 0
         var checkDate = Date()
-        
+
         let todayCompleted = questLog.contains { calendar.isDate($0.completedAt, inSameDayAs: checkDate) }
         if !todayCompleted {
-            checkDate = calendar.date(byAdding: .day, value: -1, to: checkDate)!
+            guard let yesterday = calendar.date(byAdding: .day, value: -1, to: checkDate) else {
+                return 0
+            }
+            checkDate = yesterday
         }
-        
+
         // Safety limit: max 365 days to prevent infinite loop
         for _ in 0..<365 {
             let targetDate = checkDate

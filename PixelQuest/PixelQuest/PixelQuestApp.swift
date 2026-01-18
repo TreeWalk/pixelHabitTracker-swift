@@ -43,12 +43,23 @@ struct PixelQuestApp: App {
             // Log module
             LogEntryData.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
+
+        // 首先尝试使用持久化存储
+        let persistentConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, configurations: [persistentConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            print("⚠️ 无法创建持久化存储，尝试使用内存存储: \(error)")
+
+            // 降级方案：使用内存存储
+            let inMemoryConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            do {
+                return try ModelContainer(for: schema, configurations: [inMemoryConfiguration])
+            } catch {
+                // 最终降级：创建最小配置（极少发生）
+                print("❌ 内存存储也失败: \(error)")
+                fatalError("无法初始化任何数据存储: \(error)")
+            }
         }
     }()
     

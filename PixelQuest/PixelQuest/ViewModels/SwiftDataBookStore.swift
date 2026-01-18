@@ -4,11 +4,27 @@ import SwiftData
 @MainActor
 class SwiftDataBookStore: ObservableObject {
     private var modelContext: ModelContext?
-    
+
     @Published var books: [BookEntryData] = []
     @Published var isLoading = false
     @Published var error: String?
-    
+    @Published var lastSaveError: Error?
+
+    // MARK: - Private Helpers
+
+    /// 统一的保存方法，带错误处理
+    private func saveContext() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+            lastSaveError = nil
+        } catch {
+            lastSaveError = error
+            self.error = "保存失败: \(error.localizedDescription)"
+            print("❌ SwiftDataBookStore 保存失败: \(error)")
+        }
+    }
+
     // MARK: - Configure
     
     func configure(modelContext: ModelContext) async {
@@ -70,14 +86,14 @@ class SwiftDataBookStore: ObservableObject {
         
         context.insert(book)
         books.insert(book, at: 0)
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func updateBook(_ book: BookEntryData, title: String, author: String, status: String, rating: Int) {
         book.title = title
         book.author = author
-        
+
         // Handle status changes
         if book.status != status {
             if status == "reading" && book.startDate == nil {
@@ -87,24 +103,24 @@ class SwiftDataBookStore: ObservableObject {
                 book.finishDate = Date()
             }
         }
-        
+
         book.status = status
         book.rating = rating
-        
-        try? modelContext?.save()
+
+        saveContext()
     }
-    
+
     func deleteBook(_ book: BookEntryData) {
         guard let context = modelContext else { return }
-        
+
         context.delete(book)
         books.removeAll { $0.title == book.title && $0.author == book.author }
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func updateNotes(_ book: BookEntryData, notes: String) {
         book.notes = notes
-        try? modelContext?.save()
+        saveContext()
     }
 }

@@ -34,3 +34,7 @@ fastlane/screenshots
 .env
 PixelQuest/PixelQuest/SupabaseConfig.swift
 
+
+# Claude Code
+.claude/
+.agent/

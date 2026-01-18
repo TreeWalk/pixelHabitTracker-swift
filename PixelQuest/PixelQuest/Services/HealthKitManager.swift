@@ -22,20 +22,23 @@ class HealthKitManager: ObservableObject {
             error = "此设备不支持 HealthKit"
             return false
         }
-        
+
         // 需要读取的数据类型
-        let typesToRead: Set<HKObjectType> = [
-            // 睡眠数据
-            HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
-            // 运动数据
-            HKObjectType.workoutType(),
-            // 心率数据
-            HKObjectType.quantityType(forIdentifier: .heartRate)!,
-            // 活动能量
-            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
-            // 步行/跑步距离
-            HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
-        ]
+        var typesToRead: Set<HKObjectType> = [HKObjectType.workoutType()]
+
+        // 安全添加可选类型
+        if let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) {
+            typesToRead.insert(sleepType)
+        }
+        if let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate) {
+            typesToRead.insert(heartRateType)
+        }
+        if let energyType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned) {
+            typesToRead.insert(energyType)
+        }
+        if let distanceType = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning) {
+            typesToRead.insert(distanceType)
+        }
         
         do {
             try await healthStore.requestAuthorization(toShare: [], read: typesToRead)
@@ -51,15 +54,20 @@ class HealthKitManager: ObservableObject {
     
     /// 获取昨晚的睡眠数据
     func fetchLastNightSleep() async -> SleepData? {
-        guard isHealthKitAvailable else { return nil }
-        
-        let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
-        
+        guard isHealthKitAvailable,
+              let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+            return nil
+        }
+
         // 获取昨天晚上到今天早上的时间范围
         let calendar = Calendar.current
         let now = Date()
-        let yesterday6PM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: calendar.date(byAdding: .day, value: -1, to: now)!)!
-        let today12PM = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: now)!
+
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: now),
+              let yesterday6PM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: yesterday),
+              let today12PM = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: now) else {
+            return nil
+        }
         
         let predicate = HKQuery.predicateForSamples(withStart: yesterday6PM, end: today12PM, options: .strictStartDate)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
@@ -122,10 +130,19 @@ class HealthKitManager: ObservableObject {
             }
             
             // 更新入睡和起床时间
-            if inBedStart == nil || sample.startDate < inBedStart! {
+            if let currentStart = inBedStart {
+                if sample.startDate < currentStart {
+                    inBedStart = sample.startDate
+                }
+            } else {
                 inBedStart = sample.startDate
             }
-            if inBedEnd == nil || sample.endDate > inBedEnd! {
+
+            if let currentEnd = inBedEnd {
+                if sample.endDate > currentEnd {
+                    inBedEnd = sample.endDate
+                }
+            } else {
                 inBedEnd = sample.endDate
             }
         }
@@ -200,10 +217,13 @@ class HealthKitManager: ObservableObject {
     /// 获取今日运动数据
     func fetchTodayWorkouts() async -> [WorkoutData] {
         guard isHealthKitAvailable else { return [] }
-        
+
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: Date())
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            return []
+        }
         
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)

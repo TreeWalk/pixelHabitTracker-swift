@@ -75,95 +75,78 @@ class PlayerStatsService: ObservableObject {
     }
     
     // MARK: - Stats Calculation
-    
+
     private func recalculateStats() {
-        calculateXPAndLevel()
-        calculateStrength()
-        calculateIntelligence()
-        calculateVitality()
-        calculateWealth()
+        // 将计算移到后台线程，避免阻塞 UI
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+
+            // 在后台线程获取数据快照
+            let questsSnapshot = await MainActor.run { self.questStore?.quests ?? [] }
+            let booksSnapshot = await MainActor.run { self.bookStore?.books ?? [] }
+            let exerciseWeekDuration = await MainActor.run { self.exerciseStore?.weekTotalDuration ?? 0 }
+            let netWorth = await MainActor.run { self.financeStore?.netWorth ?? 0 }
+            let completionPercentage = await MainActor.run { self.questStore?.completionPercentage ?? 0 }
+
+            // 在后台线程执行计算
+            let levelData = self.computeXPAndLevel(from: questsSnapshot)
+            let strengthValue = exerciseWeekDuration / 10
+            let intelligenceValue = self.computeIntelligence(from: booksSnapshot)
+            let vitalityValue = completionPercentage
+            let wealthValue = netWorth / 100000
+
+            // 在主线程更新 UI
+            await MainActor.run {
+                self.level = levelData.level
+                self.currentXP = levelData.currentXP
+                self.xpToNextLevel = levelData.xpToNextLevel
+                self.strength = strengthValue
+                self.intelligence = intelligenceValue
+                self.vitality = vitalityValue
+                self.wealth = wealthValue
+            }
+        }
     }
-    
-    // XP 来自完成的任务
-    private func calculateXPAndLevel() {
-        guard let questStore = questStore else { return }
-        
-        // 总XP = 所有已完成任务的XP总和
-        let totalXP = questStore.quests
+
+    // 纯计算函数 - 可在后台线程安全执行
+    private nonisolated func computeXPAndLevel(from quests: [QuestData]) -> (level: Int, currentXP: Int, xpToNextLevel: Int) {
+        let totalXP = quests
             .filter { $0.completed }
             .reduce(0) { $0 + $1.xp }
-        
-        // 等级计算: 每100XP升一级
+
         let baseXP = 100
         let growthRate = 1.2
-        
+
         var xpNeeded = baseXP
         var accumulatedXP = 0
         var calculatedLevel = 1
-        
+
         while accumulatedXP + xpNeeded <= totalXP {
             accumulatedXP += xpNeeded
             calculatedLevel += 1
-            
-            // Calculate next level requirement safely
+
             let nextXP = Double(baseXP) * pow(growthRate, Double(calculatedLevel - 1))
-            
-            // Safety check: Prevent Integer overflow or infinite loop
+
             if nextXP > Double(Int.max) || calculatedLevel >= 100 {
-                xpNeeded = Int.max // Cap at max
+                xpNeeded = Int.max
                 break
             }
-            
+
             xpNeeded = Int(nextXP)
-            
-            // Safety check: Ensure xpNeeded is positive to prevent infinite loop
-            if xpNeeded <= 0 { 
-                xpNeeded = Int.max 
-                break 
+
+            if xpNeeded <= 0 {
+                xpNeeded = Int.max
+                break
             }
         }
-        
-        self.level = calculatedLevel
-        self.currentXP = totalXP - accumulatedXP
-        self.xpToNextLevel = xpNeeded
+
+        return (calculatedLevel, totalXP - accumulatedXP, xpNeeded)
     }
-    
-    // STR 力量 - 来自本周运动次数和时长
-    private func calculateStrength() {
-        guard let exerciseStore = exerciseStore else { return }
-        
-        // 本周运动总时长 (分钟) / 10 = STR点数
-        let weekDuration = exerciseStore.weekTotalDuration
-        self.strength = weekDuration / 10
-    }
-    
-    // INT 智力 - 来自已读书籍数量
-    private func calculateIntelligence() {
-        guard let bookStore = bookStore else { return }
-        
-        // 每本已读完的书 = 5 INT
-        // 每本正在读的书 = 2 INT
-        let finishedBooks = bookStore.finishedBooks.count
-        let readingBooks = bookStore.readingBooks.count
-        
-        self.intelligence = finishedBooks * 5 + readingBooks * 2
-    }
-    
-    // VIT 活力 - 来自任务完成率
-    private func calculateVitality() {
-        guard let questStore = questStore else { return }
-        
-        // 任务完成率 * 100 = VIT
-        self.vitality = questStore.completionPercentage
-    }
-    
-    // GOLD 财富 - 来自资产净值
-    private func calculateWealth() {
-        guard let financeStore = financeStore else { return }
-        
-        // 净资产 / 1000 = GOLD (以分为单位，所以 / 100000)
-        let netWorth = financeStore.netWorth
-        self.wealth = netWorth / 100000  // 1000元 = 1 GOLD
+
+    private nonisolated func computeIntelligence(from books: [BookEntryData]) -> Int {
+        let finishedCount = books.filter { $0.status == "finished" }.count
+        let readingCount = books.filter { $0.status == "reading" }.count
+        return finishedCount * 5 + readingCount * 2
     }
     
     // MARK: - Formatted Stats (for display)

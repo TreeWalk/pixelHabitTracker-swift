@@ -4,11 +4,27 @@ import SwiftData
 @MainActor
 class SwiftDataExerciseStore: ObservableObject {
     private var modelContext: ModelContext?
-    
+
     @Published var entries: [ExerciseEntryData] = []
     @Published var isLoading = false
     @Published var error: String?
-    
+    @Published var lastSaveError: Error?
+
+    // MARK: - Private Helpers
+
+    /// 统一的保存方法，带错误处理
+    private func saveContext() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+            lastSaveError = nil
+        } catch {
+            lastSaveError = error
+            self.error = "保存失败: \(error.localizedDescription)"
+            print("❌ SwiftDataExerciseStore 保存失败: \(error)")
+        }
+    }
+
     // MARK: - Configure
     
     func configure(modelContext: ModelContext) async {
@@ -71,16 +87,16 @@ class SwiftDataExerciseStore: ObservableObject {
         
         context.insert(entry)
         entries.insert(entry, at: 0)
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func deleteEntry(_ entry: ExerciseEntryData) {
         guard let context = modelContext else { return }
-        
+
         context.delete(entry)
         entries.removeAll { $0.date == entry.date && $0.type == entry.type }
-        
-        try? context.save()
+
+        saveContext()
     }
 }

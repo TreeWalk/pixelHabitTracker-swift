@@ -4,11 +4,27 @@ import SwiftData
 @MainActor
 class SwiftDataSleepStore: ObservableObject {
     private var modelContext: ModelContext?
-    
+
     @Published var entries: [SleepEntryData] = []
     @Published var isLoading = false
     @Published var error: String?
-    
+    @Published var lastSaveError: Error?
+
+    // MARK: - Private Helpers
+
+    /// 统一的保存方法，带错误处理
+    private func saveContext() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+            lastSaveError = nil
+        } catch {
+            lastSaveError = error
+            self.error = "保存失败: \(error.localizedDescription)"
+            print("❌ SwiftDataSleepStore 保存失败: \(error)")
+        }
+    }
+
     // MARK: - Configure
     
     func configure(modelContext: ModelContext) async {
@@ -65,10 +81,10 @@ class SwiftDataSleepStore: ObservableObject {
         
         context.insert(entry)
         entries.insert(entry, at: 0)
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func addEntryWithHealthKitData(
         bedTime: Date,
         wakeTime: Date,
@@ -80,7 +96,7 @@ class SwiftDataSleepStore: ObservableObject {
         sleepScore: Int?
     ) {
         guard let context = modelContext else { return }
-        
+
         let entry = SleepEntryData(
             bedTime: bedTime,
             wakeTime: wakeTime,
@@ -92,19 +108,19 @@ class SwiftDataSleepStore: ObservableObject {
             sleepScore: sleepScore,
             isFromHealthKit: true
         )
-        
+
         context.insert(entry)
         entries.insert(entry, at: 0)
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func deleteEntry(_ entry: SleepEntryData) {
         guard let context = modelContext else { return }
-        
+
         context.delete(entry)
         entries.removeAll { $0.date == entry.date }
-        
-        try? context.save()
+
+        saveContext()
     }
 }

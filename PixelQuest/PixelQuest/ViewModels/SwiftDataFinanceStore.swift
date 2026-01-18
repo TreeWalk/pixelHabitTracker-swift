@@ -4,17 +4,34 @@ import SwiftData
 @MainActor
 class SwiftDataFinanceStore: ObservableObject {
     private var modelContext: ModelContext?
-    
+
     @Published var wallets: [WalletData] = []
     @Published var snapshots: [WalletSnapshotData] = []
     @Published var entries: [FinanceEntryData] = []
     @Published var assets: [AssetData] = []
     @Published var assetSnapshots: [AssetSnapshotData] = []
     @Published var isLoading = false
-    
+    @Published var error: String?
+    @Published var lastSaveError: Error?
+
     // 上次选择的分类
     @Published var lastExpenseCategory: String = "food"
     @Published var lastIncomeCategory: String = "salary"
+
+    // MARK: - Private Helpers
+
+    /// 统一的保存方法，带错误处理
+    private func saveContext() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+            lastSaveError = nil
+        } catch {
+            lastSaveError = error
+            self.error = "保存失败: \(error.localizedDescription)"
+            print("❌ SwiftDataFinanceStore 保存失败: \(error)")
+        }
+    }
     
     // MARK: - 配置 ModelContext
     
@@ -62,8 +79,8 @@ class SwiftDataFinanceStore: ObservableObject {
             context.insert(wallet)
             wallets.append(wallet)
         }
-        
-        try? context.save()
+
+        saveContext()
     }
     
     // MARK: - 计算属性
@@ -110,15 +127,15 @@ class SwiftDataFinanceStore: ObservableObject {
         
         if type == "expense" { lastExpenseCategory = category }
         else if type == "income" { lastIncomeCategory = category }
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func deleteEntry(_ entry: FinanceEntryData) {
         guard let context = modelContext else { return }
         context.delete(entry)
         entries.removeAll { $0.id == entry.id }
-        try? context.save()
+        saveContext()
     }
     
     // MARK: - 快照操作
@@ -135,8 +152,8 @@ class SwiftDataFinanceStore: ObservableObject {
         for wallet in wallets {
             wallet.lastUpdated = Date()
         }
-        
-        try? context.save()
+
+        saveContext()
     }
     
     func calculateDifference(from oldSnapshot: WalletSnapshotData?, to newSnapshot: WalletSnapshotData) -> (actual: Int, recorded: Int, diff: Int) {
@@ -189,36 +206,36 @@ class SwiftDataFinanceStore: ObservableObject {
     
     func addAsset(name: String, icon: String, color: String, type: String, balance: Int) {
         guard let context = modelContext else { return }
-        
+
         let order = assets.filter { $0.type == type }.count
         let asset = AssetData(name: name, icon: icon, color: color, type: type, order: order, currentBalance: balance)
         context.insert(asset)
         assets.append(asset)
-        
-        try? context.save()
+
+        saveContext()
     }
-    
+
     func updateAsset(_ asset: AssetData, balance: Int) {
         asset.currentBalance = balance
         asset.lastUpdated = Date()
-        try? modelContext?.save()
+        saveContext()
     }
-    
+
     func deleteAsset(_ asset: AssetData) {
         guard let context = modelContext else { return }
         context.delete(asset)
         assets.removeAll { $0.assetId == asset.assetId }
-        try? context.save()
+        saveContext()
     }
-    
+
     func createAssetSnapshot() {
         guard let context = modelContext else { return }
-        
+
         var balances: [String: Int] = [:]
         for asset in assets {
             balances[asset.assetId.uuidString] = asset.currentBalance
         }
-        
+
         let snapshot = AssetSnapshotData(
             balances: balances,
             totalAssets: totalAssets,
@@ -226,8 +243,8 @@ class SwiftDataFinanceStore: ObservableObject {
         )
         context.insert(snapshot)
         assetSnapshots.insert(snapshot, at: 0)
-        
-        try? context.save()
+
+        saveContext()
     }
     
     func calculateAssetChange(from oldSnapshot: AssetSnapshotData?, to newSnapshot: AssetSnapshotData) -> [(assetId: UUID, oldBalance: Int, newBalance: Int, change: Int)] {
