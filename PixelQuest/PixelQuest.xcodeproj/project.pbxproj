@@ -76,6 +76,9 @@
 		23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228622F17D7830068CEFC /* DesignSystem.swift */; };
 		23E228652F191A880068CEFC /* Font+Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228642F191A880068CEFC /* Font+Pixel.swift */; };
 		23E228672F191A950068CEFC /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228662F191A950068CEFC /* DataManager.swift */; };
+		23E2286C2F1C93500068CEFC /* QuickExpenseIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E2286A2F1C93500068CEFC /* QuickExpenseIntent.swift */; };
+		23E2286D2F1C93500068CEFC /* ExpenseCategoryAppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228692F1C93500068CEFC /* ExpenseCategoryAppEnum.swift */; };
+		23E2286E2F1C93500068CEFC /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E228682F1C93500068CEFC /* AppShortcuts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -151,6 +154,9 @@
 		23E228622F17D7830068CEFC /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		23E228642F191A880068CEFC /* Font+Pixel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Pixel.swift"; sourceTree = "<group>"; };
 		23E228662F191A950068CEFC /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		23E228682F1C93500068CEFC /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
+		23E228692F1C93500068CEFC /* ExpenseCategoryAppEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseCategoryAppEnum.swift; sourceTree = "<group>"; };
+		23E2286A2F1C93500068CEFC /* QuickExpenseIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickExpenseIntent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,6 +300,16 @@
 			path = QuickEntry;
 			sourceTree = "<group>";
 		};
+		23E2286B2F1C93500068CEFC /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				23E228682F1C93500068CEFC /* AppShortcuts.swift */,
+				23E228692F1C93500068CEFC /* ExpenseCategoryAppEnum.swift */,
+				23E2286A2F1C93500068CEFC /* QuickExpenseIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		300 = {
 			isa = PBXGroup;
 			children = (
@@ -307,6 +323,7 @@
 		301 /* PixelQuest */ = {
 			isa = PBXGroup;
 			children = (
+				23E2286B2F1C93500068CEFC /* Intents */,
 				23E228642F191A880068CEFC /* Font+Pixel.swift */,
 				23E228622F17D7830068CEFC /* DesignSystem.swift */,
 				23D2983A2F0BE43B00C1B539 /* Resources */,
@@ -576,6 +593,9 @@
 				23D298702F0E7C9F00C1B539 /* SwiftDataItemStore.swift in Sources */,
 				23E228402F1001800068CEFC /* SwiftDataBookStore.swift in Sources */,
 				015 /* SettingsView.swift in Sources */,
+				23E2286C2F1C93500068CEFC /* QuickExpenseIntent.swift in Sources */,
+				23E2286D2F1C93500068CEFC /* ExpenseCategoryAppEnum.swift in Sources */,
+				23E2286E2F1C93500068CEFC /* AppShortcuts.swift in Sources */,
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
 				23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
