@@ -14,10 +14,32 @@ struct QuickEntrySheet: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color("PixelBg").ignoresSafeArea()
-                
+        ZStack {
+            Color("PixelBg").ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                // Header
+                HStack {
+                    HStack(spacing: 8) {
+                        Image(systemName: "dollarsign.circle.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(Color("PixelAccent"))
+                        Text("finance_quick_entry".localized)
+                            .font(.pixel(22))
+                            .foregroundColor(Color("PixelBorder"))
+                    }
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Text("✕")
+                            .font(.pixel(20))
+                            .foregroundColor(Color("PixelBorder"))
+                            .frame(width: 32, height: 32)
+                            .background(Color("PixelAccent"))
+                            .pixelBorderSmall()
+                    }
+                }
+                .padding(.horizontal)
+
                 ScrollView {
                     VStack(spacing: 16) {
                         // 收入/支出切换
@@ -95,16 +117,7 @@ struct QuickEntrySheet: View {
                     .padding()
                 }
             }
-            .navigationTitle("finance_quick_entry".localized)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("cancel".localized) {
-                        dismiss()
-                    }
-                    .font(.pixel(16))
-                }
-            }
+            .padding(.top)
         }
         .onAppear {
             selectedCategory = selectedType == .expense ? financeStore.lastExpenseCategory : financeStore.lastIncomeCategory

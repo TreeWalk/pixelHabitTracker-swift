@@ -20,6 +20,7 @@
 		014 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114 /* ItemsView.swift */; };
 		015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* SettingsView.swift */; };
 		23A2E9002F1D1E44008C75B1 /* DataChangeNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */; };
+		23A2E9022F1E5E8F008C75B1 /* QuickEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */; };
 		23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298002F08F1E100C1B539 /* GymDetailView.swift */; };
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
@@ -35,7 +36,6 @@
 		23D2982B2F090E9200C1B539 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2982A2F090E9200C1B539 /* Wallet.swift */; };
 		23D2982D2F090E9D00C1B539 /* FinanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2982C2F090E9D00C1B539 /* FinanceStore.swift */; };
 		23D2982F2F0A9BA800C1B539 /* WalletSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2982E2F0A9BA800C1B539 /* WalletSnapshot.swift */; };
-		23D298312F0A9C2A00C1B539 /* QuickEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298302F0A9C2A00C1B539 /* QuickEntrySheet.swift */; };
 		23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298322F0A9C3400C1B539 /* ReconcileSheet.swift */; };
 		23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298342F0BE41400C1B539 /* LocalizationManager.swift */; };
 		23D2983B2F0BE43B00C1B539 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 23D298392F0BE43B00C1B539 /* Localizable.strings */; };
@@ -97,6 +97,7 @@
 		114 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
 		115 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeNotifier.swift; sourceTree = "<group>"; };
+		23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickEntrySheet.swift; sourceTree = "<group>"; };
 		23D297F92F08D94400C1B539 /* PixelQuest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PixelQuest.entitlements; sourceTree = "<group>"; };
 		23D298002F08F1E100C1B539 /* GymDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymDetailView.swift; sourceTree = "<group>"; };
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
@@ -113,7 +114,6 @@
 		23D2982A2F090E9200C1B539 /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		23D2982C2F090E9D00C1B539 /* FinanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceStore.swift; sourceTree = "<group>"; };
 		23D2982E2F0A9BA800C1B539 /* WalletSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSnapshot.swift; sourceTree = "<group>"; };
-		23D298302F0A9C2A00C1B539 /* QuickEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickEntrySheet.swift; sourceTree = "<group>"; };
 		23D298322F0A9C3400C1B539 /* ReconcileSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconcileSheet.swift; sourceTree = "<group>"; };
 		23D298342F0BE41400C1B539 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		23D298372F0BE43B00C1B539 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -296,6 +296,7 @@
 		23E228592F129D6C0068CEFC /* QuickEntry */ = {
 			isa = PBXGroup;
 			children = (
+				23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */,
 				23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */,
 				23E228572F129D6C0068CEFC /* QuickReadSheet.swift */,
 				23E228582F129D6C0068CEFC /* QuickSleepSheet.swift */,
@@ -431,7 +432,6 @@
 				23D2985C2F0D31EA00C1B539 /* AssetTab.swift */,
 				23D2985A2F0D31DC00C1B539 /* AddAssetSheet.swift */,
 				23D298322F0A9C3400C1B539 /* ReconcileSheet.swift */,
-				23D298302F0A9C2A00C1B539 /* QuickEntrySheet.swift */,
 				23D298282F090E8800C1B539 /* LibraryDetailView.swift */,
 				23D298262F090E7E00C1B539 /* CompanyDetailView.swift */,
 				23D298242F090E1700C1B539 /* BookDetailView.swift */,
@@ -579,7 +579,6 @@
 				23E2285B2F129D6C0068CEFC /* QuickExerciseSheet.swift in Sources */,
 				23E2285C2F129D6C0068CEFC /* QuickSleepSheet.swift in Sources */,
 				23D298592F0D304600C1B539 /* AssetData.swift in Sources */,
-				23D298312F0A9C2A00C1B539 /* QuickEntrySheet.swift in Sources */,
 				012 /* QuestsView.swift in Sources */,
 				23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */,
 				013 /* MapView.swift in Sources */,
@@ -590,6 +589,7 @@
 				23D298272F090E7E00C1B539 /* CompanyDetailView.swift in Sources */,
 				23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */,
 				23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */,
+				23A2E9022F1E5E8F008C75B1 /* QuickEntrySheet.swift in Sources */,
 				23E228672F191A950068CEFC /* DataManager.swift in Sources */,
 				23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */,
 				014 /* ItemsView.swift in Sources */,
