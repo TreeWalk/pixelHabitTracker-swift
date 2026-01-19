@@ -4,17 +4,48 @@ import SwiftUI
 // A warm, cozy design system blending pixel art with modern iOS fluidity
 // Think "Stardew Valley UI" - smooth rounded corners, warm colors, pixel fonts
 
+// MARK: - Pixel Design Tokens
+
+/// Animation presets for pixel-style interactions
+enum PixelAnimation {
+    static let standard = Animation.spring(response: 0.3, dampingFraction: 0.7)
+    static let quick = Animation.spring(response: 0.2, dampingFraction: 0.8)
+}
+
+/// Spacing scale for consistent layout
+enum PixelSpacing {
+    static let xs: CGFloat = 4
+    static let sm: CGFloat = 8
+    static let md: CGFloat = 12
+    static let lg: CGFloat = 16
+    static let xl: CGFloat = 24
+}
+
+/// Border width presets
+enum PixelBorder {
+    static let thin: CGFloat = 2
+    static let standard: CGFloat = 3
+    static let thick: CGFloat = 4
+}
+
+/// Shadow offset for pixel-style hard shadows
+enum PixelShadow {
+    static let offset: CGFloat = 4
+}
+
 // MARK: - Color Extensions
 
 extension Color {
     /// Dark Coffee - The primary warm dark brown for all borders/strokes
-    static let darkCoffee = Color(red: 0.29, green: 0.23, blue: 0.20) // #4A3B32
-    
+    /// Now references PixelBorder asset for consistency
+    static let darkCoffee = Color("PixelBorder")
+
     /// Light Coffee - For unselected/secondary elements
-    static let lightCoffee = Color(red: 0.55, green: 0.45, blue: 0.38)
-    
+    static let lightCoffee = Color("PixelBorder").opacity(0.6)
+
     /// Cream Background - Warm off-white
-    static let creamBg = Color(red: 0.98, green: 0.96, blue: 0.93)
+    /// Now references PixelBg asset for consistency
+    static let creamBg = Color("PixelBg")
 }
 
 // MARK: - Typography (Hybrid Strategy)
@@ -214,6 +245,10 @@ struct CozyCheckbox: View {
     }
 }
 
+// MARK: - Pixel Component Aliases (for semantic naming)
+typealias PixelProgressBar = CozyProgressBar
+typealias PixelCheckbox = CozyCheckbox
+
 // MARK: - Custom Floating Tab Bar
 
 struct FloatingTabBar: View {
@@ -253,10 +288,10 @@ struct FloatingTabBar: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(
-                        // Selected indicator
+                        // Selected indicator - pixel style square
                         Group {
                             if selectedTab == index {
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                Rectangle()
                                     .fill(Color.darkCoffee.opacity(0.12))
                             }
                         }
@@ -267,13 +302,17 @@ struct FloatingTabBar: View {
         .padding(.horizontal, 6)
         .padding(.vertical, 4)
         .background(Color.creamBg)
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            Rectangle()
                 .stroke(Color.darkCoffee, lineWidth: 3)
         )
-        // Soft blur shadow
-        .shadow(color: Color.darkCoffee.opacity(0.2), radius: 10, x: 0, y: 4)
+        // Hard pixel shadow
+        .background(
+            Rectangle()
+                .fill(Color.darkCoffee.opacity(0.3))
+                .offset(x: 4, y: 4)
+        )
         .padding(.horizontal, 16)
     }
 }

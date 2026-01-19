@@ -56,6 +56,27 @@ extension View {
                     .stroke(color, lineWidth: 2)
             )
     }
+
+    /// Applies pixel-style card with small border and hard shadow
+    /// Use this for Sheet internal cards for unified pixel style
+    func pixelCardSmall(
+        backgroundColor: Color = .white,
+        borderColor: Color = Color("PixelBorder"),
+        shadowColor: Color = Color("PixelBorder"),
+        shadowOffset: CGFloat = 3
+    ) -> some View {
+        self
+            .background(backgroundColor)
+            .overlay(
+                Rectangle()
+                    .stroke(borderColor, lineWidth: 2)
+            )
+            .background(
+                Rectangle()
+                    .fill(shadowColor.opacity(0.25))
+                    .offset(x: shadowOffset, y: shadowOffset)
+            )
+    }
 }
 
 // MARK: - Pixel UI Components

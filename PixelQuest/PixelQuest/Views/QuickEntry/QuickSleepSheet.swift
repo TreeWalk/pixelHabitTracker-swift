@@ -74,9 +74,9 @@ struct QuickSleepSheet: View {
                         PixelDatePicker(title: "", selection: $bedTime, displayedComponents: .hourAndMinute)
                             .frame(width: 100)
                     }
-                    
+
                     Spacer()
-                    
+
                     // Wake Time
                     VStack(spacing: 4) {
                         HStack(spacing: 4) {
@@ -92,8 +92,7 @@ struct QuickSleepSheet: View {
                 }
             }
             .padding()
-            .background(Color.white)
-            .pixelBorderSmall()
+            .pixelCardSmall()
             .padding(.horizontal)
             
             // Quality Stars Card
@@ -101,7 +100,7 @@ struct QuickSleepSheet: View {
                 Text("睡眠质量")
                     .font(.pixel(14))
                     .foregroundColor(Color("PixelBorder").opacity(0.7))
-                
+
                 HStack(spacing: 12) {
                     ForEach(1...5, id: \.self) { index in
                         Button(action: { quality = index }) {
@@ -111,14 +110,13 @@ struct QuickSleepSheet: View {
                         }
                     }
                 }
-                
+
                 Text(qualityText)
                     .font(.pixel(12))
                     .foregroundColor(Color("PixelAccent"))
             }
             .padding()
-            .background(Color.white)
-            .pixelBorderSmall()
+            .pixelCardSmall()
             .padding(.horizontal)
             
             Spacer()

@@ -45,7 +45,7 @@ struct QuickReadSheet: View {
                     Text("选择书籍")
                         .font(.pixel(14))
                         .foregroundColor(Color("PixelBorder").opacity(0.7))
-                    
+
                     if readingBooks.isEmpty {
                         HStack {
                             Image(systemName: "book.closed")
@@ -81,8 +81,7 @@ struct QuickReadSheet: View {
                     }
                 }
                 .padding()
-                .background(Color.white)
-                .pixelBorderSmall()
+                .pixelCardSmall()
                 .padding(.horizontal)
                 
                 // Duration Card
@@ -90,9 +89,9 @@ struct QuickReadSheet: View {
                     Text("阅读时长")
                         .font(.pixel(16))
                         .foregroundColor(Color("PixelBorder"))
-                    
+
                     Spacer()
-                    
+
                     Button(action: { if duration > 10 { duration -= 10 } }) {
                         Text("−")
                             .font(.pixel(24))
@@ -101,16 +100,16 @@ struct QuickReadSheet: View {
                             .background(Color("PixelAccent"))
                             .pixelBorderSmall()
                     }
-                    
+
                     Text("\(duration)")
                         .font(.pixel(28))
                         .foregroundColor(Color("PixelGreen"))
                         .frame(width: 60)
-                    
+
                     Text("分钟")
                         .font(.pixel(14))
                         .foregroundColor(Color("PixelBorder").opacity(0.7))
-                    
+
                     Button(action: { duration += 10 }) {
                         Text("+")
                             .font(.pixel(24))
@@ -121,8 +120,7 @@ struct QuickReadSheet: View {
                     }
                 }
                 .padding()
-                .background(Color.white)
-                .pixelBorderSmall()
+                .pixelCardSmall()
                 .padding(.horizontal)
                 
                 // Quick Note Card
@@ -134,7 +132,7 @@ struct QuickReadSheet: View {
                             .font(.pixel(14))
                             .foregroundColor(Color("PixelBorder").opacity(0.7))
                     }
-                    
+
                     TextField("记录一下读书心得...", text: $note, axis: .vertical)
                         .font(.pixel(14))
                         .lineLimit(2...3)
@@ -143,8 +141,7 @@ struct QuickReadSheet: View {
                         .pixelBorderSmall()
                 }
                 .padding()
-                .background(Color.white)
-                .pixelBorderSmall()
+                .pixelCardSmall()
                 .padding(.horizontal)
                 
                 Spacer()

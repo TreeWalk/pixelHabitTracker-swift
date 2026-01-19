@@ -31,7 +31,7 @@ struct QuickEntrySheet: View {
                                 selectedType = .expense
                                 selectedCategory = financeStore.lastExpenseCategory
                             }
-                            
+
                             TypeToggleButton(
                                 title: "finance_income".localized,
                                 icon: "arrow.up.circle.fill",
@@ -42,15 +42,14 @@ struct QuickEntrySheet: View {
                                 selectedCategory = financeStore.lastIncomeCategory
                             }
                         }
-                        .background(Color.white)
-                        .pixelBorderSmall()
+                        .pixelCardSmall()
                         
                         // 金额输入
                         HStack {
                             Text("¥")
                                 .font(.pixel(36))
                                 .foregroundColor(selectedType == .expense ? Color("PixelRed") : Color("PixelGreen"))
-                            
+
                             TextField("0.00", text: $amountText)
                                 .font(.pixel(44))
                                 .foregroundColor(Color("PixelBorder"))
@@ -58,8 +57,7 @@ struct QuickEntrySheet: View {
                                 .multilineTextAlignment(.center)
                         }
                         .padding()
-                        .background(Color.white)
-                        .pixelBorderSmall()
+                        .pixelCardSmall()
                         
                         // 分类选择
                         if !categories.isEmpty {

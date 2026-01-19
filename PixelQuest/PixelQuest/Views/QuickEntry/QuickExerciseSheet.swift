@@ -90,7 +90,7 @@ struct QuickExerciseSheet: View {
                     Text("运动类型")
                         .font(.pixel(14))
                         .foregroundColor(Color("PixelBorder").opacity(0.7))
-                    
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(ExerciseType.allCases, id: \.self) { type in
@@ -111,8 +111,7 @@ struct QuickExerciseSheet: View {
                     }
                 }
                 .padding()
-                .background(Color.white)
-                .pixelBorderSmall()
+                .pixelCardSmall()
                 .padding(.horizontal)
                 
                 // Duration Card
@@ -120,9 +119,9 @@ struct QuickExerciseSheet: View {
                     Text("时长")
                         .font(.pixel(16))
                         .foregroundColor(Color("PixelBorder"))
-                    
+
                     Spacer()
-                    
+
                     Button(action: { if duration > 5 { duration -= 5 } }) {
                         Text("−")
                             .font(.pixel(24))
@@ -131,16 +130,16 @@ struct QuickExerciseSheet: View {
                             .background(Color("PixelAccent"))
                             .pixelBorderSmall()
                     }
-                    
+
                     Text("\(duration)")
                         .font(.pixel(28))
                         .foregroundColor(Color("PixelBlue"))
                         .frame(width: 60)
-                    
+
                     Text("分钟")
                         .font(.pixel(14))
                         .foregroundColor(Color("PixelBorder").opacity(0.7))
-                    
+
                     Button(action: { duration += 5 }) {
                         Text("+")
                             .font(.pixel(24))
@@ -151,8 +150,7 @@ struct QuickExerciseSheet: View {
                     }
                 }
                 .padding()
-                .background(Color.white)
-                .pixelBorderSmall()
+                .pixelCardSmall()
                 .padding(.horizontal)
                 
                 Spacer()

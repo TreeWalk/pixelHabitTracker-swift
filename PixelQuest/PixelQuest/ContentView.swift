@@ -86,12 +86,16 @@ struct ContentView: View {
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color("PixelAccent"))
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        Rectangle()
                             .stroke(Color.darkCoffee, lineWidth: 3)
                     )
-                    .shadow(color: Color.darkCoffee.opacity(0.25), radius: 8, x: 0, y: 4)
+                    .background(
+                        Rectangle()
+                            .fill(Color.darkCoffee.opacity(0.3))
+                            .offset(x: 4, y: 4)
+                    )
                     .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
             }
             .padding(.bottom, 90) // Above custom tab bar
@@ -123,27 +127,31 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - FAB Action Button (Cozy Style)
+    // MARK: - FAB Action Button (Pixel Style)
     private func fabActionButton(pixelIcon: String, color: Color, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 8) {
                 ZStack {
-                    // Cozy rounded button with warm border
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    // Pixel style square button
+                    Rectangle()
                         .fill(color)
                         .frame(width: 56, height: 56)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            Rectangle()
                                 .stroke(Color.darkCoffee, lineWidth: 3)
                         )
-                        .shadow(color: Color.darkCoffee.opacity(0.2), radius: 6, x: 0, y: 3)
-                    
+                        .background(
+                            Rectangle()
+                                .fill(Color.darkCoffee.opacity(0.3))
+                                .offset(x: 4, y: 4)
+                        )
+
                     Image(pixelIcon)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 28, height: 28)
                 }
-                
+
                 Text(label)
                     .font(.pixel(12))
                     .foregroundColor(.white)
