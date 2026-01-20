@@ -20,7 +20,7 @@ struct QuickSleepSheet: View {
                     Image(systemName: "moon.zzz.fill")
                         .font(.system(size: 20))
                         .foregroundColor(Color("PixelBlue"))
-                    Text("快速记录睡眠")
+                    Text("quick_sleep_title".localized)
                         .font(.pixel(20))
                         .foregroundColor(Color("PixelBorder"))
                 }
@@ -67,7 +67,7 @@ struct QuickSleepSheet: View {
                         HStack(spacing: 4) {
                             Image(systemName: "moon.fill")
                                 .foregroundColor(Color("PixelBlue"))
-                            Text("入睡")
+                            Text("bed_time".localized)
                                 .font(.pixel(14))
                                 .foregroundColor(Color("PixelBorder"))
                         }
@@ -82,7 +82,7 @@ struct QuickSleepSheet: View {
                         HStack(spacing: 4) {
                             Image(systemName: "sun.max.fill")
                                 .foregroundColor(Color("PixelAccent"))
-                            Text("起床")
+                            Text("wake_time".localized)
                                 .font(.pixel(14))
                                 .foregroundColor(Color("PixelBorder"))
                         }
@@ -97,7 +97,7 @@ struct QuickSleepSheet: View {
             
             // Quality Stars Card
             VStack(spacing: 8) {
-                Text("睡眠质量")
+                Text("sleep_quality_label".localized)
                     .font(.pixel(14))
                     .foregroundColor(Color("PixelBorder").opacity(0.7))
 
@@ -129,7 +129,7 @@ struct QuickSleepSheet: View {
                             .scaleEffect(0.8)
                             .tint(Color("PixelBorder"))
                     }
-                    Text("记录睡眠 ✓")
+                    Text("record_sleep".localized + " ✓")
                         .font(.pixel(22))
                 }
                 .foregroundColor(Color("PixelBorder"))

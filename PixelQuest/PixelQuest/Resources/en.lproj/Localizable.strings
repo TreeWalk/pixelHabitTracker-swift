@@ -238,4 +238,32 @@
 "items_rarity_epic" = "Epic";
 "items_rarity_legendary" = "Legendary";
 
+/* Quick Entry Sheets */
+"quick_sleep_title" = "Quick Sleep Log";
+"quick_exercise_title" = "Quick Exercise Log";
+"quick_read_title" = "Quick Reading Log";
+"quick_bill_title" = "Quick Entry";
+
+"sync_from_health" = "Sync from Health";
+"syncing" = "Syncing...";
+"bed_time" = "Bed";
+"wake_time" = "Wake";
+"sleep_quality_label" = "Sleep Quality";
+"quality_very_bad" = "Very Bad";
+"quality_bad" = "Bad";
+"quality_normal" = "Normal";
+"quality_good" = "Good";
+"quality_excellent" = "Excellent";
+"record_sleep" = "Log Sleep";
+"exercise_type_label" = "Exercise Type";
+"duration_label" = "Duration";
+"minutes" = "min";
+"record_exercise" = "Log Exercise";
+"select_book" = "Select Book";
+"no_reading_books" = "No books currently reading";
+"reading_duration" = "Reading Time";
+"quick_note" = "Quick Note";
+"note_placeholder" = "Write your thoughts...";
+"record_reading" = "Log Reading";
+
 

@@ -21,6 +21,9 @@
 		015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* SettingsView.swift */; };
 		23A2E9002F1D1E44008C75B1 /* DataChangeNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */; };
 		23A2E9022F1E5E8F008C75B1 /* QuickEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */; };
+		23A2E9042F1E649A008C75B1 /* PixelSheetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9032F1E649A008C75B1 /* PixelSheetComponents.swift */; };
+		23A2E9062F1E679E008C75B1 /* QuickSheetContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9052F1E679E008C75B1 /* QuickSheetContents.swift */; };
+		23A2E9082F1E7446008C75B1 /* PixelWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9072F1E7446008C75B1 /* PixelWindow.swift */; };
 		23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298002F08F1E100C1B539 /* GymDetailView.swift */; };
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
@@ -98,6 +101,9 @@
 		115 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeNotifier.swift; sourceTree = "<group>"; };
 		23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickEntrySheet.swift; sourceTree = "<group>"; };
+		23A2E9032F1E649A008C75B1 /* PixelSheetComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelSheetComponents.swift; sourceTree = "<group>"; };
+		23A2E9052F1E679E008C75B1 /* QuickSheetContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSheetContents.swift; sourceTree = "<group>"; };
+		23A2E9072F1E7446008C75B1 /* PixelWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelWindow.swift; sourceTree = "<group>"; };
 		23D297F92F08D94400C1B539 /* PixelQuest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PixelQuest.entitlements; sourceTree = "<group>"; };
 		23D298002F08F1E100C1B539 /* GymDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymDetailView.swift; sourceTree = "<group>"; };
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
@@ -262,6 +268,8 @@
 		23D298632F0D36EE00C1B539 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				23A2E9072F1E7446008C75B1 /* PixelWindow.swift */,
+				23A2E9032F1E649A008C75B1 /* PixelSheetComponents.swift */,
 				23D298692F0E18A400C1B539 /* PixelDatePicker.swift */,
 				23D298622F0D36EE00C1B539 /* ThermalReceiptView.swift */,
 			);
@@ -296,6 +304,7 @@
 		23E228592F129D6C0068CEFC /* QuickEntry */ = {
 			isa = PBXGroup;
 			children = (
+				23A2E9052F1E679E008C75B1 /* QuickSheetContents.swift */,
 				23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */,
 				23E228562F129D6C0068CEFC /* QuickExerciseSheet.swift */,
 				23E228572F129D6C0068CEFC /* QuickReadSheet.swift */,
@@ -544,6 +553,7 @@
 				005 /* Quest.swift in Sources */,
 				23D2985D2F0D31EA00C1B539 /* AssetTab.swift in Sources */,
 				23D298292F090E8800C1B539 /* LibraryDetailView.swift in Sources */,
+				23A2E9042F1E649A008C75B1 /* PixelSheetComponents.swift in Sources */,
 				23E2283E2F1001740068CEFC /* SwiftDataExerciseStore.swift in Sources */,
 				23D2986C2F0E1C8D00C1B539 /* QuestLogView.swift in Sources */,
 				23D2985B2F0D31DC00C1B539 /* AddAssetSheet.swift in Sources */,
@@ -562,6 +572,7 @@
 				23D298542F0C0BA800C1B539 /* QuestData.swift in Sources */,
 				23E228442F10019B0068CEFC /* LogData.swift in Sources */,
 				23D298612F0D31FC00C1B539 /* TransactionStatsSheet.swift in Sources */,
+				23A2E9062F1E679E008C75B1 /* QuickSheetContents.swift in Sources */,
 				23D298552F0C0BA800C1B539 /* FinanceData.swift in Sources */,
 				23E228512F1257C20068CEFC /* WorldView.swift in Sources */,
 				23E228382F1001590068CEFC /* SwiftDataSleepStore.swift in Sources */,
@@ -600,6 +611,7 @@
 				23E2286D2F1C93500068CEFC /* ExpenseCategoryAppEnum.swift in Sources */,
 				23E2286E2F1C93500068CEFC /* AppShortcuts.swift in Sources */,
 				23D298332F0A9C3400C1B539 /* ReconcileSheet.swift in Sources */,
+				23A2E9082F1E7446008C75B1 /* PixelWindow.swift in Sources */,
 				23E228632F17D7830068CEFC /* DesignSystem.swift in Sources */,
 				23E228362F0EA0020068CEFC /* ItemData.swift in Sources */,
 				23D298572F0C0BE700C1B539 /* SwiftDataFinanceStore.swift in Sources */,

@@ -238,4 +238,32 @@
 "items_rarity_epic" = "史诗";
 "items_rarity_legendary" = "传说";
 
+/* Quick Entry Sheets */
+"quick_sleep_title" = "快速记录睡眠";
+"quick_exercise_title" = "快速记录运动";
+"quick_read_title" = "快速记录阅读";
+"quick_bill_title" = "快速记账";
+
+"sync_from_health" = "从健康同步";
+"syncing" = "同步中...";
+"bed_time" = "入睡";
+"wake_time" = "起床";
+"sleep_quality_label" = "睡眠质量";
+"quality_very_bad" = "很差";
+"quality_bad" = "较差";
+"quality_normal" = "一般";
+"quality_good" = "良好";
+"quality_excellent" = "极佳";
+"record_sleep" = "记录睡眠";
+"exercise_type_label" = "运动类型";
+"duration_label" = "时长";
+"minutes" = "分钟";
+"record_exercise" = "记录运动";
+"select_book" = "选择书籍";
+"no_reading_books" = "暂无在读书籍";
+"reading_duration" = "阅读时长";
+"quick_note" = "快速笔记";
+"note_placeholder" = "记录一下读书心得...";
+"record_reading" = "记录阅读";
+
 

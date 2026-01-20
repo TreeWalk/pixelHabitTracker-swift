@@ -105,25 +105,41 @@ struct ContentView: View {
                 .padding(.bottom, 8)
         }
         .background(Color.creamBg.ignoresSafeArea())
-        // Bill Sheet
-        .sheet(isPresented: $showBillSheet) {
-            QuickEntrySheet()
-                .presentationDetents([.medium])
+        // Bill Window (像素风格窗口弹窗)
+        .pixelWindow(
+            isPresented: $showBillSheet,
+            title: "quick_bill_title".localized,
+            icon: "yensign.circle.fill",
+            iconColor: Color("PixelAccent")
+        ) {
+            QuickEntrySheetContent(isPresented: $showBillSheet)
         }
-        // Sleep Sheet
-        .sheet(isPresented: $showSleepSheet) {
-            QuickSleepSheet()
-                .presentationDetents([.fraction(0.6)])
+        // Sleep Window
+        .pixelWindow(
+            isPresented: $showSleepSheet,
+            title: "quick_sleep_title".localized,
+            icon: "moon.zzz.fill",
+            iconColor: Color("PixelBlue")
+        ) {
+            QuickSleepSheetContent(isPresented: $showSleepSheet)
         }
-        // Sport Sheet
-        .sheet(isPresented: $showSportSheet) {
-            QuickExerciseSheet()
-                .presentationDetents([.fraction(0.65)])
+        // Sport Window
+        .pixelWindow(
+            isPresented: $showSportSheet,
+            title: "quick_exercise_title".localized,
+            icon: "figure.run",
+            iconColor: Color("PixelRed")
+        ) {
+            QuickExerciseSheetContent(isPresented: $showSportSheet)
         }
-        // Read Sheet
-        .sheet(isPresented: $showReadSheet) {
-            QuickReadSheet()
-                .presentationDetents([.fraction(0.7)])
+        // Read Window
+        .pixelWindow(
+            isPresented: $showReadSheet,
+            title: "quick_read_title".localized,
+            icon: "book.fill",
+            iconColor: Color("PixelGreen")
+        ) {
+            QuickReadSheetContent(isPresented: $showReadSheet)
         }
     }
     
