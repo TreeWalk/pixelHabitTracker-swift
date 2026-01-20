@@ -115,6 +115,7 @@ struct CompanyDetailView: View {
         .sheet(isPresented: $showStats) {
             TransactionStatsSheet()
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

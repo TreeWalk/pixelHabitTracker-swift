@@ -15,40 +15,41 @@ struct GymDetailView: View {
     @State private var syncedWorkouts: [WorkoutData] = []
     
     var body: some View {
-        ZStack {
-            Color("PixelBg").ignoresSafeArea()
+        GeometryReader { geometry in
+            let contentWidth = geometry.size.width - 32
+            
+            ZStack {
+                Color("PixelBg").ignoresSafeArea()
 
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Banner
-                    if let banner = location.banner {
-                        Image(banner)
-                            .resizable()
-                            .interpolation(.none)
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 180)
-                            .clipped()
-                            .pixelBorderSmall()
-                            .padding(.horizontal, 16)
-                    }
-
-                    // Exercise Log Section
-                    VStack(spacing: 16) {
-                        // Section Title
-                        HStack(spacing: 8) {
-                            Image(systemName: "dumbbell.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color("PixelBlue"))
-                            Rectangle()
-                                .fill(Color("PixelBlue"))
-                                .frame(width: 4, height: 20)
-                            Text("exercise_log".localized)
-                                .font(.pixel(20))
-                                .foregroundColor(Color("PixelBorder"))
-                            Spacer()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Banner
+                        if let banner = location.banner {
+                            Image(banner)
+                                .resizable()
+                                .interpolation(.none)
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: contentWidth, height: 180)
+                                .clipped()
+                                .pixelBorderSmall()
                         }
-                        .padding(.horizontal, 16)
+
+                        // Exercise Log Section
+                        VStack(spacing: 16) {
+                            // Section Title
+                            HStack(spacing: 8) {
+                                Image(systemName: "dumbbell.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(Color("PixelBlue"))
+                                Rectangle()
+                                    .fill(Color("PixelBlue"))
+                                    .frame(width: 4, height: 20)
+                                Text("exercise_log".localized)
+                                    .font(.pixel(20))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                            }
+                            .frame(width: contentWidth, alignment: .leading)
                         
                         // HealthKit Sync Button
                         Button(action: syncFromHealthKit) {
@@ -69,15 +70,16 @@ struct GymDetailView: View {
                             .pixelBorderSmall(color: Color.red)
                         }
                         .disabled(isSyncing)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .padding(.horizontal, 16)
+                        .frame(width: contentWidth, alignment: .trailing)
                         
                         // Synced Workouts from HealthKit
                         if !syncedWorkouts.isEmpty {
                             VStack(spacing: 8) {
                                 ForEach(syncedWorkouts) { workout in
-                                    HealthKitWorkoutRow(workout: workout)
-                                        .padding(.horizontal, 16)
+                                    HealthKitWorkoutRow(workout: workout) {
+                                        saveHealthKitWorkout(workout)
+                                    }
+                                    .frame(width: contentWidth)
                                 }
                             }
                         }
@@ -194,9 +196,9 @@ struct GymDetailView: View {
                             }
                         }
                         .padding()
+                        .frame(width: contentWidth)
                         .background(Color.white)
                         .pixelBorderSmall()
-                        .padding(.horizontal, 16)
 
                         // Save Button
                         Button(action: saveExercise) {
@@ -216,7 +218,7 @@ struct GymDetailView: View {
                             .pixelBorderSmall()
                         }
                         .disabled(isSaving)
-                        .padding(.horizontal, 16)
+                        .frame(width: contentWidth)
                     }
 
                     // Weekly Stats Section
@@ -233,7 +235,7 @@ struct GymDetailView: View {
                                 .foregroundColor(Color("PixelBorder"))
                             Spacer()
                         }
-                        .padding(.horizontal, 16)
+                        .frame(width: contentWidth, alignment: .leading)
                         
                         // Stats Cards
                         HStack(spacing: 12) {
@@ -253,7 +255,7 @@ struct GymDetailView: View {
                             )
                             .frame(maxWidth: .infinity)
                         }
-                        .padding(.horizontal, 16)
+                        .frame(width: contentWidth)
                     }
 
                     // Today's Records Section
@@ -271,18 +273,21 @@ struct GymDetailView: View {
                                     .foregroundColor(Color("PixelBorder"))
                                 Spacer()
                             }
-                            .padding(.horizontal, 16)
+                            .frame(width: contentWidth, alignment: .leading)
                             
                             ForEach(exerciseStore.todayEntries) { entry in
                                 ExerciseEntryRow(entry: entry)
-                                    .padding(.horizontal, 16)
+                                    .frame(width: contentWidth)
                             }
                         }
                     }
                 }
+                .frame(width: geometry.size.width)
                 .padding(.vertical, 16)
+                .padding(.bottom, 20)
             }
         }
+    }
         .navigationTitle(location.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -302,6 +307,7 @@ struct GymDetailView: View {
                 }
             }
         }
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             // Data is loaded automatically on configure
         }
@@ -334,6 +340,32 @@ struct GymDetailView: View {
             syncedWorkouts = await healthKitManager.fetchTodayWorkouts()
             isSyncing = false
         }
+    }
+    
+    func saveHealthKitWorkout(_ workout: WorkoutData) {
+        // 将 WorkoutData 转换为 ExerciseType
+        let exerciseType: ExerciseType
+        switch workout.typeName.lowercased() {
+        case let name where name.contains("run"):
+            exerciseType = .running
+        case let name where name.contains("walk"):
+            exerciseType = .hiking
+        case let name where name.contains("cycle"), let name where name.contains("bike"):
+            exerciseType = .cycling
+        case let name where name.contains("swim"):
+            exerciseType = .swimming
+        case let name where name.contains("yoga"):
+            exerciseType = .yoga
+        default:
+            exerciseType = .strength
+        }
+        
+        // 保存到数据库
+        exerciseStore.addEntry(
+            type: exerciseType,
+            duration: workout.durationMinutes,
+            calories: Int(workout.calories)
+        )
     }
 }
 
@@ -417,63 +449,93 @@ struct ExerciseEntryRow: View {
 
 // MARK: - HealthKit Workout Row
 
+
 struct HealthKitWorkoutRow: View {
     let workout: WorkoutData
+    let onSave: () -> Void
+    @State private var isSaving = false
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Type Icon
-            Image(systemName: workout.typeIcon)
-                .font(.system(size: 24))
-                .foregroundColor(.red)
-                .frame(width: 44, height: 44)
-                .background(Color.red.opacity(0.1))
-                .pixelBorderSmall(color: Color.red.opacity(0.3))
-            
-            // Details
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(workout.typeName)
-                        .font(.pixel(16))
-                        .foregroundColor(Color("PixelBorder"))
-                    
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 10))
-                        .foregroundColor(.red)
-                }
+        VStack(spacing: 8) {
+            HStack(spacing: 12) {
+                // Type Icon
+                Image(systemName: workout.typeIcon)
+                    .font(.system(size: 24))
+                    .foregroundColor(.red)
+                    .frame(width: 44, height: 44)
+                    .background(Color.red.opacity(0.1))
+                    .pixelBorderSmall(color: Color.red.opacity(0.3))
                 
-                HStack(spacing: 12) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "timer")
-                            .font(.system(size: 12))
-                        Text(workout.formattedDuration)
-                            .font(.pixel(12))
+                // Details
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(workout.typeName)
+                            .font(.pixel(16))
+                            .foregroundColor(Color("PixelBorder"))
+                        
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.red)
                     }
-                    .foregroundColor(Color("PixelBlue"))
                     
-                    HStack(spacing: 4) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 12))
-                        Text("\(Int(workout.calories))kcal")
-                            .font(.pixel(12))
-                    }
-                    .foregroundColor(Color("PixelRed"))
-                    
-                    if workout.distance > 0 {
+                    HStack(spacing: 12) {
                         HStack(spacing: 4) {
-                            Image(systemName: "location.fill")
+                            Image(systemName: "timer")
                                 .font(.system(size: 12))
-                            Text(String(format: "%.1fkm", workout.distanceKM))
+                            Text(workout.formattedDuration)
                                 .font(.pixel(12))
                         }
-                        .foregroundColor(Color("PixelGreen"))
+                        .foregroundColor(Color("PixelBlue"))
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "flame.fill")
+                                .font(.system(size: 12))
+                            Text("\(Int(workout.calories))kcal")
+                                .font(.pixel(12))
+                        }
+                        .foregroundColor(Color("PixelRed"))
+                        
+                        if workout.distance > 0 {
+                            HStack(spacing: 4) {
+                                Image(systemName: "location.fill")
+                                    .font(.system(size: 12))
+                                Text(String(format: "%.1fkm", workout.distanceKM))
+                                    .font(.pixel(12))
+                            }
+                            .foregroundColor(Color("PixelGreen"))
+                        }
                     }
                 }
+                
+                Spacer()
             }
             
-            Spacer()
+            // Save Button
+            Button(action: {
+                isSaving = true
+                onSave()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isSaving = false
+                }
+            }) {
+                HStack {
+                    if isSaving {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    }
+                    Text(isSaving ? "saving".localized : "save_workout".localized)
+                        .font(.pixel(14))
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color("PixelGreen"))
+                .pixelBorderSmall(color: Color("PixelGreen"))
+            }
+            .disabled(isSaving)
         }
         .padding()
         .pixelDialogBorder()
     }
 }
+

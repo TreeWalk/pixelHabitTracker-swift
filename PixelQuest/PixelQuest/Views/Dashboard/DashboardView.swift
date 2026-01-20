@@ -8,6 +8,7 @@ struct DashboardView: View {
     @EnvironmentObject var sleepStore: SwiftDataSleepStore
     @StateObject private var statsService = PlayerStatsService()
     @State private var showSettings = false
+    @Binding var hideTabBar: Bool
     
     // Detail sheet states
     @State private var showExerciseDetail = false
@@ -90,21 +91,31 @@ struct DashboardView: View {
                 financeStore: financeStore
             )
         }
-        // Detail Sheets
-        .sheet(isPresented: $showExerciseDetail) {
-            NavigationStack { GymDetailView(location: gymLocation) }
+        // Detail Navigation Destinations
+        .navigationDestination(isPresented: $showExerciseDetail) {
+            GymDetailView(location: gymLocation)
+                .onAppear { hideTabBar = true }
+                .onDisappear { hideTabBar = false }
         }
-        .sheet(isPresented: $showBookDetail) {
-            NavigationStack { LibraryDetailView(location: libraryLocation) }
+        .navigationDestination(isPresented: $showBookDetail) {
+            LibraryDetailView(location: libraryLocation)
+                .onAppear { hideTabBar = true }
+                .onDisappear { hideTabBar = false }
         }
-        .sheet(isPresented: $showSleepDetail) {
-            NavigationStack { HomeBaseDetailView(location: homeLocation) }
+        .navigationDestination(isPresented: $showSleepDetail) {
+            HomeBaseDetailView(location: homeLocation)
+                .onAppear { hideTabBar = true }
+                .onDisappear { hideTabBar = false }
         }
-        .sheet(isPresented: $showFinanceDetail) {
-            NavigationStack { CompanyDetailView(location: companyLocation) }
+        .navigationDestination(isPresented: $showFinanceDetail) {
+            CompanyDetailView(location: companyLocation)
+                .onAppear { hideTabBar = true }
+                .onDisappear { hideTabBar = false }
         }
-        .sheet(isPresented: $showQuestLog) {
-            NavigationStack { QuestLogView() }
+        .navigationDestination(isPresented: $showQuestLog) {
+            QuestLogView()
+                .onAppear { hideTabBar = true }
+                .onDisappear { hideTabBar = false }
         }
     }
     
@@ -157,7 +168,7 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(hideTabBar: .constant(false))
         .environmentObject(SwiftDataQuestStore())
         .environmentObject(SwiftDataBookStore())
         .environmentObject(SwiftDataExerciseStore())

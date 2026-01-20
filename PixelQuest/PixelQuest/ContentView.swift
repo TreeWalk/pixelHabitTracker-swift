@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var showSleepSheet = false
     @State private var showSportSheet = false
     @State private var showReadSheet = false
+    @State private var hideTabBar = false
     @EnvironmentObject var localizationManager: LocalizationManager
     
     // Static haptic generator to avoid recreation on each tap
@@ -22,7 +23,9 @@ struct ContentView: View {
             Group {
                 switch selectedTab {
                 case 0:
-                    NavigationStack { DashboardView() }
+                    NavigationStack { 
+                        DashboardView(hideTabBar: $hideTabBar)
+                    }
                 case 1:
                     QuestsView()
                 case 2:
@@ -30,7 +33,7 @@ struct ContentView: View {
                 case 3:
                     WorldView()
                 default:
-                    DashboardView()
+                    DashboardView(hideTabBar: $hideTabBar)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -99,10 +102,14 @@ struct ContentView: View {
                     .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
             }
             .padding(.bottom, 90) // Above custom tab bar
+            .offset(y: hideTabBar ? 200 : 0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: hideTabBar)
             
             // Custom Floating Tab Bar
             FloatingTabBar(selectedTab: $selectedTab)
                 .padding(.bottom, 8)
+                .offset(y: hideTabBar ? 200 : 0)
+                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: hideTabBar)
         }
         .background(Color.creamBg.ignoresSafeArea())
         // Bill Window (像素风格窗口弹窗)

@@ -14,60 +14,64 @@ struct LibraryDetailView: View {
     ]
     
     var body: some View {
-        ZStack {
-            Color("PixelBg").ignoresSafeArea()
+        GeometryReader { geometry in
+            let contentWidth = geometry.size.width - 32
+            
+            ZStack {
+                Color("PixelBg").ignoresSafeArea()
 
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Banner
-                    if let banner = location.banner {
-                        Image(banner)
-                            .resizable()
-                            .interpolation(.none)
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 180)
-                            .clipped()
-                            .pixelBorderSmall()
-                            .padding(.horizontal, 16)
-                    }
-
-                    // Section Title
-                    HStack(spacing: 8) {
-                        Image(systemName: "books.vertical.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(Color("PixelBlue"))
-                        Rectangle()
-                            .fill(Color("PixelBlue"))
-                            .frame(width: 4, height: 20)
-                        Text("library_my_books".localized)
-                            .font(.pixel(20))
-                            .foregroundColor(Color("PixelBorder"))
-                        Spacer()
-
-                        Text(String(format: "library_books_count".localized, bookStore.books.count))
-                            .font(.pixel(14))
-                            .foregroundColor(Color("PixelBorder").opacity(0.7))
-                    }
-                    .padding(.horizontal, 16)
-
-                    // Book Grid
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        // Add Book Card
-                        Button(action: { showAddBook = true }) {
-                            AddBookCard()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Banner
+                        if let banner = location.banner {
+                            Image(banner)
+                                .resizable()
+                                .interpolation(.none)
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: contentWidth, height: 180)
+                                .clipped()
+                                .pixelBorderSmall()
                         }
 
-                        // Book Cards
-                        ForEach(bookStore.books) { book in
-                            NavigationLink(destination: BookDetailView(book: book)) {
-                                BookCard(book: book)
+                        // Section Title
+                        HStack(spacing: 8) {
+                            Image(systemName: "books.vertical.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color("PixelBlue"))
+                            Rectangle()
+                                .fill(Color("PixelBlue"))
+                                .frame(width: 4, height: 20)
+                            Text("library_my_books".localized)
+                                .font(.pixel(20))
+                                .foregroundColor(Color("PixelBorder"))
+                            Spacer()
+
+                            Text(String(format: "library_books_count".localized, bookStore.books.count))
+                                .font(.pixel(14))
+                                .foregroundColor(Color("PixelBorder").opacity(0.7))
+                        }
+                        .frame(width: contentWidth, alignment: .leading)
+
+                        // Book Grid
+                        LazyVGrid(columns: columns, spacing: 12) {
+                            // Add Book Card
+                            Button(action: { showAddBook = true }) {
+                                AddBookCard()
+                            }
+
+                            // Book Cards
+                            ForEach(bookStore.books) { book in
+                                NavigationLink(destination: BookDetailView(book: book)) {
+                                    BookCard(book: book)
+                                }
                             }
                         }
+                        .frame(width: contentWidth)
                     }
-                    .padding(.horizontal, 16)
+                    .frame(width: geometry.size.width)
+                    .padding(.vertical, 16)
+                    .padding(.bottom, 20)
                 }
-                .padding(.vertical, 16)
             }
         }
         .navigationTitle(location.name)
@@ -92,6 +96,7 @@ struct LibraryDetailView: View {
         .sheet(isPresented: $showAddBook) {
             AddBookView()
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

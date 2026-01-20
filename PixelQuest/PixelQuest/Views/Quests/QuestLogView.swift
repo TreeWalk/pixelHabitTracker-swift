@@ -69,6 +69,7 @@ struct QuestLogView: View {
                         .font(.pixel(16))
                 }
             }
+            .toolbar(.hidden, for: .tabBar)
         }
     }
     

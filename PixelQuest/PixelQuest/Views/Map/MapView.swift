@@ -10,7 +10,7 @@ struct MapView: View {
         Location(id: 1, name: "Home Base", icon: "home", banner: "homeLong", type: "Rest", desc: "Safe zone. Recover HP here.", unlocked: true),
         Location(id: 2, name: "Gym", icon: "gyn", banner: "gymLong", type: "Strength", desc: "Train your strength stats.", unlocked: true),
         Location(id: 3, name: "Library", icon: "library", banner: "libraryLongMorning", type: "Intellect", desc: "Ancient knowledge lies here.", unlocked: true),
-        Location(id: 4, name: "Company", icon: "company", banner: "companyLongMorning", type: "Skill", desc: "Level up your career skills.", unlocked: true),
+        Location(id: 4, name: "Company", icon: "company", banner: "companyLong", type: "Skill", desc: "Level up your career skills.", unlocked: true),
     ]
     
     var body: some View {

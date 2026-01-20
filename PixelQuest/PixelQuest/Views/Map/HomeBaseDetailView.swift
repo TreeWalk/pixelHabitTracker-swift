@@ -256,6 +256,7 @@ struct HomeBaseDetailView: View {
                 }
             }
         }
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             // Data is loaded automatically on configure
         }
