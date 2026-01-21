@@ -62,6 +62,10 @@ struct QuestsView: View {
         .sheet(isPresented: $showLogSheet) {
             QuestLogView()
         }
+        .onAppear {
+            // 检查并重置需要重置的周期性任务
+            questStore.checkAndResetPeriodicQuests()
+        }
     }
     
     // MARK: - Header Section
@@ -71,10 +75,7 @@ struct QuestsView: View {
                 Text("quests_title".localized)
                     .font(.pixel(28))
                     .foregroundColor(Color("PixelBorder"))
-                
-                Text("Lvl \(questStore.currentLevel). \(questStore.currentTitle)")
-                    .font(.pixel(16))
-                    .foregroundColor(Color("PixelAccent"))
+
             }
             
             Spacer()
@@ -183,9 +184,6 @@ struct SimpleQuestCard: View {
     
     // Completion animation states
     @State private var isFlashing = false
-    @State private var showFloatingXP = false
-    @State private var floatingXPOffset: CGFloat = 0
-    @State private var floatingXPOpacity: Double = 1
     
     // Constants
     private let chargeDuration: Double = 0.6 // seconds to fully charge
@@ -198,6 +196,38 @@ struct SimpleQuestCard: View {
         let capitalized = quest.type.prefix(1).uppercased() + quest.type.dropFirst().lowercased()
         return Quest.QuestType(rawValue: capitalized) ?? .health
     }
+    
+    // Recurrence display properties
+    private var recurrenceText: String {
+        switch quest.recurrenceValue {
+        case "once": return "单次"
+        case "daily": return "每日"
+        case "weekly": return "每周"
+        case "monthly": return "每月"
+        default: return "每日"
+        }
+    }
+    
+    private var recurrenceIcon: String {
+        switch quest.recurrenceValue {
+        case "once": return "1.circle.fill"
+        case "daily": return "sun.max.fill"
+        case "weekly": return "calendar.circle.fill"
+        case "monthly": return "calendar"
+        default: return "sun.max.fill"
+        }
+    }
+    
+    private var recurrenceColor: Color {
+        switch quest.recurrenceValue {
+        case "once": return Color.purple
+        case "daily": return Color.orange
+        case "weekly": return Color.blue
+        case "monthly": return Color.green
+        default: return Color.orange
+        }
+    }
+
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -221,17 +251,6 @@ struct SimpleQuestCard: View {
                         }
                 )
             
-            // Floating XP Text
-            if showFloatingXP {
-                Text("+\(quest.xp) XP")
-                    .font(.pixel(20))
-                    .foregroundColor(Color("PixelAccent"))
-                    .shadow(color: .white, radius: 2)
-                    .offset(y: floatingXPOffset)
-                    .opacity(floatingXPOpacity)
-                    .padding(.trailing, 16)
-                    .padding(.top, -10)
-            }
         }
     }
     
@@ -263,6 +282,7 @@ struct SimpleQuestCard: View {
                     .strikethrough(isCompleted, color: Color("PixelBorder").opacity(0.5))
                 
                 HStack(spacing: 8) {
+                    // Type badge
                     Text(quest.type.uppercased())
                         .font(.pixel(11))
                         .foregroundColor(Color(questType.color))
@@ -270,11 +290,17 @@ struct SimpleQuestCard: View {
                         .padding(.vertical, 2)
                         .background(Color(questType.color).opacity(0.2))
                     
-                    if !isCompleted {
-                        Text("+\(quest.xp) XP")
-                            .font(.pixel(14))
-                            .foregroundColor(Color("PixelAccent"))
+                    // Recurrence badge
+                    HStack(spacing: 2) {
+                        Image(systemName: recurrenceIcon)
+                            .font(.system(size: 8))
+                        Text(recurrenceText)
+                            .font(.pixel(10))
                     }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(recurrenceColor)
                 }
             }
             
@@ -368,26 +394,11 @@ struct SimpleQuestCard: View {
             isFlashing = true
         }
         
-        // Show floating XP
-        showFloatingXP = true
-        floatingXPOffset = 0
-        floatingXPOpacity = 1
-        
-        withAnimation(.easeOut(duration: 0.8)) {
-            floatingXPOffset = -50
-            floatingXPOpacity = 0
-        }
-        
         // End flash
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             withAnimation(.easeInOut(duration: 0.15)) {
                 isFlashing = false
             }
-        }
-        
-        // Hide floating XP
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            showFloatingXP = false
         }
         
         // Toggle completion
@@ -417,7 +428,6 @@ struct AddQuestSheet: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var questStore: SwiftDataQuestStore
     @State private var title = ""
-    @State private var xp = 50
     @State private var type: Quest.QuestType = .health
     @State private var recurrence: Quest.QuestRecurrence = .daily
     
@@ -458,37 +468,7 @@ struct AddQuestSheet: View {
                                 }
                             }
                         }
-                        
-                        // XP Selection
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("quest_xp_reward".localized)
-                                    .font(.pixel(14))
-                                    .foregroundColor(Color("PixelAccent"))
-                                Spacer()
-                                Text("+\(xp) XP")
-                                    .font(.pixel(18))
-                                    .foregroundColor(Color("PixelAccent"))
-                            }
-                            
-                            HStack(spacing: 6) {
-                                ForEach([25, 50, 75, 100, 150, 200], id: \.self) { value in
-                                    Button(action: { xp = value }) {
-                                        Text("\(value)")
-                                            .font(.pixel(14))
-                                            .foregroundColor(xp == value ? .white : Color("PixelBorder"))
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 10)
-                                            .background(xp == value ? Color("PixelAccent") : .white)
-                                            .overlay(
-                                                Rectangle()
-                                                    .stroke(Color("PixelBorder"), lineWidth: 2)
-                                            )
-                                    }
-                                }
-                            }
-                        }
-                        
+
                         // Recurrence Selection
                         VStack(alignment: .leading, spacing: 8) {
                             Text("quest_recurrence_label".localized)
@@ -548,7 +528,7 @@ struct AddQuestSheet: View {
     }
     
     private func createQuest() {
-        questStore.addQuest(title: title, xp: xp, type: type.rawValue, recurrence: recurrence.rawValue)
+        questStore.addQuest(title: title, xp: 1, type: type.rawValue, recurrence: recurrence.rawValue)
         dismiss()
     }
 }

@@ -93,22 +93,22 @@ struct DashboardView: View {
         }
         // Detail Navigation Destinations
         .navigationDestination(isPresented: $showExerciseDetail) {
-            GymDetailView(location: gymLocation)
+            GymRecordsView()
                 .onAppear { hideTabBar = true }
                 .onDisappear { hideTabBar = false }
         }
         .navigationDestination(isPresented: $showBookDetail) {
-            LibraryDetailView(location: libraryLocation)
+            ReadingRecordsView()
                 .onAppear { hideTabBar = true }
                 .onDisappear { hideTabBar = false }
         }
         .navigationDestination(isPresented: $showSleepDetail) {
-            HomeBaseDetailView(location: homeLocation)
+            SleepRecordsView()
                 .onAppear { hideTabBar = true }
                 .onDisappear { hideTabBar = false }
         }
         .navigationDestination(isPresented: $showFinanceDetail) {
-            CompanyDetailView(location: companyLocation)
+            CompanyRecordsView()
                 .onAppear { hideTabBar = true }
                 .onDisappear { hideTabBar = false }
         }
@@ -126,10 +126,7 @@ struct DashboardView: View {
                     Text("dashboard_title".localized)
                         .font(.pixel(28))
                         .foregroundColor(Color("PixelBorder"))
-                    
-                    Text("Lv.\(statsService.level) \(statsService.currentTitle)")
-                        .font(.pixel(16))
-                        .foregroundColor(Color("PixelAccent"))
+
                 }
                 
                 Spacer()

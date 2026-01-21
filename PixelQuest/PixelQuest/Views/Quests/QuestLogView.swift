@@ -16,7 +16,6 @@ struct QuestLogView: View {
                         // MARK: 1. Stats Overview
                         StatsOverviewCard(
                             streak: questStore.currentStreak,
-                            totalXP: questStore.totalXP,
                             totalQuests: questStore.totalCompletedQuests
                         )
                         
@@ -38,18 +37,31 @@ struct QuestLogView: View {
                                 Spacer()
                             }
                             
-                            LazyVStack(spacing: 12) {
-                                let logsToShow = filteredLogs
-                                if logsToShow.isEmpty {
-                                    Text("quest_log_empty".localized)
-                                        .font(.pixel(14))
-                                        .foregroundColor(.gray)
-                                        .padding(.vertical, 20)
-                                } else {
+                            let logsToShow = filteredLogs
+                            if logsToShow.isEmpty {
+                                Text("quest_log_empty".localized)
+                                    .font(.pixel(14))
+                                    .foregroundColor(.gray)
+                                    .padding(.vertical, 20)
+                            } else {
+                                List {
                                     ForEach(logsToShow, id: \.completedAt) { log in
                                         LogItemRow(log: log)
+                                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                                            .listRowBackground(Color.clear)
+                                            .listRowSeparator(.hidden)
+                                    }
+                                    .onDelete { indexSet in
+                                        withAnimation {
+                                            for index in indexSet {
+                                                questStore.deleteQuestLog(logsToShow[index])
+                                            }
+                                        }
                                     }
                                 }
+                                .listStyle(.plain)
+                                .frame(height: CGFloat(min(logsToShow.count, 10) * 70))
+                                .scrollDisabled(logsToShow.count <= 10)
                             }
                         }
                         .padding(16)
@@ -102,13 +114,11 @@ struct QuestLogView: View {
 
 struct StatsOverviewCard: View {
     let streak: Int
-    let totalXP: Int
     let totalQuests: Int
     
     var body: some View {
         HStack(spacing: 12) {
             QuestStatItem(title: "STREAK", value: "\(streak)", icon: "flame.fill", color: .orange)
-            QuestStatItem(title: "TOTAL XP", value: "\(totalXP)", icon: "star.fill", color: .yellow)
             QuestStatItem(title: "QUESTS", value: "\(totalQuests)", icon: "checkmark.circle.fill", color: .green)
         }
         .padding(16)
@@ -371,10 +381,6 @@ struct LogItemRow: View {
             }
             
             Spacer()
-            
-            Text("+\(log.xp) XP")
-                .font(.pixel(14))
-                .foregroundColor(Color("PixelAccent"))
         }
         .padding(8)
         .pixelDialogBorder()

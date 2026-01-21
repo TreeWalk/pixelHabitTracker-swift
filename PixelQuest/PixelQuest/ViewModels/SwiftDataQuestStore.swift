@@ -111,20 +111,51 @@ class SwiftDataQuestStore: ObservableObject {
         let wasCompleted = quest.completed
         quest.completed.toggle()
 
-        if !wasCompleted, let context = modelContext {
-            let log = QuestLogData(
-                questTitle: quest.title,
-                questType: quest.type,
-                xp: quest.xp
-            )
-            context.insert(log)
-            questLog.insert(log, at: 0)
+        // 如果从未完成变为完成
+        if !wasCompleted {
+            // 更新最后完成时间
+            quest.lastCompletedAt = Date()
+            print("✅ Quest '\(quest.title)' completed at \(quest.lastCompletedAt!)")
+            
+            // 添加到日志
+            if let context = modelContext {
+                let log = QuestLogData(
+                    questTitle: quest.title,
+                    questType: quest.type,
+                    xp: quest.xp
+                )
+                context.insert(log)
+                questLog.insert(log, at: 0)
+            }
+            
+            // 如果是单次任务，完成后从列表中移除
+            if quest.recurrenceValue == "once" {
+                deleteQuest(quest)
+                return // 已经在 deleteQuest 中保存了
+            }
         }
 
         saveContext()
 
         // Update cached lists
         updateQuestLists()
+    }
+    
+    /// 检查并重置所有需要重置的周期性任务
+    func checkAndResetPeriodicQuests() {
+        var needsSave = false
+        
+        for quest in quests {
+            if quest.shouldReset {
+                quest.completed = false
+                needsSave = true
+            }
+        }
+        
+        if needsSave {
+            saveContext()
+            updateQuestLists()
+        }
     }
 
     func addQuest(title: String, xp: Int, type: String, recurrence: String = "daily") {
@@ -166,8 +197,53 @@ class SwiftDataQuestStore: ObservableObject {
 
     private func updateQuestLists() {
         activeQuests = quests.filter { !$0.completed }
-        completedQuests = quests.filter { $0.completed }
+        
+        // 只显示今天完成的任务
+        let calendar = Calendar.current
+        let today = Date()
+        completedQuests = quests.filter { quest in
+            guard quest.completed, let lastCompleted = quest.lastCompletedAt else {
+                return false
+            }
+            return calendar.isDate(lastCompleted, inSameDayAs: today)
+        }
     }
+    
+    // MARK: - Quest Log Management
+    
+    /// 删除指定的日志记录
+    func deleteQuestLog(_ log: QuestLogData) {
+        guard let context = modelContext else { return }
+        
+        context.delete(log)
+        questLog.removeAll { $0.completedAt == log.completedAt && $0.questTitle == log.questTitle }
+        
+        saveContext()
+        
+        // 重新计算缓存
+        Task {
+            await rebuildCacheAsync()
+        }
+    }
+    
+    /// 删除多个日志记录
+    func deleteQuestLogs(at offsets: IndexSet) {
+        guard let context = modelContext else { return }
+        
+        for index in offsets {
+            let log = questLog[index]
+            context.delete(log)
+        }
+        
+        questLog.remove(atOffsets: offsets)
+        saveContext()
+        
+        // 重新计算缓存
+        Task {
+            await rebuildCacheAsync()
+        }
+    }
+
     
     // MARK: - Cache Rebuild
 
