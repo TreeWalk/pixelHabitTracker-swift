@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var showSleepSheet = false
     @State private var showSportSheet = false
     @State private var showReadSheet = false
+    @State private var showQuestSheet = false
     @State private var hideTabBar = false
     @EnvironmentObject var localizationManager: LocalizationManager
     
@@ -38,9 +39,8 @@ struct ContentView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            // FAB Overlay
+            // FAB Overlay - Blur background
             if isFabMenuOpen {
-                // Blur background
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
@@ -49,33 +49,63 @@ struct ContentView: View {
                             isFabMenuOpen = false
                         }
                     }
-                
-                // Sub-menu buttons with pixel icons
-                VStack(spacing: 20) {
-                    HStack(spacing: 30) {
-                        fabActionButton(pixelIcon: "pixel_sleep", color: Color("PixelBlue"), label: "Sleep") {
-                            showSleepSheet = true
-                            isFabMenuOpen = false
-                        }
-                        fabActionButton(pixelIcon: "pixel_strength", color: Color("PixelRed"), label: "Sport") {
-                            showSportSheet = true
-                            isFabMenuOpen = false
-                        }
-                    }
-                    HStack(spacing: 30) {
-                        fabActionButton(pixelIcon: "pixel_book", color: Color("PixelGreen"), label: "Read") {
-                            showReadSheet = true
-                            isFabMenuOpen = false
-                        }
-                        fabActionButton(pixelIcon: "pixel_money", color: Color("PixelAccent"), label: "Bill") {
-                            showBillSheet = true
-                            isFabMenuOpen = false
-                        }
-                    }
-                }
-                .offset(y: -180)
-                .opacity(isFabMenuOpen ? 1 : 0)
             }
+            
+            // Fan-shaped menu buttons (5 buttons in arc) - Always present for animation
+            ZStack {
+                    // Button 1: Sleep (leftmost)
+                    fabActionButton(pixelIcon: "pixel_sleep", color: Color("PixelBlue"), label: "Sleep") {
+                        showSleepSheet = true
+                        isFabMenuOpen = false
+                    }
+                    .offset(
+                        x: isFabMenuOpen ? fanOffset(index: 0).x : 0,
+                        y: isFabMenuOpen ? fanOffset(index: 0).y : 0
+                    )
+                    
+                    // Button 2: Sport (left-center)
+                    fabActionButton(pixelIcon: "pixel_strength", color: Color("PixelRed"), label: "Sport") {
+                        showSportSheet = true
+                        isFabMenuOpen = false
+                    }
+                    .offset(
+                        x: isFabMenuOpen ? fanOffset(index: 1).x : 0,
+                        y: isFabMenuOpen ? fanOffset(index: 1).y : 0
+                    )
+                    
+                    // Button 3: Quest (center)
+                    fabActionButton(pixelIcon: "pixel_todo", color: Color("PixelAccent"), label: "Quest") {
+                        showQuestSheet = true
+                        isFabMenuOpen = false
+                    }
+                    .offset(
+                        x: isFabMenuOpen ? fanOffset(index: 2).x : 0,
+                        y: isFabMenuOpen ? fanOffset(index: 2).y : 0
+                    )
+                    
+                    // Button 4: Read (right-center)
+                    fabActionButton(pixelIcon: "pixel_book", color: Color("PixelGreen"), label: "Read") {
+                        showReadSheet = true
+                        isFabMenuOpen = false
+                    }
+                    .offset(
+                        x: isFabMenuOpen ? fanOffset(index: 3).x : 0,
+                        y: isFabMenuOpen ? fanOffset(index: 3).y : 0
+                    )
+                    
+                    // Button 5: Bill (rightmost)
+                    fabActionButton(pixelIcon: "pixel_money", color: Color("PixelAccent"), label: "Bill") {
+                        showBillSheet = true
+                        isFabMenuOpen = false
+                    }
+                    .offset(
+                        x: isFabMenuOpen ? fanOffset(index: 4).x : 0,
+                        y: isFabMenuOpen ? fanOffset(index: 4).y : 0
+                    )
+            }
+            .offset(y: -90)
+            .opacity(isFabMenuOpen ? 1 : 0)
+            .allowsHitTesting(isFabMenuOpen)
             
             // Main FAB Button (Cozy Style)
             Button(action: {
@@ -148,6 +178,15 @@ struct ContentView: View {
         ) {
             QuickReadSheetContent(isPresented: $showReadSheet)
         }
+        // Quest Window
+        .pixelWindow(
+            isPresented: $showQuestSheet,
+            title: "quick_quest_title".localized,
+            icon: "checkmark.circle.fill",
+            iconColor: Color("PixelAccent")
+        ) {
+            QuickQuestSheetContent(isPresented: $showQuestSheet)
+        }
     }
     
     // MARK: - FAB Action Button (Pixel Style)
@@ -177,9 +216,30 @@ struct ContentView: View {
 
                 Text(label)
                     .font(.pixel(12))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color("PixelBorder"))
             }
         }
+    }
+    
+    // MARK: - Fan Layout Helper
+    /// Calculate position for fan-shaped button layout
+    /// Creates a semi-circular arc above the main FAB
+    private func fanOffset(index: Int) -> CGPoint {
+        let totalButtons = 5
+        let radius: CGFloat = 140 // Distance from center
+        let startAngle: CGFloat = 180 // Start from left (180°)
+        let endAngle: CGFloat = 0 // End at right (0°)
+        let angleRange = startAngle - endAngle
+        
+        // Calculate angle for this button
+        let angle = startAngle - (angleRange * CGFloat(index) / CGFloat(totalButtons - 1))
+        let radians = angle * .pi / 180
+        
+        // Convert polar to cartesian coordinates
+        let x = radius * cos(radians)
+        let y = -radius * sin(radians) // Negative because SwiftUI y-axis points down
+        
+        return CGPoint(x: x, y: y)
     }
 }
 

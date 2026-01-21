@@ -243,6 +243,7 @@
 "quick_exercise_title" = "快速记录运动";
 "quick_read_title" = "快速记录阅读";
 "quick_bill_title" = "快速记账";
+"quick_quest_title" = "快速添加任务";
 
 "sync_from_health" = "从健康同步";
 "syncing" = "同步中...";

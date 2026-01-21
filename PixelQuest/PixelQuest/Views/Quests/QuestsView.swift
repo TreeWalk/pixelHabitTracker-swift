@@ -46,15 +46,7 @@ struct QuestsView: View {
                 .padding(.bottom, 100)
             }
             .background(Color("PixelBg"))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showAddSheet = true }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(Color("PixelAccent"))
-                    }
-                }
-            }
+
         }
         .sheet(isPresented: $showAddSheet) {
             AddQuestSheet()

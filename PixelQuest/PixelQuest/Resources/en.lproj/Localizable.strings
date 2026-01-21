@@ -243,6 +243,7 @@
 "quick_exercise_title" = "Quick Exercise Log";
 "quick_read_title" = "Quick Reading Log";
 "quick_bill_title" = "Quick Entry";
+"quick_quest_title" = "Quick Quest";
 
 "sync_from_health" = "Sync from Health";
 "syncing" = "Syncing...";

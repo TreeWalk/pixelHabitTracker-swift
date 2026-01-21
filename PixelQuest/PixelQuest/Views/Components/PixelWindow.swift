@@ -10,7 +10,7 @@ struct PixelWindow<Content: View>: View {
     var iconColor: Color = Color("PixelAccent")
     @ViewBuilder var content: () -> Content
     
-    @State private var scale: CGFloat = 0.9
+    @State private var offset: CGFloat = 500
     @State private var opacity: Double = 0
     
     var body: some View {
@@ -34,7 +34,7 @@ struct PixelWindow<Content: View>: View {
                             if let icon = icon {
                                 Image(systemName: icon)
                                     .font(.system(size: 14))
-                                    .foregroundColor(iconColor)
+                                    .foregroundColor(Color("PixelBorder"))
                             }
                             Text(title)
                                 .font(.pixel(14))
@@ -49,7 +49,7 @@ struct PixelWindow<Content: View>: View {
                                     .font(.pixel(14))
                                     .foregroundColor(Color("PixelBorder"))
                                     .frame(width: 24, height: 24)
-                                    .background(Color("PixelAccent").opacity(0.3))
+                                    .background(Color.white.opacity(0.9))
                                     .overlay(
                                         Rectangle()
                                             .stroke(Color("PixelBorder"), lineWidth: 2)
@@ -58,7 +58,7 @@ struct PixelWindow<Content: View>: View {
                         }
                         .padding(.horizontal, 10)
                         .padding(.vertical, 8)
-                        .background(Color("PixelBg"))
+                        .background(iconColor)
                         
                         // 分隔线
                         Rectangle()
@@ -76,11 +76,11 @@ struct PixelWindow<Content: View>: View {
                         Rectangle()
                             .stroke(Color("PixelBorder"), lineWidth: 3)
                     )
-                    .scaleEffect(scale)
+                    .offset(y: offset)
                     .opacity(opacity)
                     .onAppear {
-                        withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
-                            scale = 1
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                            offset = 0
                             opacity = 1
                         }
                     }
@@ -91,11 +91,11 @@ struct PixelWindow<Content: View>: View {
     }
     
     private func dismissWindow() {
-        withAnimation(.easeOut(duration: 0.1)) {
-            scale = 0.9
+        withAnimation(.easeOut(duration: 0.15)) {
+            offset = 500
             opacity = 0
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             isPresented = false
         }
     }

@@ -495,3 +495,109 @@ struct QuickEntrySheetContent: View {
         return Int(value * 100) // 转换为分
     }
 }
+
+// MARK: - Quick Quest Sheet Content
+/// 简化的任务添加内容
+struct QuickQuestSheetContent: View {
+    @Binding var isPresented: Bool
+    @EnvironmentObject var questStore: SwiftDataQuestStore
+    
+    @State private var title = ""
+    @State private var type: Quest.QuestType = .health
+    @State private var recurrence: Quest.QuestRecurrence = .daily
+    @State private var isSaving = false
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            // 标题输入
+            VStack(alignment: .leading, spacing: 6) {
+                Text("quest_title_label".localized)
+                    .font(.pixel(12))
+                    .foregroundColor(Color("PixelBorder").opacity(0.7))
+                
+                TextField("quest_title_placeholder".localized, text: $title)
+                    .font(.pixel(16))
+                    .padding(12)
+                    .background(Color.white)
+                    .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 2))
+            }
+            
+            // 类型选择
+            VStack(alignment: .leading, spacing: 6) {
+                Text("quest_type_label".localized)
+                    .font(.pixel(12))
+                    .foregroundColor(Color("PixelBorder").opacity(0.7))
+                
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
+                    ForEach(Quest.QuestType.allCases, id: \.self) { questType in
+                        Button(action: { type = questType }) {
+                            VStack(spacing: 2) {
+                                Image(systemName: questType.icon)
+                                    .font(.system(size: 16))
+                                Text(questType.rawValue)
+                                    .font(.pixel(9))
+                            }
+                            .foregroundColor(type == questType ? .white : Color("PixelBorder"))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(type == questType ? Color(questType.color) : .white)
+                            .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 1))
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .background(Color.white)
+            .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 2))
+            
+            // 周期选择
+            VStack(alignment: .leading, spacing: 6) {
+                Text("quest_recurrence_label".localized)
+                    .font(.pixel(12))
+                    .foregroundColor(Color("PixelBorder").opacity(0.7))
+                
+                HStack(spacing: 6) {
+                    ForEach(Quest.QuestRecurrence.allCases, id: \.self) { rec in
+                        Button(action: { recurrence = rec }) {
+                            VStack(spacing: 2) {
+                                Image(systemName: rec.icon)
+                                    .font(.system(size: 12))
+                                Text(rec.displayName)
+                                    .font(.pixel(8))
+                            }
+                            .foregroundColor(recurrence == rec ? .white : Color("PixelBorder"))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(recurrence == rec ? Color("PixelAccent") : .white)
+                            .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 1))
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .background(Color.white)
+            .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 2))
+            
+            // 创建按钮
+            Button(action: createQuest) {
+                Text("quest_create".localized + " ✓")
+                    .font(.pixel(18))
+                    .foregroundColor(Color("PixelBorder"))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color("PixelAccent"))
+                    .overlay(Rectangle().stroke(Color("PixelBorder"), lineWidth: 2))
+            }
+            .disabled(isSaving || title.isEmpty)
+            .opacity(title.isEmpty ? 0.5 : 1)
+        }
+        .padding(12)
+    }
+    
+    private func createQuest() {
+        isSaving = true
+        questStore.addQuest(title: title, xp: 1, type: type.rawValue, recurrence: recurrence.rawValue)
+        isSaving = false
+        isPresented = false
+    }
+}
