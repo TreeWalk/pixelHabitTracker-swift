@@ -6,6 +6,7 @@ final class BookEntryData {
     var title: String
     var author: String
     var coverIcon: String
+    var coverColor: String // BookCoverColor rawValue
     var status: String // reading, finished, wishlist
     var rating: Int // 1-5
     var startDate: Date?
@@ -17,6 +18,7 @@ final class BookEntryData {
         title: String,
         author: String,
         coverIcon: String = "book.fill",
+        coverColor: String = "蓝色",
         status: String = "wishlist",
         rating: Int = 0,
         startDate: Date? = nil,
@@ -27,6 +29,7 @@ final class BookEntryData {
         self.title = title
         self.author = author
         self.coverIcon = coverIcon
+        self.coverColor = coverColor
         self.status = status
         self.rating = rating
         self.startDate = startDate

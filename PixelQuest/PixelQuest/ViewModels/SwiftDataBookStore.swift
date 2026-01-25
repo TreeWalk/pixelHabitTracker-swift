@@ -71,13 +71,14 @@ class SwiftDataBookStore: ObservableObject {
     
     // MARK: - CRUD Operations
     
-    func addBook(title: String, author: String, status: String = "wishlist", rating: Int = 0, coverIcon: String = "book.fill") {
+    func addBook(title: String, author: String, status: String = "wishlist", rating: Int = 0, coverIcon: String = "book.fill", coverColor: String = "蓝色") {
         guard let context = modelContext else { return }
         
         let book = BookEntryData(
             title: title,
             author: author,
             coverIcon: coverIcon,
+            coverColor: coverColor,
             status: status,
             rating: rating,
             startDate: status == "reading" ? Date() : nil,
