@@ -31,6 +31,15 @@ enum PixelBorder {
 /// Shadow offset for pixel-style hard shadows
 enum PixelShadow {
     static let offset: CGFloat = 4
+    static let small: CGFloat = 3
+    static let large: CGFloat = 6
+}
+
+/// Shadow style presets
+enum PixelShadowStyle {
+    case hard      // 硬像素阴影 - 纯色偏移，无模糊
+    case soft      // 软阴影 - 轻微模糊，用于浮层
+    case none      // 无阴影
 }
 
 // MARK: - Color Extensions
@@ -104,8 +113,12 @@ struct CozyBorderModifier: ViewModifier {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .stroke(borderColor, lineWidth: borderWidth)
             )
-            // Soft blur shadow instead of solid offset
-            .shadow(color: shadowColor, radius: 8, x: 0, y: 4)
+            // Hard pixel shadow - offset without blur
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(shadowColor)
+                    .offset(x: shadowOffset, y: shadowOffset)
+            )
     }
 }
 
@@ -321,15 +334,29 @@ struct FloatingTabBar: View {
 
 struct SubtleNoiseOverlay: View {
     var opacity: Double = 0.02
+    var useCheckerboard: Bool = false  // 棋盘格模式更像素化
     
     var body: some View {
         Canvas { context, size in
-            for y in stride(from: 0, to: size.height, by: 3) {
-                for x in stride(from: 0, to: size.width, by: 3) {
-                    let noise = (sin(x * 12.9898 + y * 78.233) * 43758.5453).truncatingRemainder(dividingBy: 1)
-                    if noise > 0.6 {
-                        let rect = CGRect(x: x, y: y, width: 2, height: 2)
-                        context.fill(Path(rect), with: .color(.black.opacity(opacity)))
+            if useCheckerboard {
+                // 棋盘格抖动 - 更像素化的效果
+                for y in stride(from: 0, to: size.height, by: 4) {
+                    for x in stride(from: 0, to: size.width, by: 4) {
+                        if (Int(x) + Int(y)) % 8 == 0 {
+                            let rect = CGRect(x: x, y: y, width: 2, height: 2)
+                            context.fill(Path(rect), with: .color(.black.opacity(opacity)))
+                        }
+                    }
+                }
+            } else {
+                // 随机噪点模式
+                for y in stride(from: 0, to: size.height, by: 3) {
+                    for x in stride(from: 0, to: size.width, by: 3) {
+                        let noise = (sin(x * 12.9898 + y * 78.233) * 43758.5453).truncatingRemainder(dividingBy: 1)
+                        if noise > 0.6 {
+                            let rect = CGRect(x: x, y: y, width: 2, height: 2)
+                            context.fill(Path(rect), with: .color(.black.opacity(opacity)))
+                        }
                     }
                 }
             }
@@ -337,6 +364,11 @@ struct SubtleNoiseOverlay: View {
         .allowsHitTesting(false)
     }
 }
+
+// MARK: - Pixel Hard Shadow Modifier
+
+// View modifiers moved to Font+Pixel.swift for global visibility
+
 
 // MARK: - Previews
 

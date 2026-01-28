@@ -210,6 +210,7 @@ struct ContentView: View {
 
                     Image(pixelIcon)
                         .resizable()
+                        .interpolation(.none)
                         .scaledToFit()
                         .frame(width: 28, height: 28)
                 }

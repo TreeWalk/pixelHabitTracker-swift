@@ -70,6 +70,7 @@ struct FiveElementCard: View {
                 // Pixel icon - no background container
                 Image(element.pixelIcon)
                     .resizable()
+                    .interpolation(.none)
                     .scaledToFit()
                     .frame(width: 36, height: 36)
                 
@@ -136,7 +137,15 @@ struct FiveElementCard: View {
             }
         }
         .padding()
-        .pixelDialogBorder()
+        .pixelDoubleBorder(
+            outerColor: .darkCoffee,
+            innerColor: element.color.opacity(0.3),
+            outerWidth: 3,
+            innerWidth: 2,
+            innerPadding: 4
+        )
+        .background(Color.white)
+        .pixelHardShadow(color: Color.darkCoffee.opacity(0.25), offset: 5)
     }
 }
 

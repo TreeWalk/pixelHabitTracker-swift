@@ -55,7 +55,9 @@ struct AddBookView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 24)
-                        .pixelDialogBorder()
+                        .pixelDoubleBorder(outerColor: .darkCoffee, innerColor: Color.white.opacity(0.2))
+                        .background(Color.white)
+                        .pixelHardShadow(offset: 4)
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                         
@@ -98,7 +100,9 @@ struct AddBookView: View {
                             }
                         }
                         .padding(16)
-                        .pixelDialogBorder()
+                        .pixelDoubleBorder(outerColor: .darkCoffee, innerColor: Color("PixelBlue").opacity(0.2))
+                        .background(Color.white)
+                        .pixelHardShadow(offset: 4)
                         .padding(.horizontal, 16)
                         
                         // MARK: - Cover Color Section
@@ -131,7 +135,9 @@ struct AddBookView: View {
                             .frame(maxWidth: .infinity)
                         }
                         .padding(16)
-                        .pixelDialogBorder()
+                        .pixelDoubleBorder(outerColor: .darkCoffee, innerColor: Color("PixelAccent").opacity(0.2))
+                        .background(Color.white)
+                        .pixelHardShadow(offset: 4)
                         .padding(.horizontal, 16)
                         
                         // MARK: - Reading Status Section
@@ -163,7 +169,9 @@ struct AddBookView: View {
                             }
                         }
                         .padding(16)
-                        .pixelDialogBorder()
+                        .pixelDoubleBorder(outerColor: .darkCoffee, innerColor: Color("PixelGreen").opacity(0.2))
+                        .background(Color.white)
+                        .pixelHardShadow(offset: 4)
                         .padding(.horizontal, 16)
                         
                         // MARK: - Rating Section
@@ -196,7 +204,9 @@ struct AddBookView: View {
                             .frame(maxWidth: .infinity)
                         }
                         .padding(16)
-                        .pixelDialogBorder()
+                        .pixelDoubleBorder(outerColor: .darkCoffee, innerColor: Color("PixelAccent").opacity(0.2))
+                        .background(Color.white)
+                        .pixelHardShadow(offset: 4)
                         .padding(.horizontal, 16)
                         
                         // MARK: - Save Button

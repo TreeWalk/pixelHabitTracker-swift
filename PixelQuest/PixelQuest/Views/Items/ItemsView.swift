@@ -165,6 +165,7 @@ struct ItemDataCard: View {
                 // Item Icon
                 Image(item.icon)
                     .resizable()
+                    .interpolation(.none)
                     .scaledToFit()
                     .frame(width: 56, height: 56)
                     .padding(8)
@@ -323,6 +324,7 @@ struct ItemDataDetailSheet: View {
                         // Item Icon
                         Image(item.icon)
                             .resizable()
+                            .interpolation(.none)
                             .scaledToFit()
                             .frame(width: 120, height: 120)
                             .padding(20)
@@ -515,6 +517,7 @@ struct AddItemSheet: View {
                                     Button(action: { selectedIcon = iconName }) {
                                         Image(iconName)
                                             .resizable()
+                                            .interpolation(.none)
                                             .scaledToFit()
                                             .frame(width: 40, height: 40)
                                             .padding(8)

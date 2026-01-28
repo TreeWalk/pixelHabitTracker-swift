@@ -40,7 +40,7 @@ extension View {
     }
     
     /// Applies pixel-style border
-    func pixelBorder(color: Color = Color("PixelBorder"), lineWidth: CGFloat = 4) -> some View {
+    func pixelBorder(color: Color = Color("PixelBorder"), lineWidth: CGFloat = PixelBorder.thick) -> some View {
         self
             .overlay(
                 Rectangle()
@@ -48,12 +48,21 @@ extension View {
             )
     }
     
-    /// Applies pixel-style small border
+    /// Applies pixel-style small border (thin width)
     func pixelBorderSmall(color: Color = Color("PixelBorder")) -> some View {
         self
             .overlay(
                 Rectangle()
-                    .stroke(color, lineWidth: 2)
+                    .stroke(color, lineWidth: PixelBorder.thin)
+            )
+    }
+    
+    /// Applies pixel-style medium border (standard width)
+    func pixelBorderMedium(color: Color = Color("PixelBorder")) -> some View {
+        self
+            .overlay(
+                Rectangle()
+                    .stroke(color, lineWidth: PixelBorder.standard)
             )
     }
 
@@ -81,17 +90,18 @@ extension View {
 
 // MARK: - Pixel UI Components
 
-/// A retro-style pixel button
 struct PixelButton<Content: View>: View {
     var action: () -> Void
     var backgroundColor: Color = Color("PixelAccent")
     var borderColor: Color = Color("PixelBorder")
+    var showInnerHighlight: Bool = true  // 内缩高光效果
     var content: Content
     
-    init(backgroundColor: Color = Color("PixelAccent"), borderColor: Color = Color("PixelBorder"), action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
+    init(backgroundColor: Color = Color("PixelAccent"), borderColor: Color = Color("PixelBorder"), showInnerHighlight: Bool = true, action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
         self.action = action
         self.backgroundColor = backgroundColor
         self.borderColor = borderColor
+        self.showInnerHighlight = showInnerHighlight
         self.content = content()
     }
     
@@ -101,6 +111,41 @@ struct PixelButton<Content: View>: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(backgroundColor)
+                .overlay(
+                    // 内缩高光效果 - 像素按钮立体感
+                    Group {
+                        if showInnerHighlight {
+                            ZStack {
+                                // 顶部/左侧高光
+                                VStack(spacing: 0) {
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.25))
+                                        .frame(height: 2)
+                                    Spacer()
+                                }
+                                HStack(spacing: 0) {
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.2))
+                                        .frame(width: 2)
+                                    Spacer()
+                                }
+                                // 底部/右侧暗边
+                                VStack(spacing: 0) {
+                                    Spacer()
+                                    Rectangle()
+                                        .fill(Color.black.opacity(0.15))
+                                        .frame(height: 2)
+                                }
+                                HStack(spacing: 0) {
+                                    Spacer()
+                                    Rectangle()
+                                        .fill(Color.black.opacity(0.1))
+                                        .frame(width: 2)
+                                }
+                            }
+                        }
+                    }
+                )
                 .pixelBorderSmall(color: borderColor)
         }
         .buttonStyle(PixelButtonStyle())
@@ -387,23 +432,8 @@ struct RetroDialogBorder: View {
     }
 }
 
-extension View {
-    /// Applies classic pixel game dialog border with stepped corner decoration
-    func pixelDialogBorder(
-        backgroundColor: Color = .white,
-        borderColor: Color = Color("PixelBorder"),
-        borderWidth: CGFloat = 3
-    ) -> some View {
-        self
-            .background(
-                RetroDialogBorder(
-                    backgroundColor: backgroundColor,
-                    borderColor: borderColor,
-                    borderWidth: borderWidth
-                )
-            )
-    }
-}
+// Duplicate definition removed - using the one in DesignSystem.swift
+
 
 // MARK: - Dithered Background Pattern
 
@@ -437,5 +467,96 @@ extension View {
     /// Applies dithered background pattern for pixel art aesthetic
     func ditheredBackground(color: Color = Color("PixelBg")) -> some View {
         self.background(DitheredBackground(backgroundColor: color))
+    }
+}
+
+// MARK: - Global Pixel View Modifiers (Consolidated)
+
+extension View {
+    /// 硬像素阴影 - 纯色偏移，无模糊
+    func pixelHardShadow(
+        color: Color = Color.darkCoffee.opacity(0.3),
+        offset: CGFloat = PixelShadow.offset
+    ) -> some View {
+        self.background(
+            Rectangle()
+                .fill(color)
+                .offset(x: offset, y: offset)
+        )
+    }
+    
+    /// 双线像素边框 - 经典RPG对话框风格
+    func pixelDoubleBorder(
+        outerColor: Color = .darkCoffee,
+        innerColor: Color = .white.opacity(0.5),
+        outerWidth: CGFloat = PixelBorder.standard,
+        innerWidth: CGFloat = PixelBorder.thin,
+        innerPadding: CGFloat = 4
+    ) -> some View {
+        self
+            .overlay(
+                Rectangle()
+                    .stroke(outerColor, lineWidth: outerWidth)
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(innerColor, lineWidth: innerWidth)
+                    .padding(innerPadding)
+            )
+    }
+    
+    /// 内缩高光边框 - 像素按钮立体感
+    func pixelInnerHighlight(
+        highlightColor: Color = .white.opacity(0.3),
+        shadowColor: Color = .black.opacity(0.2),
+        thickness: CGFloat = 2
+    ) -> some View {
+        self.overlay(
+            ZStack {
+                // 顶部/左侧高光
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .fill(highlightColor)
+                        .frame(height: thickness)
+                    Spacer()
+                }
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .fill(highlightColor)
+                        .frame(width: thickness)
+                    Spacer()
+                }
+                // 底部/右侧暗边
+                VStack(spacing: 0) {
+                    Spacer()
+                    Rectangle()
+                        .fill(shadowColor)
+                        .frame(height: thickness)
+                }
+                HStack(spacing: 0) {
+                    Spacer()
+                    Rectangle()
+                        .fill(shadowColor)
+                        .frame(width: thickness)
+                }
+            }
+        )
+    }
+    
+    /// 兼容旧代码的像素对话框边框 - 统一使用双线边框样式
+    func pixelDialogBorder(
+        backgroundColor: Color = .white,
+        borderColor: Color = .darkCoffee
+    ) -> some View {
+        self
+            .pixelDoubleBorder(
+                outerColor: borderColor,
+                innerColor: borderColor.opacity(0.3),
+                outerWidth: PixelBorder.standard,
+                innerWidth: PixelBorder.thin,
+                innerPadding: 4
+            )
+            .background(backgroundColor)
+            .pixelHardShadow(color: borderColor.opacity(0.2), offset: 4)
     }
 }

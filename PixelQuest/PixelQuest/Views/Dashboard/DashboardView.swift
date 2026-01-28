@@ -81,8 +81,16 @@ struct DashboardView: View {
                 }
                 .padding(.bottom, 100)
             }
-            .background(Color("PixelBg"))
+            .background(
+                ZStack {
+                    Color("PixelBg")
+                    SubtleNoiseOverlay(opacity: 0.05, useCheckerboard: true)
+                }
+                .ignoresSafeArea()
+            )
         }
+
+
         .onAppear {
             statsService.configure(
                 questStore: questStore,
