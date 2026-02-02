@@ -51,7 +51,7 @@ struct ContentView: View {
                     }
             }
             
-            // Fan-shaped menu buttons (5 buttons in arc) - Always present for animation
+            // Fan-shaped menu buttons (5 buttons in arc) - Cascade animation
             ZStack {
                     // Button 1: Sleep (leftmost)
                     fabActionButton(pixelIcon: "pixel_sleep", color: Color("PixelBlue"), label: "Sleep") {
@@ -62,6 +62,9 @@ struct ContentView: View {
                         x: isFabMenuOpen ? fanOffset(index: 0).x : 0,
                         y: isFabMenuOpen ? fanOffset(index: 0).y : 0
                     )
+                    .scaleEffect(isFabMenuOpen ? 1 : 0.3)
+                    .opacity(isFabMenuOpen ? 1 : 0)
+                    .animation(PixelAnimation.cascade(index: 0), value: isFabMenuOpen)
                     
                     // Button 2: Sport (left-center)
                     fabActionButton(pixelIcon: "pixel_strength", color: Color("PixelRed"), label: "Sport") {
@@ -72,6 +75,9 @@ struct ContentView: View {
                         x: isFabMenuOpen ? fanOffset(index: 1).x : 0,
                         y: isFabMenuOpen ? fanOffset(index: 1).y : 0
                     )
+                    .scaleEffect(isFabMenuOpen ? 1 : 0.3)
+                    .opacity(isFabMenuOpen ? 1 : 0)
+                    .animation(PixelAnimation.cascade(index: 1), value: isFabMenuOpen)
                     
                     // Button 3: Quest (center)
                     fabActionButton(pixelIcon: "pixel_todo", color: Color("PixelAccent"), label: "Quest") {
@@ -82,6 +88,9 @@ struct ContentView: View {
                         x: isFabMenuOpen ? fanOffset(index: 2).x : 0,
                         y: isFabMenuOpen ? fanOffset(index: 2).y : 0
                     )
+                    .scaleEffect(isFabMenuOpen ? 1 : 0.3)
+                    .opacity(isFabMenuOpen ? 1 : 0)
+                    .animation(PixelAnimation.cascade(index: 2), value: isFabMenuOpen)
                     
                     // Button 4: Read (right-center)
                     fabActionButton(pixelIcon: "pixel_book", color: Color("PixelGreen"), label: "Read") {
@@ -92,6 +101,9 @@ struct ContentView: View {
                         x: isFabMenuOpen ? fanOffset(index: 3).x : 0,
                         y: isFabMenuOpen ? fanOffset(index: 3).y : 0
                     )
+                    .scaleEffect(isFabMenuOpen ? 1 : 0.3)
+                    .opacity(isFabMenuOpen ? 1 : 0)
+                    .animation(PixelAnimation.cascade(index: 3), value: isFabMenuOpen)
                     
                     // Button 5: Bill (rightmost)
                     fabActionButton(pixelIcon: "pixel_money", color: Color("PixelAccent"), label: "Bill") {
@@ -102,36 +114,53 @@ struct ContentView: View {
                         x: isFabMenuOpen ? fanOffset(index: 4).x : 0,
                         y: isFabMenuOpen ? fanOffset(index: 4).y : 0
                     )
+                    .scaleEffect(isFabMenuOpen ? 1 : 0.3)
+                    .opacity(isFabMenuOpen ? 1 : 0)
+                    .animation(PixelAnimation.cascade(index: 4), value: isFabMenuOpen)
             }
             .offset(y: -90)
-            .opacity(isFabMenuOpen ? 1 : 0)
             .allowsHitTesting(isFabMenuOpen)
             
-            // Main FAB Button (Cozy Style)
+            // Main FAB Button (Enhanced with scale and rotation)
             Button(action: {
                 Self.hapticGenerator.impactOccurred()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                withAnimation(PixelAnimation.elastic) {
                     isFabMenuOpen.toggle()
                 }
             }) {
-                Image(systemName: "plus")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundStyle(.white)
-                    .frame(width: 56, height: 56)
-                    .background(Color("PixelAccent"))
-                    .clipShape(Rectangle())
-                    .overlay(
-                        Rectangle()
-                            .stroke(Color.darkCoffee, lineWidth: 3)
-                    )
-                    .background(
-                        Rectangle()
-                            .fill(Color.darkCoffee.opacity(0.3))
-                            .offset(x: 4, y: 4)
-                    )
-                    .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
+                ZStack {
+                    Image(systemName: "plus")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(.white)
+                        .rotationEffect(.degrees(isFabMenuOpen ? 45 : 0))
+                }
+                .frame(width: 56, height: 56)
+                .background(
+                    Color("PixelAccent")
+                        .overlay(
+                            // Inner highlight for 3D effect
+                            VStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(height: 2)
+                                Spacer()
+                            }
+                        )
+                )
+                .clipShape(Rectangle())
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.darkCoffee, lineWidth: 3)
+                )
+                .background(
+                    Rectangle()
+                        .fill(Color.darkCoffee.opacity(0.3))
+                        .offset(x: 4, y: 4)
+                )
+                .scaleEffect(isFabMenuOpen ? 1.1 : 1.0)
             }
-            .padding(.bottom, 90) // Above custom tab bar
+            .animation(PixelAnimation.elastic, value: isFabMenuOpen)
+            .padding(.bottom, 90)
             .offset(y: hideTabBar ? 200 : 0)
             .animation(.spring(response: 0.4, dampingFraction: 0.8), value: hideTabBar)
             

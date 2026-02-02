@@ -12,8 +12,23 @@ struct QuestLogView: View {
                 Color("PixelBg").ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 24) {
-                        // MARK: 1. Stats Overview
+                    VStack(spacing: 20) {
+                        // Section Header (Fire - 火) - matching unified style
+                        HStack(spacing: 8) {
+                            Image(systemName: "flame.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(ElementType.fire.color)
+                            Rectangle()
+                                .fill(ElementType.fire.color)
+                                .frame(width: 4, height: 20)
+                            Text("quest_log_title".localized)
+                                .font(.pixel(20))
+                                .foregroundColor(Color("PixelBorder"))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        
+                        // MARK: 1. Stats Overview (already has pixel styling)
                         StatsOverviewCard(
                             streak: questStore.currentStreak,
                             totalQuests: questStore.totalCompletedQuests

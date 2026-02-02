@@ -17,75 +17,21 @@ struct GymRecordsView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Header with Sync Button
-                        HStack(spacing: 8) {
-                            Image(systemName: "dumbbell.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color("PixelBlue"))
-                            Rectangle()
-                                .fill(Color("PixelBlue"))
-                                .frame(width: 4, height: 20)
-                            Text("exercise_log".localized)
-                                .font(.pixel(20))
-                                .foregroundColor(Color("PixelBorder"))
-                            
-                            Spacer()
-                            
-                            // HealthKit Sync Button (compact)
-                            Button(action: syncFromHealthKit) {
-                                HStack(spacing: 4) {
-                                    if isSyncing {
-                                        ProgressView()
-                                            .scaleEffect(0.7)
-                                    } else {
-                                        Image(systemName: "heart.fill")
-                                            .font(.system(size: 12))
-                                    }
-                                    Text(isSyncing ? "同步中" : "同步")
-                                        .font(.pixel(12))
-                                }
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color.red.opacity(0.8))
-                                .pixelBorderSmall(color: Color.red)
-                            }
-                            .disabled(isSyncing)
-                        }
-                        .frame(width: contentWidth, alignment: .leading)
-                        
-                        // Synced Workouts from HealthKit
-                        if !syncedWorkouts.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("来自 Apple Health")
-                                    .font(.pixel(14))
-                                    .foregroundColor(Color("PixelBlue"))
-                                    .frame(width: contentWidth, alignment: .leading)
-                                
-                                ForEach(syncedWorkouts) { workout in
-                                    HealthKitWorkoutRow(workout: workout) {
-                                        saveHealthKitWorkout(workout)
-                                    }
-                                    .frame(width: contentWidth)
-                                }
-                            }
-                        }
-                        
-                        // Weekly Stats Section
+                        // MARK: - Weekly Stats Section
                         VStack(spacing: 16) {
+                            // Section Title (matching GymDetailView style)
                             HStack(spacing: 8) {
                                 Image(systemName: "chart.bar.fill")
                                     .font(.system(size: 18))
-                                    .foregroundColor(Color("PixelBlue"))
+                                    .foregroundColor(ElementType.metal.color)
                                 Rectangle()
-                                    .fill(Color("PixelBlue"))
+                                    .fill(ElementType.metal.color)
                                     .frame(width: 4, height: 20)
                                 Text("exercise_week_stats".localized)
                                     .font(.pixel(20))
                                     .foregroundColor(Color("PixelBorder"))
                                 Spacer()
                             }
-                            .frame(width: contentWidth, alignment: .leading)
                             
                             // Stats Cards
                             HStack(spacing: 12) {
@@ -93,7 +39,7 @@ struct GymRecordsView: View {
                                     icon: "timer",
                                     value: formatDuration(exerciseStore.weekTotalDuration),
                                     label: "exercise_total_duration".localized,
-                                    color: Color("PixelBlue")
+                                    color: ElementType.metal.color
                                 )
                                 .frame(maxWidth: .infinity)
                                 
@@ -105,8 +51,65 @@ struct GymRecordsView: View {
                                 )
                                 .frame(maxWidth: .infinity)
                             }
-                            .frame(width: contentWidth)
                         }
+                        .padding(16)
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                        .frame(width: contentWidth)
+                        
+                        // MARK: - HealthKit Sync Section
+                        VStack(spacing: 12) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "heart.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.red)
+                                Rectangle()
+                                    .fill(Color.red)
+                                    .frame(width: 4, height: 20)
+                                Text("sleep_sync_health".localized)
+                                    .font(.pixel(20))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                                
+                                Button(action: syncFromHealthKit) {
+                                    HStack(spacing: 6) {
+                                        if isSyncing {
+                                            ProgressView()
+                                                .scaleEffect(0.7)
+                                        } else {
+                                            Image(systemName: "arrow.triangle.2.circlepath")
+                                                .font(.system(size: 14))
+                                        }
+                                        Text(isSyncing ? "同步中..." : "同步")
+                                            .font(.pixel(14))
+                                    }
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color.red.opacity(0.85))
+                                    .pixelBorderSmall(color: .red)
+                                }
+                                .disabled(isSyncing)
+                            }
+                            
+                            // Synced Workouts
+                            if !syncedWorkouts.isEmpty {
+                                ForEach(syncedWorkouts) { workout in
+                                    HealthKitWorkoutRow(workout: workout) {
+                                        saveHealthKitWorkout(workout)
+                                    }
+                                }
+                            } else {
+                                Text("点击同步按钮获取最新数据")
+                                    .font(.pixel(12))
+                                    .foregroundColor(Color("PixelBorder").opacity(0.5))
+                                    .padding(.vertical, 8)
+                            }
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                        .frame(width: contentWidth)
                         
                         // Today's Records Section
                         if !exerciseStore.todayEntries.isEmpty {
@@ -114,22 +117,24 @@ struct GymRecordsView: View {
                                 HStack(spacing: 8) {
                                     Image(systemName: "list.bullet")
                                         .font(.system(size: 18))
-                                        .foregroundColor(Color("PixelBlue"))
+                                        .foregroundColor(ElementType.metal.color)
                                     Rectangle()
-                                        .fill(Color("PixelBlue"))
+                                        .fill(ElementType.metal.color)
                                         .frame(width: 4, height: 20)
                                     Text("今日记录")
                                         .font(.pixel(20))
                                         .foregroundColor(Color("PixelBorder"))
                                     Spacer()
                                 }
-                                .frame(width: contentWidth, alignment: .leading)
                                 
                                 ForEach(exerciseStore.todayEntries) { entry in
                                     ExerciseEntryRow(entry: entry)
-                                        .frame(width: contentWidth)
                                 }
                             }
+                            .padding(16)
+                            .background(Color.white)
+                            .pixelBorderSmall()
+                            .frame(width: contentWidth)
                         }
                     }
                     .frame(width: geometry.size.width)
@@ -228,42 +233,78 @@ struct SleepRecordsView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Header with Sync Button
-                        HStack(spacing: 8) {
-                            Image(systemName: "moon.zzz.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color("PixelBlue"))
-                            Rectangle()
-                                .fill(Color("PixelBlue"))
-                                .frame(width: 4, height: 20)
-                            Text("sleep_log".localized)
-                                .font(.pixel(20))
-                                .foregroundColor(Color("PixelBorder"))
+                        // MARK: - Sleep Stats Section
+                        VStack(spacing: 16) {
+                            // Section Title
+                            HStack(spacing: 8) {
+                                Image(systemName: "moon.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(ElementType.water.color)
+                                Rectangle()
+                                    .fill(ElementType.water.color)
+                                    .frame(width: 4, height: 20)
+                                Text("sleep_log".localized)
+                                    .font(.pixel(20))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                            }
                             
+                            // Stats Cards
+                            HStack(spacing: 12) {
+                                SleepStatCard(
+                                    icon: "clock.fill",
+                                    value: String(format: "%.1fh", sleepStore.averageDuration),
+                                    label: "平均时长",
+                                    color: ElementType.water.color
+                                )
+                                .frame(maxWidth: .infinity)
+                                
+                                SleepStatCard(
+                                    icon: "star.fill",
+                                    value: String(format: "%.1f", sleepStore.averageQuality),
+                                    label: "平均质量",
+                                    color: Color("PixelAccent")
+                                )
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                        .frame(width: contentWidth)
+                        
+                        // HealthKit Sync Button
+                        HStack {
                             Spacer()
-                            
-                            // HealthKit Sync Button (compact)
                             Button(action: syncFromHealthKit) {
-                                HStack(spacing: 4) {
+                                HStack(spacing: 6) {
                                     if isSyncing {
                                         ProgressView()
                                             .scaleEffect(0.7)
                                     } else {
                                         Image(systemName: "heart.fill")
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 14))
                                     }
-                                    Text(isSyncing ? "同步中" : "同步")
-                                        .font(.pixel(12))
+                                    Text(isSyncing ? "同步中..." : "从 Apple Health 同步")
+                                        .font(.pixel(14))
                                 }
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color.red.opacity(0.8))
-                                .pixelBorderSmall(color: Color.red)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 8)
+                                .background(Color.red.opacity(0.85))
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.red, lineWidth: 2)
+                                )
+                                .background(
+                                    Rectangle()
+                                        .fill(Color.red.opacity(0.3))
+                                        .offset(x: 2, y: 2)
+                                )
                             }
                             .disabled(isSyncing)
                         }
-                        .frame(width: contentWidth, alignment: .leading)
+                        .frame(width: contentWidth)
                         
                         // Synced Sleep Score Display
                         if let sleepData = syncedSleepData {
@@ -432,6 +473,14 @@ struct ReadingRecordsView: View {
         GridItem(.flexible(), spacing: 12)
     ]
     
+    private var readingCount: Int {
+        bookStore.books.filter { $0.status == "reading" }.count
+    }
+    
+    private var finishedCount: Int {
+        bookStore.books.filter { $0.status == "finished" }.count
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             let contentWidth = geometry.size.width - 32
@@ -441,24 +490,45 @@ struct ReadingRecordsView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Section Title
-                        HStack(spacing: 8) {
-                            Image(systemName: "books.vertical.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color("PixelBlue"))
-                            Rectangle()
-                                .fill(Color("PixelBlue"))
-                                .frame(width: 4, height: 20)
-                            Text("library_my_books".localized)
-                                .font(.pixel(20))
-                                .foregroundColor(Color("PixelBorder"))
-                            Spacer()
+                        // MARK: - Reading Stats Section
+                        VStack(spacing: 16) {
+                            // Section Title
+                            HStack(spacing: 8) {
+                                Image(systemName: "book.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(ElementType.wood.color)
+                                Rectangle()
+                                    .fill(ElementType.wood.color)
+                                    .frame(width: 4, height: 20)
+                                Text("library_my_books".localized)
+                                    .font(.pixel(20))
+                                    .foregroundColor(Color("PixelBorder"))
+                                Spacer()
+                            }
                             
-                            Text(String(format: "library_books_count".localized, bookStore.books.count))
-                                .font(.pixel(14))
-                                .foregroundColor(Color("PixelBorder").opacity(0.7))
+                            // Stats Cards
+                            HStack(spacing: 12) {
+                                ReadingStatCard(
+                                    icon: "book.fill",
+                                    value: "\(readingCount)",
+                                    label: "在读",
+                                    color: ElementType.wood.color
+                                )
+                                .frame(maxWidth: .infinity)
+                                
+                                ReadingStatCard(
+                                    icon: "checkmark.circle.fill",
+                                    value: "\(finishedCount)",
+                                    label: "已读",
+                                    color: Color("PixelGreen")
+                                )
+                                .frame(maxWidth: .infinity)
+                            }
                         }
-                        .frame(width: contentWidth, alignment: .leading)
+                        .padding(16)
+                        .background(Color.white)
+                        .pixelBorderSmall()
+                        .frame(width: contentWidth)
                         
                         // Book Grid
                         LazyVGrid(columns: columns, spacing: 12) {
@@ -535,7 +605,45 @@ struct CompanyRecordsView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
-                            // No Banner - this is the key difference from CompanyDetailView
+                            // MARK: - Finance Stats Section
+                            VStack(spacing: 16) {
+                                // Section Title
+                                HStack(spacing: 8) {
+                                    Image(systemName: "yensign.circle.fill")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(ElementType.earth.color)
+                                    Rectangle()
+                                        .fill(ElementType.earth.color)
+                                        .frame(width: 4, height: 20)
+                                    Text("company_finance".localized)
+                                        .font(.pixel(20))
+                                        .foregroundColor(Color("PixelBorder"))
+                                    Spacer()
+                                }
+                                
+                                // Stats Cards
+                                HStack(spacing: 12) {
+                                    FinanceStatCard(
+                                        icon: "building.columns.fill",
+                                        value: formatCurrency(financeStore.totalAssets),
+                                        label: "总资产",
+                                        color: ElementType.earth.color
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                    
+                                    FinanceStatCard(
+                                        icon: "arrow.down.circle.fill",
+                                        value: formatCurrency(financeStore.monthExpense),
+                                        label: "本月支出",
+                                        color: Color("PixelRed")
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                }
+                            }
+                            .padding(16)
+                            .background(Color.white)
+                            .pixelBorderSmall()
+                            .padding(.horizontal, 16)
                             
                             VStack(spacing: 0) {
                                 // Custom Tab Bar
@@ -622,5 +730,86 @@ struct CompanyRecordsView: View {
         }
         .toolbar(.hidden, for: .tabBar)
     }
+    
+    private func formatCurrency(_ value: Int) -> String {
+        if value >= 10000 {
+            return String(format: "¥%.1fW", Double(value) / 10000)
+        } else {
+            return "¥\(value)"
+        }
+    }
 }
 
+// MARK: - Reusable Stat Card Components
+
+struct SleepStatCard: View {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+                .foregroundColor(color)
+            Text(value)
+                .font(.pixel(22))
+                .foregroundColor(color)
+            Text(label)
+                .font(.pixel(12))
+                .foregroundColor(Color("PixelBorder").opacity(0.7))
+        }
+        .padding()
+        .background(Color.white)
+        .pixelBorderSmall()
+    }
+}
+
+struct ReadingStatCard: View {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+                .foregroundColor(color)
+            Text(value)
+                .font(.pixel(22))
+                .foregroundColor(color)
+            Text(label)
+                .font(.pixel(12))
+                .foregroundColor(Color("PixelBorder").opacity(0.7))
+        }
+        .padding()
+        .background(Color.white)
+        .pixelBorderSmall()
+    }
+}
+
+struct FinanceStatCard: View {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+                .foregroundColor(color)
+            Text(value)
+                .font(.pixel(22))
+                .foregroundColor(color)
+            Text(label)
+                .font(.pixel(12))
+                .foregroundColor(Color("PixelBorder").opacity(0.7))
+        }
+        .padding()
+        .background(Color.white)
+        .pixelBorderSmall()
+    }
+}

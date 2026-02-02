@@ -81,13 +81,7 @@ struct DashboardView: View {
                 }
                 .padding(.bottom, 100)
             }
-            .background(
-                ZStack {
-                    Color("PixelBg")
-                    SubtleNoiseOverlay(opacity: 0.05, useCheckerboard: true)
-                }
-                .ignoresSafeArea()
-            )
+            .background(Color("PixelBg").ignoresSafeArea())
         }
 
 

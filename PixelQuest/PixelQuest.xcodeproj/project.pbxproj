@@ -25,6 +25,7 @@
 		23A2E9062F1E679E008C75B1 /* QuickSheetContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9052F1E679E008C75B1 /* QuickSheetContents.swift */; };
 		23A2E9082F1E7446008C75B1 /* PixelWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9072F1E7446008C75B1 /* PixelWindow.swift */; };
 		23A2E90A2F1FC77D008C75B1 /* RecordsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9092F1FC77D008C75B1 /* RecordsViews.swift */; };
+		23A2E90C2F2A5884008C75B1 /* PixelEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E90B2F2A5884008C75B1 /* PixelEffects.swift */; };
 		23D298012F08F1E100C1B539 /* GymDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298002F08F1E100C1B539 /* GymDetailView.swift */; };
 		23D298032F08F21900C1B539 /* HomeBaseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */; };
 		23D298092F08F24B00C1B539 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D298082F08F24B00C1B539 /* ExerciseEntry.swift */; };
@@ -106,6 +107,7 @@
 		23A2E9052F1E679E008C75B1 /* QuickSheetContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSheetContents.swift; sourceTree = "<group>"; };
 		23A2E9072F1E7446008C75B1 /* PixelWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelWindow.swift; sourceTree = "<group>"; };
 		23A2E9092F1FC77D008C75B1 /* RecordsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsViews.swift; sourceTree = "<group>"; };
+		23A2E90B2F2A5884008C75B1 /* PixelEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEffects.swift; sourceTree = "<group>"; };
 		23D297F92F08D94400C1B539 /* PixelQuest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PixelQuest.entitlements; sourceTree = "<group>"; };
 		23D298002F08F1E100C1B539 /* GymDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymDetailView.swift; sourceTree = "<group>"; };
 		23D298022F08F21900C1B539 /* HomeBaseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBaseDetailView.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 		301 /* PixelQuest */ = {
 			isa = PBXGroup;
 			children = (
+				23A2E90B2F2A5884008C75B1 /* PixelEffects.swift */,
 				23E2286B2F1C93500068CEFC /* Intents */,
 				23E228642F191A880068CEFC /* Font+Pixel.swift */,
 				23E228622F17D7830068CEFC /* DesignSystem.swift */,
@@ -605,6 +608,7 @@
 				23E2283C2F10016A0068CEFC /* SwiftDataLogStore.swift in Sources */,
 				23E228482F1079110068CEFC /* GameStyleSettingsComponents.swift in Sources */,
 				23A2E9022F1E5E8F008C75B1 /* QuickEntrySheet.swift in Sources */,
+				23A2E90C2F2A5884008C75B1 /* PixelEffects.swift in Sources */,
 				23E228672F191A950068CEFC /* DataManager.swift in Sources */,
 				23D298362F0BE41400C1B539 /* LocalizationManager.swift in Sources */,
 				014 /* ItemsView.swift in Sources */,
