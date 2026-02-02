@@ -81,6 +81,8 @@
 "map_gym" = "Gym";
 "map_library" = "Library";
 "map_company" = "Company";
+"home_base" = "COZY CABIN";
+"safe_zone" = "Your secret hideout";
 
 /* Items */
 "items_title" = "MY ITEMS";

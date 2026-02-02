@@ -81,6 +81,8 @@
 "map_gym" = "健身房";
 "map_library" = "图书馆";
 "map_company" = "公司";
+"home_base" = "舒适小屋";
+"safe_zone" = "你的秘密基地";
 
 /* Items */
 "items_title" = "我的物品";

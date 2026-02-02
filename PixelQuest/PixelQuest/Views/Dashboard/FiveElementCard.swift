@@ -116,9 +116,9 @@ struct FiveElementCard: View {
                         .frame(height: 14)
                         .padding(3)
                         .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .clipShape(Rectangle())
                         .overlay(
-                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            Rectangle()
                                 .stroke(Color.darkCoffee.opacity(0.5), lineWidth: 2)
                         )
                     }

@@ -346,7 +346,11 @@ struct ItemDataDetailSheet: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 4)
                             .background(Color(item.rarityColor))
-                            .cornerRadius(4)
+                            .clipShape(Rectangle())
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            )
                         
                         // Description
                         Text(item.itemDescription)

@@ -105,7 +105,11 @@ struct SettingsView: View {
                         }
                         .padding(16)
                         .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color("PixelBorder").opacity(0.1), lineWidth: 2)
+                        )
                     }
                     .padding(.horizontal)
                     
@@ -126,7 +130,7 @@ struct SettingsView: View {
         HStack(spacing: 16) {
             // 设置图标
             ZStack {
-                Circle()
+                Rectangle()
                     .fill(Color("PixelAccent").opacity(0.15))
                     .frame(width: 60, height: 60)
                 
@@ -135,6 +139,10 @@ struct SettingsView: View {
                     .foregroundColor(Color("PixelAccent"))
                     .rotationEffect(.degrees(-15))
             }
+            .overlay(
+                Rectangle()
+                    .stroke(Color("PixelAccent").opacity(0.3), lineWidth: 2)
+            )
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("settings_title".localized)
@@ -150,7 +158,11 @@ struct SettingsView: View {
         }
         .padding()
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
+        .overlay(
+            Rectangle()
+                .stroke(Color("PixelBorder").opacity(0.1), lineWidth: 2)
+        )
         .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
         .padding(.horizontal)
     }
@@ -160,7 +172,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 16) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
+                    Rectangle()
                         .fill(Color.blue.opacity(0.15))
                         .frame(width: 44, height: 44)
                     
@@ -168,6 +180,10 @@ struct SettingsView: View {
                         .font(.system(size: 20))
                         .foregroundColor(.blue)
                 }
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.blue.opacity(0.3), lineWidth: 2)
+                )
                 
                 Text("settings_language".localized)
                     .font(.pixel(16))
@@ -184,7 +200,11 @@ struct SettingsView: View {
         }
         .padding(12)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
+        .overlay(
+            Rectangle()
+                .stroke(Color("PixelBorder").opacity(0.1), lineWidth: 2)
+        )
     }
     
     private func languageButton(language: String, name: String, flag: String) -> some View {
@@ -209,9 +229,9 @@ struct SettingsView: View {
                     ? Color("PixelBlue")
                     : Color("PixelBg")
             )
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
+                Rectangle()
                     .stroke(
                         localizationManager.currentLanguage == language
                             ? Color("PixelBlue")

@@ -438,8 +438,8 @@ struct AddQuestSheet: View {
                             
                             TextField("quest_title_placeholder".localized, text: $title)
                                 .font(.pixel(18))
-                                .padding(16)
-                                .background(.white)
+                                .background(Color.white)
+                                .clipShape(Rectangle())
                                 .overlay(
                                     Rectangle()
                                         .stroke(Color("PixelBorder"), lineWidth: 3)

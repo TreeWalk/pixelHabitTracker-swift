@@ -22,7 +22,11 @@ struct NintendoStyleCard<Content: View>: View {
     var body: some View {
         content
             .background(backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(Rectangle())
+            .overlay(
+                Rectangle()
+                    .stroke(Color.darkCoffee, lineWidth: 3)
+            )
             .shadow(color: shadowColor, radius: 8, x: 0, y: 4)
             .scaleEffect(isPressed ? 0.97 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
@@ -41,7 +45,7 @@ struct ElementCard: View {
         VStack(spacing: compact ? 8 : 12) {
             // 元素图标
             ZStack {
-                Circle()
+                Rectangle()
                     .fill(element.color.opacity(0.15))
                     .frame(width: compact ? 44 : 56, height: compact ? 44 : 56)
                 
@@ -49,6 +53,10 @@ struct ElementCard: View {
                     .font(.system(size: compact ? 20 : 26))
                     .foregroundColor(element.color)
             }
+            .overlay(
+                Rectangle()
+                    .stroke(element.color.opacity(0.3), lineWidth: 2)
+            )
             
             // 元素名称
             Text(element.chineseName)
@@ -71,12 +79,12 @@ struct ElementCard: View {
         .frame(maxWidth: .infinity)
         .padding(compact ? 12 : 16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.white)
                 .shadow(color: element.color.opacity(0.2), radius: 8, x: 0, y: 4)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .stroke(element.color.opacity(0.3), lineWidth: 2)
         )
     }
@@ -154,7 +162,7 @@ struct AnimatedSettingsRow: View {
             HStack(spacing: 16) {
                 // 图标
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
+                    Rectangle()
                         .fill(iconColor.opacity(0.15))
                         .frame(width: 44, height: 44)
                     
@@ -162,6 +170,10 @@ struct AnimatedSettingsRow: View {
                         .font(.system(size: 20))
                         .foregroundColor(iconColor)
                 }
+                .overlay(
+                    Rectangle()
+                        .stroke(iconColor.opacity(0.3), lineWidth: 2)
+                )
                 
                 // 文本
                 VStack(alignment: .leading, spacing: 2) {
@@ -187,7 +199,11 @@ struct AnimatedSettingsRow: View {
             }
             .padding(12)
             .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
+            .overlay(
+                Rectangle()
+                    .stroke(Color.darkCoffee.opacity(0.1), lineWidth: 2)
+            )
         }
         .buttonStyle(BounceButtonStyle())
     }
@@ -205,7 +221,7 @@ struct GameStyleToggle: View {
         HStack(spacing: 16) {
             // 图标
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
+                Rectangle()
                     .fill(iconColor.opacity(0.15))
                     .frame(width: 44, height: 44)
                 
@@ -213,6 +229,10 @@ struct GameStyleToggle: View {
                     .font(.system(size: 20))
                     .foregroundColor(iconColor)
             }
+            .overlay(
+                Rectangle()
+                    .stroke(iconColor.opacity(0.3), lineWidth: 2)
+            )
             
             // 标题
             Text(title)
@@ -228,7 +248,11 @@ struct GameStyleToggle: View {
         }
         .padding(12)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
+        .overlay(
+            Rectangle()
+                .stroke(Color.darkCoffee.opacity(0.1), lineWidth: 2)
+        )
     }
 }
 

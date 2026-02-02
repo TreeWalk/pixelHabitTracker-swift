@@ -221,9 +221,13 @@ struct ContributionHeatmap: View {
                                 }
                         } else {
                             // 未来日期或无效日期 - 显示空白格子
-                            RoundedRectangle(cornerRadius: 2)
+                            Rectangle()
                                 .fill(Color.gray.opacity(0.1))
                                 .frame(width: cellSize, height: cellSize)
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                )
                         }
                     }
                 }
@@ -236,9 +240,13 @@ struct ContributionHeatmap: View {
                     .foregroundColor(.gray)
                 
                 ForEach(0..<4) { level in
-                    RoundedRectangle(cornerRadius: 2)
+                    Rectangle()
                         .fill(HeatmapCell.color(for: level * 2))
                         .frame(width: 12, height: 12)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.black.opacity(0.2), lineWidth: 1)
+                        )
                 }
                 
                 Text("More")
@@ -283,12 +291,12 @@ struct HeatmapCell: View {
     let isSelected: Bool
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 2)
+        Rectangle()
             .fill(Self.color(for: count))
             .frame(width: 32, height: 32)
             .overlay(
-                RoundedRectangle(cornerRadius: 2)
-                    .stroke(Color.black.opacity(0.5), lineWidth: isSelected ? 2 : 0)
+                Rectangle()
+                    .stroke(Color.black.opacity(0.5), lineWidth: isSelected ? 2 : 1)
             )
     }
     
@@ -339,7 +347,7 @@ struct HeatmapCell: View {
                  LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 8) {
                      ForEach(Quest.QuestType.allCases, id: \.self) { type in
                          HStack(spacing: 4) {
-                             Circle()
+                             Rectangle()
                                  .fill(Color(type.color))
                                  .frame(width: 8, height: 8)
                              Text(type.rawValue)

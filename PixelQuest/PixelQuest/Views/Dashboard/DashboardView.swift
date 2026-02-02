@@ -21,14 +21,15 @@ struct DashboardView: View {
     private let gymLocation = Location(id: 2, name: "Gym", icon: "gym", banner: "gymLong", type: "Strength", desc: "Train your strength stats.", unlocked: true)
     private let libraryLocation = Location(id: 3, name: "Library", icon: "library", banner: "libraryLongMorning", type: "Intellect", desc: "Ancient knowledge lies here.", unlocked: true)
     private let homeLocation = Location(id: 1, name: "Home Base", icon: "home", banner: "homeLong", type: "Rest", desc: "Safe zone. Recover HP here.", unlocked: true)
-    private let companyLocation = Location(id: 4, name: "Company", icon: "company", banner: "companyLong", type: "Wealth", desc: "Earn gold here.", unlocked: true)
+    private let companyLocation = Location(id: 4, name: "Company", icon: "map_company", banner: "companyLong", type: "Wealth", desc: "Earn gold here.", unlocked: true)
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
                     // Header
-                    headerSection
+                    HomeBaseLiveView()
+                        .padding(.top, 20)
                     
                     // Five Element Cards
                     VStack(spacing: 12) {

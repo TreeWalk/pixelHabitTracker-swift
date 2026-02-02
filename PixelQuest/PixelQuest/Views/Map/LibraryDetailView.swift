@@ -48,13 +48,13 @@ struct LibraryDetailView: View {
                                 // Reading goal progress (decorative)
                                 VStack(spacing: 4) {
                                     ZStack {
-                                        Circle()
+                                        Rectangle()
                                             .stroke(Color("PixelBorder").opacity(0.15), lineWidth: 4)
                                             .frame(width: 50, height: 50)
                                         
-                                        Circle()
+                                        Rectangle()
                                             .trim(from: 0, to: min(1, Double(bookStore.books.filter { $0.status == "finished" }.count) / max(1, Double(bookStore.books.count))))
-                                            .stroke(Color("PixelGreen"), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                            .stroke(Color("PixelGreen"), style: StrokeStyle(lineWidth: 4, lineCap: .square))
                                             .frame(width: 50, height: 50)
                                             .rotationEffect(.degrees(-90))
                                         
@@ -303,7 +303,7 @@ struct EnhancedAddBookCard: View {
                 
                 // Main book cover placeholder
                 ZStack {
-                    RoundedRectangle(cornerRadius: 0)
+                    Rectangle()
                         .fill(Color("PixelBg"))
                         .frame(width: bookWidth, height: bookHeight)
                         .overlay(

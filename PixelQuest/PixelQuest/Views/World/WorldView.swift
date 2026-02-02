@@ -12,19 +12,32 @@ struct WorldView: View {
         Location(id: 4, name: "Company", icon: "company", banner: "companyLongMorning", type: "Skill", desc: "Level up your career skills.", unlocked: true),
     ]
     
+    @State private var hasAppeared = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(locations) { location in
+                VStack(spacing: 20) {
+                    ForEach(Array(locations.enumerated()), id: \.offset) { index, location in
                         WorldLocationCard(location: location) {
                             selectedLocation = location
                             showDetail = true
                         }
+                        .offset(y: hasAppeared ? 0 : 20)
+                        .opacity(hasAppeared ? 1 : 0)
+                        .scaleEffect(hasAppeared ? 1 : 0.95)
+                        .animation(
+                            .spring(response: 0.6, dampingFraction: 0.8)
+                            .delay(Double(index) * 0.15),
+                            value: hasAppeared
+                        )
                     }
                 }
                 .padding()
                 .padding(.bottom, 80)
+                .onAppear {
+                    hasAppeared = true
+                }
             }
             .background(Color("PixelBg"))
             .navigationTitle("world_title".localized)
@@ -97,9 +110,9 @@ struct WorldLocationCard: View {
                 .padding(16)
             }
             .frame(height: 160)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                Rectangle()
                     .stroke(Color.darkCoffee, lineWidth: 3)
             )
             .shadow(color: Color.darkCoffee.opacity(0.2), radius: 8, x: 0, y: 4)

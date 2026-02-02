@@ -121,9 +121,9 @@ struct BuildingCard: View {
                                 .font(.pixel(14))
                                 .foregroundColor(.yellow)
                             
-                            Circle()
+                            Rectangle()
                                 .fill(.white.opacity(0.5))
-                                .frame(width: 4, height: 4)
+                                .frame(width: 3, height: 3)
                             
                             Text("MAP UNIT \(location.id)")
                                 .font(.pixel(12))

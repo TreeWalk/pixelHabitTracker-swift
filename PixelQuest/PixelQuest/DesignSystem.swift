@@ -21,6 +21,14 @@ enum PixelSpacing {
     static let xl: CGFloat = 24
 }
 
+/// Corner radius presets - updated to 0 for square corners
+enum PixelCornerRadius {
+    static let none: CGFloat = 0
+    static let sm: CGFloat = 0
+    static let md: CGFloat = 0
+    static let lg: CGFloat = 0
+}
+
 /// Border width presets
 enum PixelBorder {
     static let thin: CGFloat = 2
@@ -90,7 +98,7 @@ struct CozyBorderModifier: ViewModifier {
         backgroundColor: Color = .white,
         borderColor: Color = .darkCoffee,
         borderWidth: CGFloat = 3,
-        cornerRadius: CGFloat = 12,
+        cornerRadius: CGFloat = 0,
         shadowColor: Color = .darkCoffee.opacity(0.25),
         shadowOffset: CGFloat = 4
     ) {
@@ -105,17 +113,17 @@ struct CozyBorderModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .fill(backgroundColor)
             )
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .stroke(borderColor, lineWidth: borderWidth)
             )
             // Hard pixel shadow - offset without blur
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .fill(shadowColor)
                     .offset(x: shadowOffset, y: shadowOffset)
             )
@@ -128,7 +136,7 @@ extension View {
         backgroundColor: Color = .white,
         borderColor: Color = .darkCoffee,
         borderWidth: CGFloat = 3,
-        cornerRadius: CGFloat = 12,
+        cornerRadius: CGFloat = 0,
         shadowColor: Color = .darkCoffee.opacity(0.2),
         shadowOffset: CGFloat = 4
     ) -> some View {
@@ -146,12 +154,12 @@ extension View {
     func cozyBorder(
         color: Color = .darkCoffee,
         lineWidth: CGFloat = 3,
-        cornerRadius: CGFloat = 12
+        cornerRadius: CGFloat = 0
     ) -> some View {
         self
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .stroke(color, lineWidth: lineWidth)
             )
     }
@@ -179,7 +187,7 @@ struct CozyProgressBar: View {
         borderColor: Color = .darkCoffee,
         blockSpacing: CGFloat = 2,
         height: CGFloat = 14,
-        cornerRadius: CGFloat = 4
+        cornerRadius: CGFloat = 0
     ) {
         self.value = value
         self.maxValue = maxValue
@@ -200,16 +208,16 @@ struct CozyProgressBar: View {
     var body: some View {
         HStack(spacing: blockSpacing) {
             ForEach(0..<totalBlocks, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 2, style: .continuous)
+                Rectangle()
                     .fill(index < filledBlocks ? filledColor : emptyColor)
             }
         }
         .frame(height: height)
         .padding(3)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            Rectangle()
                 .stroke(borderColor, lineWidth: 2)
         )
     }
@@ -222,7 +230,7 @@ struct CozyCheckbox: View {
     var size: CGFloat = 26
     var checkedColor: Color = Color("PixelAccent")
     var borderColor: Color = .darkCoffee
-    var cornerRadius: CGFloat = 6
+    var cornerRadius: CGFloat = 0
     var onToggle: (() -> Void)? = nil
     
     // Static haptic generator
@@ -239,7 +247,7 @@ struct CozyCheckbox: View {
             onToggle?()
         }) {
             ZStack {
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .fill(isChecked ? checkedColor : .white)
                     .frame(width: size, height: size)
                 
@@ -250,7 +258,7 @@ struct CozyCheckbox: View {
                 }
             }
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                Rectangle()
                     .stroke(borderColor, lineWidth: 2.5)
             )
         }

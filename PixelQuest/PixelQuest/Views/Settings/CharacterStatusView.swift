@@ -53,7 +53,7 @@ struct CharacterStatusView: View {
             HStack(spacing: 16) {
                 // 像素头像
                 ZStack {
-                    RoundedRectangle(cornerRadius: 4)
+                    Rectangle()
                         .fill(Color("PixelWood").opacity(0.3))
                         .frame(width: 80, height: 80)
                     
@@ -61,6 +61,10 @@ struct CharacterStatusView: View {
                         .font(.system(size: 40))
                         .foregroundColor(Color("PixelBorder"))
                 }
+                .overlay(
+                    Rectangle()
+                        .stroke(Color("PixelWood").opacity(0.5), lineWidth: 2)
+                )
                 .pixelBorderSmall()
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -77,7 +81,11 @@ struct CharacterStatusView: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 4)
                             .background(Color("PixelAccent"))
-                            .cornerRadius(4)
+                            .clipShape(Rectangle())
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            )
                         
                         Text("character_title".localized)
                             .font(.pixel(14))
@@ -103,14 +111,22 @@ struct CharacterStatusView: View {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
                         // 背景
-                        RoundedRectangle(cornerRadius: 2)
+                        Rectangle()
                             .fill(Color("PixelBorder").opacity(0.2))
                             .frame(height: 12)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color("PixelBorder").opacity(0.3), lineWidth: 1)
+                            )
                         
                         // 进度
-                        RoundedRectangle(cornerRadius: 2)
+                        Rectangle()
                             .fill(Color("PixelBlue"))
                             .frame(width: max(0, geometry.size.width * statsService.xpProgress), height: 12)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                            )
                     }
                 }
                 .frame(height: 12)
@@ -211,11 +227,11 @@ struct CharacterStatusView: View {
                         InventoryDataSlot(item: item)
                     } else {
                         // 空格子
-                        RoundedRectangle(cornerRadius: 2)
+                        Rectangle()
                             .fill(Color("PixelBorder").opacity(0.1))
                             .frame(height: 44)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 2)
+                                Rectangle()
                                     .stroke(Color("PixelBorder").opacity(0.3), lineWidth: 1)
                             )
                     }
@@ -294,10 +310,9 @@ struct StatCard: View {
         .padding(12)
         .background(color.opacity(0.1))
         .overlay(
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .stroke(color.opacity(0.3), lineWidth: 2)
         )
-        .cornerRadius(4)
     }
 }
 
@@ -309,7 +324,7 @@ struct InventoryDataSlot: View {
     var body: some View {
         ZStack {
             // 背景 - 根据稀有度着色
-            RoundedRectangle(cornerRadius: 2)
+            Rectangle()
                 .fill(Color(item.rarityColor).opacity(0.2))
                 .frame(height: 44)
             
@@ -320,7 +335,7 @@ struct InventoryDataSlot: View {
                 .frame(width: 32, height: 32)
         }
         .overlay(
-            RoundedRectangle(cornerRadius: 2)
+            Rectangle()
                 .stroke(Color(item.rarityColor).opacity(0.6), lineWidth: 2)
         )
     }
