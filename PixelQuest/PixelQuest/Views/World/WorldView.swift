@@ -3,6 +3,7 @@ import SwiftUI
 struct WorldView: View {
     @State private var selectedLocation: Location?
     @State private var showDetail = false
+    @Binding var hideTabBar: Bool
     
     // Predefined locations
     private let locations = [
@@ -44,18 +45,22 @@ struct WorldView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showDetail) {
                 if let location = selectedLocation {
-                    switch location.id {
-                    case 1:
-                        HomeBaseDetailView(location: location)
-                    case 2:
-                        GymDetailView(location: location)
-                    case 3:
-                        LibraryDetailView(location: location)
-                    case 4:
-                        CompanyDetailView(location: location)
-                    default:
-                        Text("Unknown Location")
+                    Group {
+                        switch location.id {
+                        case 1:
+                            HomeBaseDetailView(location: location)
+                        case 2:
+                            GymDetailView(location: location)
+                        case 3:
+                            LibraryDetailView(location: location)
+                        case 4:
+                            CompanyDetailView(location: location)
+                        default:
+                            Text("Unknown Location")
+                        }
                     }
+                    .onAppear { hideTabBar = true }
+                    .onDisappear { hideTabBar = false }
                 }
             }
         }
@@ -122,5 +127,5 @@ struct WorldLocationCard: View {
 }
 
 #Preview {
-    WorldView()
+    WorldView(hideTabBar: .constant(false))
 }

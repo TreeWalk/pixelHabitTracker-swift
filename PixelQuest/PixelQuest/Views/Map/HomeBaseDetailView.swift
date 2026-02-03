@@ -191,46 +191,48 @@ struct HomeBaseDetailView: View {
                             }
                         }
                         
-                        // Weekly Trend Section
-                        VStack(spacing: 16) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "chart.bar.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(Color("PixelBlue"))
-                                Rectangle()
-                                    .fill(Color("PixelBlue"))
-                                    .frame(width: 4, height: 20)
-                                Text("sleep_week_trend".localized)
-                                    .font(.pixel(20))
-                                    .foregroundColor(Color("PixelBorder"))
-                                Spacer()
-                            }
-                            .frame(width: contentWidth, alignment: .leading)
-                            
-                            // Week Chart
-                            WeekSleepChart(entries: sleepStore.weekEntries)
-                                .frame(width: contentWidth, height: 160)
-                                .background(Color.white)
-                                .pixelBorderSmall()
-                            
-                            // Stats
-                            HStack(spacing: 20) {
-                                SleepStatBox(
-                                    title: "sleep_avg_duration".localized,
-                                    value: String(format: "%.1fh", sleepStore.averageDuration),
-                                    icon: "bed.double.fill"
-                                )
-                                .frame(maxWidth: .infinity)
+                        // Unified Sleep Report Panel
+                        RetroReportPanel(
+                            title: "sleep_week_trend".localized,
+                            icon: "chart.bar.fill",
+                            accentColor: Color("PixelBlue")
+                        ) {
+                            VStack(spacing: 20) {
+                                WeekSleepChart(entries: sleepStore.weekEntries)
+                                    .frame(height: 160)
                                 
-                                SleepStatBox(
-                                    title: "sleep_avg_quality".localized,
-                                    value: String(format: "%.1f", sleepStore.averageQuality),
-                                    icon: "star.fill"
-                                )
-                                .frame(maxWidth: .infinity)
+                                Divider()
+                                    .background(Color("PixelBorder").opacity(0.1))
+                                
+                                // Integrated Stats
+                                HStack(spacing: 0) {
+                                    VStack(spacing: 4) {
+                                        Text(String(format: "%.1fh", sleepStore.averageDuration))
+                                            .font(.pixel(24))
+                                            .foregroundColor(Color("PixelBlue"))
+                                        Text("sleep_avg_duration".localized)
+                                            .font(.pixel(12))
+                                            .foregroundColor(Color("PixelBorder").opacity(0.6))
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    
+                                    Rectangle()
+                                        .fill(Color("PixelBorder").opacity(0.1))
+                                        .frame(width: 2, height: 30)
+                                    
+                                    VStack(spacing: 4) {
+                                        Text(String(format: "%.1f", sleepStore.averageQuality))
+                                            .font(.pixel(24))
+                                            .foregroundColor(Color("PixelAccent"))
+                                        Text("sleep_avg_quality".localized)
+                                            .font(.pixel(12))
+                                            .foregroundColor(Color("PixelBorder").opacity(0.6))
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
                             }
-                            .frame(width: contentWidth)
                         }
+                        .frame(width: contentWidth)
                     }
                     .frame(width: geometry.size.width)
                     .padding(.vertical, 16)
@@ -335,27 +337,25 @@ struct HomeBaseDetailView: View {
 
 // MARK: - Week Sleep Chart
 
+
 struct WeekSleepChart: View {
     let entries: [SleepEntryData]
     
     var body: some View {
-        HStack(alignment: .bottom, spacing: 8) {
-            ForEach(weekDays, id: \.date) { day in
-                VStack(spacing: 4) {
-                    // Bar
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(barColor(for: day.entry))
-                        .frame(width: 30, height: barHeight(for: day.entry))
-                    
-                    // Day Label
-                    Text(day.label)
-                        .font(.pixel(12))
-                        .foregroundColor(day.isToday ? Color("PixelBlue") : Color("PixelBorder"))
-                }
-                .frame(maxWidth: .infinity)
-            }
+        let chartData = weekDays.map { day in
+            RetroChartData(
+                label: day.label,
+                value: Double(day.entry?.durationHours ?? 0),
+                color: barColor(for: day.entry),
+                isToday: day.isToday
+            )
         }
-        .padding()
+        
+        RetroBarChart(
+            data: chartData,
+            maxValue: 12.0, // Max 12 hours for sleep
+            accentColor: Color("PixelBlue")
+        )
     }
     
     struct DayData: Hashable {
@@ -385,20 +385,14 @@ struct WeekSleepChart: View {
         }
     }
     
-    func barHeight(for entry: SleepEntryData?) -> CGFloat {
-        guard let entry = entry else { return 10 }
-        // 8小时 = 100pt, 最大 120pt
-        return min(CGFloat(entry.durationHours) * 12.5, 100)
-    }
-    
     func barColor(for entry: SleepEntryData?) -> Color {
-        guard let entry = entry else { return Color.gray.opacity(0.3) }
+        guard let entry = entry else { return Color("PixelBorder").opacity(0.1) }
         switch entry.quality {
-        case 1: return Color.red.opacity(0.7)
-        case 2: return Color.orange.opacity(0.7)
-        case 3: return Color.yellow.opacity(0.7)
-        case 4: return Color("PixelBlue").opacity(0.7)
-        case 5: return Color("PixelGreen").opacity(0.7)
+        case 1: return Color("PixelRed")
+        case 2: return Color.orange
+        case 3: return Color.yellow
+        case 4: return Color("PixelBlue")
+        case 5: return Color("PixelGreen")
         default: return Color.gray.opacity(0.5)
         }
     }

@@ -373,9 +373,241 @@ struct SubtleNoiseOverlay: View {
     }
 }
 
-// MARK: - Pixel Hard Shadow Modifier
-
 // View modifiers moved to Font+Pixel.swift for global visibility
+
+
+// MARK: - Retro Stat Panel (Unified RPG Style)
+
+struct RetroStatItem {
+    let icon: String
+    let value: String
+    let label: String
+    let color: Color
+}
+
+struct RetroReportPanel<Content: View>: View {
+    let title: String
+    let icon: String
+    let accentColor: Color
+    let content: Content
+    
+    init(title: String, icon: String, accentColor: Color, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.icon = icon
+        self.accentColor = accentColor
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Panel Header
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 14))
+                    .foregroundColor(accentColor)
+                
+                Text(title.uppercased())
+                    .font(.pixel(16))
+                    .foregroundColor(Color("PixelBorder"))
+                
+                Spacer()
+                
+                // Decorative dots
+                HStack(spacing: 4) {
+                    ForEach(0..<3, id: \.self) { _ in
+                        Rectangle()
+                            .fill(accentColor.opacity(0.3))
+                            .frame(width: 4, height: 4)
+                    }
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(accentColor.opacity(0.1))
+            .overlay(
+                Rectangle()
+                    .stroke(Color("PixelBorder"), lineWidth: 2),
+                alignment: .bottom
+            )
+            
+            // Content
+            content
+                .padding(16)
+                .background(Color.white)
+        }
+        .overlay(
+            Rectangle()
+                .stroke(Color("PixelBorder"), lineWidth: 2)
+        )
+        // Hard Shadow
+        .background(
+            Rectangle()
+                .fill(Color("PixelBorder").opacity(0.15))
+                .offset(x: 4, y: 4)
+        )
+    }
+}
+
+struct RetroStatPanel: View {
+    let title: String
+    let items: [RetroStatItem]
+    let accentColor: Color
+    
+    var body: some View {
+        RetroReportPanel(title: title, icon: "chart.bar.fill", accentColor: accentColor) {
+            HStack(spacing: 0) {
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    VStack(spacing: 6) {
+                        Image(systemName: item.icon)
+                            .font(.system(size: 20))
+                            .foregroundColor(item.color)
+                        
+                        Text(item.value)
+                            .font(.pixel(22))
+                            .foregroundColor(item.color)
+                        
+                        Text(item.label)
+                            .font(.pixel(12))
+                            .foregroundColor(Color("PixelBorder").opacity(0.7))
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    if index < items.count - 1 {
+                        Rectangle()
+                            .fill(Color("PixelBorder").opacity(0.1))
+                            .frame(width: 2)
+                            .padding(.vertical, 8)
+                    }
+                }
+            }
+            .padding(-16) // Neutralize the padding from RetroReportPanel for stat items
+        }
+    }
+}
+
+
+// MARK: - Retro Bar Chart
+
+struct RetroChartData: Identifiable {
+    let id = UUID()
+    let label: String
+    let value: Double
+    let color: Color
+    let isToday: Bool
+}
+
+struct RetroBarChart: View {
+    let data: [RetroChartData]
+    let maxValue: Double
+    let accentColor: Color
+    
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 12) {
+            // Y-Axis Labels
+            VStack(alignment: .trailing, spacing: 0) {
+                let labels = [12, 8, 4]
+                ForEach(labels, id: \.self) { label in
+                    Text("\(label)h")
+                        .font(.pixel(10))
+                        .foregroundColor(Color("PixelBorder").opacity(0.4))
+                        .frame(height: 100 / (maxValue / Double(label)), alignment: .bottom)
+                    if label != 4 { Spacer() }
+                }
+            }
+            .frame(height: 100)
+            .padding(.bottom, 20) // Align with bars, excluding labels
+            
+            ZStack {
+                // Background Dot Grid
+                VStack(spacing: 24) {
+                    ForEach(0..<5) { _ in
+                        HStack(spacing: 24) {
+                            ForEach(0..<8) { _ in
+                                Circle()
+                                    .fill(Color("PixelBorder").opacity(0.05))
+                                    .frame(width: 2, height: 2)
+                            }
+                        }
+                    }
+                }
+                
+                // Horizontal Guide Lines
+                VStack(spacing: 0) {
+                    ForEach(0..<3) { _ in
+                        Spacer()
+                        Divider()
+                            .background(Color("PixelBorder").opacity(0.1))
+                    }
+                }
+                .frame(height: 100)
+                .padding(.bottom, 20)
+                
+                HStack(alignment: .bottom, spacing: 12) {
+                    ForEach(data) { item in
+                        VStack(spacing: 8) {
+                            // Segmented Bar
+                            GeometryReader { geometry in
+                                VStack(spacing: 2) {
+                                    Spacer(minLength: 0)
+                                    
+                                    let barHeight = maxValue > 0 ? (item.value / maxValue) * geometry.size.height : 0
+                                    let segmentCount = Int(barHeight / 6)
+                                    
+                                    ForEach(0..<max(0, segmentCount), id: \.self) { i in
+                                        Rectangle()
+                                            .fill(item.value > 0 ? item.color : Color("PixelBorder").opacity(0.1))
+                                            .frame(height: 4)
+                                            .overlay(
+                                                Rectangle()
+                                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                            )
+                                    }
+                                    
+                                    if segmentCount == 0 && item.value > 0 {
+                                        Rectangle()
+                                            .fill(item.color)
+                                            .frame(height: 2)
+                                    }
+                                }
+                            }
+                            .frame(height: 100)
+                            
+                            // Label
+                            Text(item.label)
+                                .font(.pixel(12))
+                                .foregroundColor(item.isToday ? accentColor : Color("PixelBorder").opacity(0.6))
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+            }
+            .padding(16)
+            .background(
+                ZStack {
+                    Color.white
+                    // Dithered-style accent background
+                    accentColor.opacity(0.03)
+                    
+                    // Subtle diagonal stripe pattern
+                    GeometryReader { geo in
+                        Path { path in
+                            let step: CGFloat = 10
+                            for x in stride(from: 0, through: geo.size.width + geo.size.height, by: step) {
+                                path.move(to: CGPoint(x: x, y: 0))
+                                path.addLine(to: CGPoint(x: x - geo.size.height, y: geo.size.height))
+                            }
+                        }
+                        .stroke(accentColor.opacity(0.02), lineWidth: 1)
+                    }
+                }
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color("PixelBorder"), lineWidth: 2)
+            )
+        }
+    }
+}
 
 
 // MARK: - Previews

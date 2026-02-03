@@ -32,7 +32,7 @@ struct ContentView: View {
                 case 2:
                     AssetsView()
                 case 3:
-                    WorldView()
+                    WorldView(hideTabBar: $hideTabBar)
                 default:
                     DashboardView(hideTabBar: $hideTabBar)
                 }

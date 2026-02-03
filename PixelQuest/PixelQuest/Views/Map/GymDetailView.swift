@@ -221,42 +221,26 @@ struct GymDetailView: View {
                         .frame(width: contentWidth)
                     }
 
-                    // Weekly Stats Section
-                    VStack(spacing: 16) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "chart.bar.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color("PixelBlue"))
-                            Rectangle()
-                                .fill(Color("PixelBlue"))
-                                .frame(width: 4, height: 20)
-                            Text("exercise_week_stats".localized)
-                                .font(.pixel(20))
-                                .foregroundColor(Color("PixelBorder"))
-                            Spacer()
-                        }
-                        .frame(width: contentWidth, alignment: .leading)
-                        
-                        // Stats Cards
-                        HStack(spacing: 12) {
-                            ExerciseStatCard(
+                    // Retro Stat Panel
+                    RetroStatPanel(
+                        title: "exercise_week_stats".localized,
+                        items: [
+                            RetroStatItem(
                                 icon: "timer",
                                 value: formatDuration(exerciseStore.weekTotalDuration),
                                 label: "exercise_total_duration".localized,
                                 color: Color("PixelBlue")
-                            )
-                            .frame(maxWidth: .infinity)
-                            
-                            ExerciseStatCard(
+                            ),
+                            RetroStatItem(
                                 icon: "flame.fill",
                                 value: "\(exerciseStore.weekTotalCalories)",
                                 label: "exercise_total_calories".localized,
                                 color: Color("PixelRed")
                             )
-                            .frame(maxWidth: .infinity)
-                        }
-                        .frame(width: contentWidth)
-                    }
+                        ],
+                        accentColor: Color("PixelBlue")
+                    )
+                    .frame(width: contentWidth)
 
                     // Today's Records Section
                     if !exerciseStore.todayEntries.isEmpty {
