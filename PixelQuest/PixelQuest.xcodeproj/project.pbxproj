@@ -19,6 +19,7 @@
 		013 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113 /* MapView.swift */; };
 		014 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114 /* ItemsView.swift */; };
 		015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115 /* SettingsView.swift */; };
+		231D28932F336B6C000C2006 /* AsymmetricDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231D28922F336B6C000C2006 /* AsymmetricDashboardView.swift */; };
 		23A2E9002F1D1E44008C75B1 /* DataChangeNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */; };
 		23A2E9022F1E5E8F008C75B1 /* QuickEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */; };
 		23A2E9042F1E649A008C75B1 /* PixelSheetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A2E9032F1E649A008C75B1 /* PixelSheetComponents.swift */; };
@@ -102,6 +103,7 @@
 		113 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		114 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
 		115 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		231D28922F336B6C000C2006 /* AsymmetricDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsymmetricDashboardView.swift; sourceTree = "<group>"; };
 		23A2E8FF2F1D1E44008C75B1 /* DataChangeNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeNotifier.swift; sourceTree = "<group>"; };
 		23A2E9012F1E5E8F008C75B1 /* QuickEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickEntrySheet.swift; sourceTree = "<group>"; };
 		23A2E9032F1E649A008C75B1 /* PixelSheetComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelSheetComponents.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 		23E2284B2F1257B70068CEFC /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				231D28922F336B6C000C2006 /* AsymmetricDashboardView.swift */,
 				23A2E90D2F30F01F008C75B1 /* HomeBaseLiveView.swift */,
 				23A2E9092F1FC77D008C75B1 /* RecordsViews.swift */,
 				23E228492F1257B70068CEFC /* DashboardView.swift */,
@@ -601,6 +604,7 @@
 				23E2285C2F129D6C0068CEFC /* QuickSleepSheet.swift in Sources */,
 				23D298592F0D304600C1B539 /* AssetData.swift in Sources */,
 				012 /* QuestsView.swift in Sources */,
+				231D28932F336B6C000C2006 /* AsymmetricDashboardView.swift in Sources */,
 				23D2980B2F08F25600C1B539 /* SleepEntry.swift in Sources */,
 				013 /* MapView.swift in Sources */,
 				23D2985F2F0D31F300C1B539 /* AssetUpdateSheet.swift in Sources */,

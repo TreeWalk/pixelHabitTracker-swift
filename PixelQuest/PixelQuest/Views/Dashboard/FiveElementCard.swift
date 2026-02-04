@@ -146,10 +146,43 @@ struct FiveElementCard: View {
                 
                 // Expanded content
                 if isExpanded {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
                         Rectangle()
                             .fill(Color.darkCoffee.opacity(0.15))
                             .frame(height: 2)
+                        
+                        // Ring progress + mini heatmap row
+                        HStack(spacing: 16) {
+                            // Ring progress showing weekly goal
+                            VStack(spacing: 4) {
+                                PixelRingProgress(
+                                    progress: progress,
+                                    icon: element.icon,
+                                    accentColor: element.color,
+                                    size: 56,
+                                    lineWidth: 5,
+                                    segments: 12
+                                )
+                                
+                                Text("\(Int(progress * 100))%")
+                                    .font(.pixel(10))
+                                    .foregroundColor(element.color)
+                            }
+                            
+                            // Mini heatmap (last 3 weeks)
+                            VStack(alignment: .trailing, spacing: 2) {
+                                PixelHeatmap(
+                                    data: generateMockHeatmapData(),
+                                    accentColor: element.color,
+                                    columns: 7,
+                                    rows: 3,
+                                    cellSize: 8,
+                                    spacing: 2
+                                )
+                            }
+                            
+                            Spacer()
+                        }
                         
                         Button(action: {
                             Self.lightHaptic.impactOccurred()
@@ -209,6 +242,22 @@ struct FiveElementCard: View {
             }
             previousValue = oldValue
         }
+    }
+    
+    // Generate mock heatmap data for preview (in real app, this would come from store)
+    private func generateMockHeatmapData() -> [PixelHeatmapData] {
+        var data: [PixelHeatmapData] = []
+        let calendar = Calendar.current
+        let today = Date()
+        
+        for i in 0..<21 { // 3 weeks
+            if let date = calendar.date(byAdding: .day, value: -i, to: today) {
+                let randomValue = Double.random(in: 0...1)
+                data.append(PixelHeatmapData(date: date, value: randomValue))
+            }
+        }
+        
+        return data.reversed()
     }
 }
 

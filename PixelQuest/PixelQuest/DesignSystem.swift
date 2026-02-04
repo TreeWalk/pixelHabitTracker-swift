@@ -63,6 +63,15 @@ extension Color {
     /// Cream Background - Warm off-white
     /// Now references PixelBg asset for consistency
     static let creamBg = Color("PixelBg")
+
+    /// Warm butter - for highlight cards
+    static let warmButter = Color("PixelButter")
+
+    /// Soft peach - for subscription cards
+    static let softPeach = Color("PixelPeach")
+
+    /// Soft mint - for recovery cards
+    static let softMint = Color("PixelMint")
 }
 
 // MARK: - Typography (Hybrid Strategy)
@@ -290,7 +299,7 @@ struct FloatingTabBar: View {
     }()
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             ForEach(0..<tabs.count, id: \.self) { index in
                 Button(action: {
                     Self.hapticGenerator.impactOccurred()
@@ -298,30 +307,30 @@ struct FloatingTabBar: View {
                         selectedTab = index
                     }
                 }) {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 6) {
                         Image(systemName: tabs[index].icon)
-                            .font(.system(size: 20, weight: selectedTab == index ? .semibold : .regular))
+                            .font(.system(size: 21, weight: selectedTab == index ? .semibold : .regular))
                         
                         Text(tabs[index].label)
-                            .font(.pixel(10))
+                            .font(.pixel(11))
                     }
                     .foregroundColor(selectedTab == index ? .darkCoffee : .lightCoffee)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 12)
                     .background(
                         // Selected indicator - pixel style square
                         Group {
                             if selectedTab == index {
                                 Rectangle()
-                                    .fill(Color.darkCoffee.opacity(0.12))
+                                    .fill(Color("PixelButter").opacity(0.8))
                             }
                         }
                     )
                 }
             }
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
         .background(Color.creamBg)
         .clipShape(Rectangle())
         .overlay(
@@ -481,6 +490,129 @@ struct RetroStatPanel: View {
                 }
             }
             .padding(-16) // Neutralize the padding from RetroReportPanel for stat items
+        }
+    }
+}
+
+
+// MARK: - Pixel Ring Progress (圆环进度指示器)
+
+struct PixelRingProgress: View {
+    let progress: Double // 0.0 to 1.0
+    let icon: String
+    let accentColor: Color
+    var size: CGFloat = 60
+    var lineWidth: CGFloat = 6
+    var segments: Int = 16 // Number of segments in the ring
+    
+    var body: some View {
+        ZStack {
+            // Background ring (unfilled segments)
+            ForEach(0..<segments, id: \.self) { index in
+                PixelRingSegment(
+                    index: index,
+                    total: segments,
+                    isFilled: false,
+                    color: accentColor.opacity(0.15),
+                    lineWidth: lineWidth
+                )
+            }
+            
+            // Foreground ring (filled segments)
+            let filledCount = Int(progress * Double(segments))
+            ForEach(0..<filledCount, id: \.self) { index in
+                PixelRingSegment(
+                    index: index,
+                    total: segments,
+                    isFilled: true,
+                    color: accentColor,
+                    lineWidth: lineWidth
+                )
+            }
+            
+            // Center icon
+            Image(systemName: icon)
+                .font(.system(size: size * 0.35, weight: .bold))
+                .foregroundColor(accentColor)
+        }
+        .frame(width: size, height: size)
+    }
+}
+
+struct PixelRingSegment: View {
+    let index: Int
+    let total: Int
+    let isFilled: Bool
+    let color: Color
+    let lineWidth: CGFloat
+    
+    var body: some View {
+        let startAngle = Angle(degrees: Double(index) / Double(total) * 360 - 90)
+        let endAngle = Angle(degrees: Double(index + 1) / Double(total) * 360 - 90 - 2) // Gap between segments
+        
+        Path { path in
+            path.addArc(
+                center: CGPoint(x: lineWidth * 5, y: lineWidth * 5),
+                radius: lineWidth * 4,
+                startAngle: startAngle,
+                endAngle: endAngle,
+                clockwise: false
+            )
+        }
+        .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .butt))
+        .frame(width: lineWidth * 10, height: lineWidth * 10)
+    }
+}
+
+
+// MARK: - Pixel Heatmap (热力图)
+
+struct PixelHeatmapData: Identifiable {
+    let id = UUID()
+    let date: Date
+    let value: Double // 0.0 to 1.0 intensity
+}
+
+struct PixelHeatmap: View {
+    let data: [PixelHeatmapData]
+    let accentColor: Color
+    var columns: Int = 7 // Days per row (week)
+    var rows: Int = 5 // Weeks to show
+    var cellSize: CGFloat = 12
+    var spacing: CGFloat = 3
+    
+    var body: some View {
+        VStack(alignment: .trailing, spacing: spacing) {
+            ForEach(0..<rows, id: \.self) { row in
+                HStack(spacing: spacing) {
+                    ForEach(0..<columns, id: \.self) { col in
+                        let index = row * columns + col
+                        let intensity = index < data.count ? data[index].value : 0
+                        
+                        Rectangle()
+                            .fill(cellColor(for: intensity))
+                            .frame(width: cellSize, height: cellSize)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color("PixelBorder").opacity(0.1), lineWidth: 1)
+                            )
+                    }
+                }
+            }
+        }
+    }
+    
+    private func cellColor(for intensity: Double) -> Color {
+        if intensity <= 0 {
+            return Color("PixelBorder").opacity(0.05)
+        } else if intensity < 0.25 {
+            return accentColor.opacity(0.2)
+        } else if intensity < 0.5 {
+            return accentColor.opacity(0.4)
+        } else if intensity < 0.75 {
+            return accentColor.opacity(0.7)
+        } else {
+            return accentColor
         }
     }
 }
