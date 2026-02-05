@@ -5,6 +5,8 @@ struct CompanyDetailView: View {
     @EnvironmentObject var financeStore: SwiftDataFinanceStore
     @EnvironmentObject var localizationManager: LocalizationManager
     let location: Location
+    let showsBackButton: Bool
+    let heroNamespace: Namespace.ID?
     
     @State private var selectedTab: Int = 0
     @State private var showQuickEntry = false
@@ -30,6 +32,9 @@ struct CompanyDetailView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
+                            bookkeepingHeroCard
+                                .frame(width: contentWidth)
+                            
                             // Banner
                             if let banner = location.banner {
                                 Image(banner)
@@ -91,18 +96,20 @@ struct CompanyDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "arrow.left")
-                        Text("back".localized)
+            if showsBackButton {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { dismiss() }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.left")
+                            Text("back".localized)
+                        }
+                        .font(.pixel(16))
+                        .foregroundColor(Color("PixelBorder"))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color("PixelAccent"))
+                        .pixelBorderSmall()
                     }
-                    .font(.pixel(16))
-                    .foregroundColor(Color("PixelBorder"))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color("PixelAccent"))
-                    .pixelBorderSmall()
                 }
             }
         }
@@ -116,6 +123,75 @@ struct CompanyDetailView: View {
             TransactionStatsSheet()
         }
         .toolbar(.hidden, for: .tabBar)
+    }
+
+    @ViewBuilder
+    private var bookkeepingHeroCard: some View {
+        let card = VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("记账概览")
+                    .font(.pixelHeader(20))
+                    .foregroundStyle(Color("PixelBorder"))
+
+                Spacer()
+
+                Text("本月")
+                    .font(.pixel(12))
+                    .foregroundStyle(Color("PixelBorder").opacity(0.6))
+            }
+
+            Text("总余额")
+                .font(.pixel(12))
+                .foregroundStyle(Color("PixelBorder").opacity(0.6))
+
+            Text(Double(financeStore.totalBalance) / 100, format: .currency(code: "CNY").precision(.fractionLength(2)))
+                .font(.pixelHeader(32))
+                .foregroundStyle(Color("PixelBorder"))
+                .ifAvailable17 { view in
+                    view.contentTransition(.numericText())
+                }
+
+            HStack(spacing: 12) {
+                heroAmountPill(title: "收入", amount: financeStore.monthIncome, tint: Color("PixelGreen"))
+                heroAmountPill(title: "支出", amount: financeStore.monthExpense, tint: Color("PixelRed"))
+                heroAmountPill(title: "净值", amount: financeStore.monthNet, tint: Color("PixelAccent"))
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cozyCard(backgroundColor: .white, borderWidth: 3)
+
+        if let heroNamespace {
+            card.matchedGeometryEffect(id: HomeHeroID.bookkeeping, in: heroNamespace, isSource: false)
+        } else {
+            card
+        }
+    }
+
+    private func heroAmountPill(title: String, amount: Int, tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.pixel(11))
+                .foregroundStyle(Color("PixelBorder").opacity(0.6))
+
+            Text(Double(amount) / 100, format: .currency(code: "CNY").precision(.fractionLength(2)))
+                .font(.pixel(14))
+                .foregroundStyle(tint)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .cozyBorder(color: Color("PixelBorder").opacity(0.3), lineWidth: 2)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func ifAvailable17(_ transform: (Self) -> some View) -> some View {
+        if #available(iOS 17.0, *) {
+            transform(self)
+        } else {
+            self
+        }
     }
 }
 
