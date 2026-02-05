@@ -9,9 +9,6 @@ final class DataChangeNotifier {
     /// 财务数据变更通知
     static let financeDataDidChange = Notification.Name("com.pixelquest.financeDataDidChange")
 
-    /// 任务数据变更通知
-    static let questDataDidChange = Notification.Name("com.pixelquest.questDataDidChange")
-
     /// 通用数据变更通知（可用于其他模块扩展）
     static let dataDidChange = Notification.Name("com.pixelquest.dataDidChange")
 
@@ -23,17 +20,6 @@ final class DataChangeNotifier {
         DispatchQueue.main.async {
             NotificationCenter.default.post(
                 name: financeDataDidChange,
-                object: nil,
-                userInfo: userInfo
-            )
-        }
-    }
-
-    /// 发送任务数据变更通知
-    static func notifyQuestDataChanged(userInfo: [String: Any]? = nil) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(
-                name: questDataDidChange,
                 object: nil,
                 userInfo: userInfo
             )

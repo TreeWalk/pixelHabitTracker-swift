@@ -285,10 +285,9 @@ struct FloatingTabBar: View {
     @Binding var selectedTab: Int
     
     private let tabs: [(icon: String, label: String)] = [
-        ("person.crop.circle", "Dashboard"),
-        ("scroll.fill", "Actions"),
-        ("shippingbox.fill", "Assets"),
-        ("map.fill", "World")
+        ("house.fill", "Home"),
+        ("list.bullet.rectangle.fill", "Bookkeeping"),
+        ("shippingbox.fill", "Assets")
     ]
     
     // Static haptic generator

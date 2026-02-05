@@ -35,14 +35,7 @@ struct QuickExpenseIntent: AppIntent {
             WalletSnapshotData.self,
             AssetData.self,
             AssetSnapshotData.self,
-            // 需要包含所有 Schema 以确保兼容
-            QuestData.self,
-            QuestLogData.self,
-            ItemData.self,
-            BookEntryData.self,
-            SleepEntryData.self,
-            ExerciseEntryData.self,
-            LogEntryData.self
+            ItemData.self
         ])
 
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
