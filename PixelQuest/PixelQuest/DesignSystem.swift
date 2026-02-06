@@ -617,6 +617,400 @@ struct PixelHeatmap: View {
 }
 
 
+// MARK: - 铅笔草图设计系统 (100% 真实质感还原)
+
+extension Color {
+    // 铅笔灰度 - 模拟不同硬度的铅笔 (HB, 2B, 4B)
+    static let pencilDark = Color(white: 0.15)      // 4B - 深色笔触
+    static let pencilMedium = Color(white: 0.35)    // 2B - 普通笔触
+    static let pencilLight = Color(white: 0.60)     // HB - 浅色笔触
+    static let pencilFaint = Color(white: 0.85)     // 2H - 极浅草稿线
+    static let pencilStroke = Color(white: 0.30)    // 边框专用
+    
+    // 纸张色系
+    static let paperWhite = Color(red: 0.97, green: 0.96, blue: 0.93)
+    static let paperCream = Color(red: 0.96, green: 0.94, blue: 0.89)
+}
+
+// MARK: - 纸张纹理
+
+struct PaperTextureBackground: View {
+    var baseColor: Color = .paperCream
+    
+    var body: some View {
+        ZStack {
+            baseColor
+            // 添加细微的纸张噪点纹理
+            Rectangle()
+                .fill(Color.white.opacity(0.3))
+                .blendMode(.multiply)
+                .overlay(
+                    Canvas { context, size in
+                        // 绘制随机噪点模拟纸张纤维
+                        for _ in 0..<Int(size.width * size.height / 800) {
+                            let x = Double.random(in: 0...size.width)
+                            let y = Double.random(in: 0...size.height)
+                            let rect = CGRect(x: x, y: y, width: 1.5, height: 1.5)
+                            context.opacity = Double.random(in: 0.05...0.15)
+                            context.fill(Path(ellipseIn: rect), with: .color(.black))
+                        }
+                    }
+                )
+        }
+        .ignoresSafeArea()
+    }
+}
+
+// MARK: - 高级手绘边框 (Realistic Pencil Sketch Border)
+// 模拟真实素描：多重描边、转角加重、线条断续
+
+// MARK: - 高级手绘边框 (Realistic Pencil Sketch Border)
+// 模拟真实素描：多重描边、转角加重、线条断续
+
+struct HandDrawnBorder: View {
+    var cornerRadius: CGFloat
+    // 边框的“草稿程度”，越高线条越乱
+    var sketchiness: CGFloat = 1.0
+    
+    var body: some View {
+        Canvas { context, size in
+            let rect = CGRect(origin: .zero, size: size)
+            
+            // 1. 绘制 3 层主要的素描轮廓
+            // 真实的素描通常有 2-3 根主要的线条来界定轮廓
+            for i in 0..<3 {
+                var path = Path()
+                let inset = CGFloat(i) * 0.8 // 线条之间的间距
+                let currentRect = rect.insetBy(dx: inset, dy: inset)
+                
+                // 每一层都有不同的随机扰动
+                let wobble = (1.5 - CGFloat(i) * 0.3) * sketchiness
+                
+                // 构建带有随机控制点的不规则圆角矩形路径
+                // 起点：左上角下方
+                path.move(to: CGPoint(x: currentRect.minX, y: currentRect.minY + cornerRadius))
+                
+                // 左上圆角
+                path.addQuadCurve(
+                    to: CGPoint(x: currentRect.minX + cornerRadius, y: currentRect.minY),
+                    control: CGPoint(x: currentRect.minX + random(wobble), y: currentRect.minY + random(wobble))
+                )
+                
+                // 顶边
+                path.addLine(to: CGPoint(x: currentRect.maxX - cornerRadius + random(wobble), y: currentRect.minY + random(wobble)))
+                
+                // 右上圆角
+                path.addQuadCurve(
+                    to: CGPoint(x: currentRect.maxX, y: currentRect.minY + cornerRadius),
+                    control: CGPoint(x: currentRect.maxX - random(wobble), y: currentRect.minY + random(wobble))
+                )
+                
+                // 右边
+                path.addLine(to: CGPoint(x: currentRect.maxX + random(wobble), y: currentRect.maxY - cornerRadius + random(wobble)))
+                
+                // 右下圆角
+                path.addQuadCurve(
+                    to: CGPoint(x: currentRect.maxX - cornerRadius, y: currentRect.maxY),
+                    control: CGPoint(x: currentRect.maxX - random(wobble), y: currentRect.maxY - random(wobble))
+                )
+                
+                // 底边
+                path.addLine(to: CGPoint(x: currentRect.minX + cornerRadius + random(wobble), y: currentRect.maxY + random(wobble)))
+                
+                // 左下圆角
+                path.addQuadCurve(
+                    to: CGPoint(x: currentRect.minX, y: currentRect.maxY - cornerRadius),
+                    control: CGPoint(x: currentRect.minX + random(wobble), y: currentRect.maxY - random(wobble))
+                )
+                
+                // 左边闭合
+                path.closeSubpath()
+                
+                // 绘制线条
+                context.stroke(
+                    path,
+                    with: .color(Color.pencilStroke.opacity(i == 0 ? 0.8 : 0.4)), // 第一层深，通过层浅
+                    lineWidth: i == 0 ? 1.0 : 0.6 // 第一层粗，后面细
+                )
+            }
+            
+            // 2. 增强转角处的笔触 (Corner Emphasis)
+            // 素描时，转角处往往会多画几笔，显得更深
+            let corners = [
+                CGPoint(x: rect.minX, y: rect.minY), // 左上
+                CGPoint(x: rect.maxX, y: rect.minY), // 右上
+                CGPoint(x: rect.maxX, y: rect.maxY), // 右下
+                CGPoint(x: rect.minX, y: rect.maxY)  // 左下
+            ]
+            
+            for corner in corners {
+                // 在每个角画 2-3 条短弧线
+                for _ in 0..<Int.random(in: 1...2) {
+                    var cornerPath = Path()
+                    let offset = CGFloat.random(in: -2...2)
+                    let r = cornerRadius + offset
+                    
+                    // 根据角的象限确定绘制方向，这里简化处理，绘制切角短线
+                    // 简单的模拟：在角附近画一些非连续的线条
+                    
+                    // 确定这是哪个角
+                    let isLeft = corner.x == rect.minX
+                    let isTop = corner.y == rect.minY
+                    
+                    let centerX = isLeft ? rect.minX + cornerRadius : rect.maxX - cornerRadius
+                    let centerY = isTop ? rect.minY + cornerRadius : rect.maxY - cornerRadius
+                    
+                    // 绘制一段圆弧
+                    cornerPath.addArc(
+                        center: CGPoint(x: centerX, y: centerY),
+                        radius: r,
+                        startAngle: Angle(degrees: isLeft ? (isTop ? 180 : 90) : (isTop ? 270 : 0)),
+                        endAngle: Angle(degrees: isLeft ? (isTop ? 270 : 180) : (isTop ? 360 : 90)),
+                        clockwise: false
+                    )
+                    
+                    context.stroke(
+                        cornerPath,
+                        with: .color(Color.pencilDark.opacity(0.3)),
+                        lineWidth: 0.5
+                    )
+                }
+            }
+        }
+    }
+    
+    // 简单的随机函数
+    private func random(_ range: CGFloat) -> CGFloat {
+        CGFloat.random(in: -range...range)
+    }
+}
+
+// MARK: - 包含阴影和背景的完整卡片样式
+
+struct PencilSketchCardModifier: ViewModifier {
+    var cornerRadius: CGFloat = 16
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                ZStack {
+                    // 涂抹阴影
+                    Canvas { context, size in
+                        let rect = CGRect(origin: .zero, size: size)
+                        let shadowPath = Path(roundedRect: rect, cornerRadius: cornerRadius)
+                        // 绘制多层模糊阴影，模拟石墨涂抹
+                        context.addFilter(.blur(radius: 4))
+                        context.opacity = 0.2
+                        context.fill(shadowPath, with: .color(.black))
+                        
+                        context.addFilter(.blur(radius: 8))
+                        context.opacity = 0.1
+                        context.translateBy(x: 3, y: 3)
+                        context.fill(shadowPath, with: .color(.black))
+                    }
+                    
+                    // 纸张底色
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(Color.paperWhite)
+                    
+                    // 手绘边框
+                    HandDrawnBorder(cornerRadius: cornerRadius)
+                }
+            )
+    }
+}
+
+struct PencilSketchBorderModifier: ViewModifier {
+    var cornerRadius: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                HandDrawnBorder(cornerRadius: cornerRadius)
+            )
+    }
+}
+
+extension View {
+    func pencilSketchCard(cornerRadius: CGFloat = 16) -> some View {
+        self.modifier(PencilSketchCardModifier(cornerRadius: cornerRadius))
+    }
+    
+    func pencilSketchBorder(cornerRadius: CGFloat = 6) -> some View {
+        self.modifier(PencilSketchBorderModifier(cornerRadius: cornerRadius))
+    }
+}
+
+// MARK: - 真实铅笔涂抹热力图格子 (Dense Pencil Smudge)
+
+struct PencilHeatmapCell: View {
+    let intensity: Double
+    let size: CGFloat
+    
+    var body: some View {
+        Canvas { context, canvasSize in
+            let rect = CGRect(origin: .zero, size: canvasSize)
+            
+            // 1. 绘制边框 (更圆润、更清晰的素描线)
+            // 使用连续的路径，不再断开，确保形状完整
+            var borderPath = Path()
+            let r: CGFloat = 3
+            // 减少抖动，让它看起来更像是一个确定的方块，只是线条是手绘的
+            let inset: CGFloat = 0.5
+            let dRect = rect.insetBy(dx: inset, dy: inset)
+            
+            // 拟合一个略微不规则的圆角矩形
+            borderPath.move(to: CGPoint(x: dRect.minX + r, y: dRect.minY))
+            
+            // 顶边
+            borderPath.addCurve(
+                to: CGPoint(x: dRect.maxX - r, y: dRect.minY),
+                control1: CGPoint(x: dRect.width * 0.3, y: dRect.minY - 0.5),
+                control2: CGPoint(x: dRect.width * 0.7, y: dRect.minY + 0.5)
+            )
+            // 右上角
+            borderPath.addQuadCurve(to: CGPoint(x: dRect.maxX, y: dRect.minY + r), control: CGPoint(x: dRect.maxX, y: dRect.minY))
+            // 右边
+            borderPath.addCurve(
+                to: CGPoint(x: dRect.maxX, y: dRect.maxY - r),
+                control1: CGPoint(x: dRect.maxX + 0.5, y: dRect.height * 0.3),
+                control2: CGPoint(x: dRect.maxX - 0.5, y: dRect.height * 0.7)
+            )
+            // 右下角
+            borderPath.addQuadCurve(to: CGPoint(x: dRect.maxX - r, y: dRect.maxY), control: CGPoint(x: dRect.maxX, y: dRect.maxY))
+            // 底边
+            borderPath.addCurve(
+                to: CGPoint(x: dRect.minX + r, y: dRect.maxY),
+                control1: CGPoint(x: dRect.width * 0.7, y: dRect.maxY + 0.5),
+                control2: CGPoint(x: dRect.width * 0.3, y: dRect.maxY - 0.5)
+            )
+            // 左下角
+            borderPath.addQuadCurve(to: CGPoint(x: dRect.minX, y: dRect.maxY - r), control: CGPoint(x: dRect.minX, y: dRect.maxY))
+            // 左边
+            borderPath.addCurve(
+                to: CGPoint(x: dRect.minX, y: dRect.minY + r),
+                control1: CGPoint(x: dRect.minX - 0.5, y: dRect.height * 0.7),
+                control2: CGPoint(x: dRect.minX + 0.5, y: dRect.height * 0.3)
+            )
+            // 左上角
+            borderPath.addQuadCurve(to: CGPoint(x: dRect.minX + r, y: dRect.minY), control: CGPoint(x: dRect.minX, y: dRect.minY))
+            
+            // 绘制主边框
+            context.stroke(borderPath, with: .color(Color.pencilStroke.opacity(0.7)), lineWidth: 0.8)
+            
+            // 2. 密集涂抹填充 (Dense Smudge Filling)
+            // 模拟铅笔充分涂抹：无数细小的笔触叠加
+            if intensity > 0.01 {
+                context.clip(to: borderPath)
+                
+                // 基础底色：模拟纸张被涂脏的感觉
+                context.fill(borderPath, with: .color(Color.pencilDark.opacity(0.05 + intensity * 0.1)))
+                
+                // 笔触层：生成大量随机短线，模拟侧锋涂抹
+                // 强度越高，笔触越密
+                let area = Double(size) * Double(size)
+                let density = Int(area * (0.5 + intensity * 2.0))
+                let strokeAlpha = 0.15 + intensity * 0.15
+                
+                // 批量绘制优化性能
+                var strokesPath = Path()
+                
+                for _ in 0..<density {
+                    // 随机位置
+                    let x = CGFloat.random(in: 0...size)
+                    let y = CGFloat.random(in: 0...size)
+                    
+                    // 只有在边框内的点才绘制（虽然有clip，但这样生成更均匀）
+                    // 统一的斜向笔触，带轻微角度扰动
+                    let length = CGFloat.random(in: 2...6)
+                    let angle = Double.pi / 4 + Double.random(in: -0.2...0.2) // 45度附近抖动
+                    
+                    let x2 = x + CGFloat(cos(angle)) * length
+                    let y2 = y + CGFloat(sin(angle)) * length
+                    
+                    strokesPath.move(to: CGPoint(x: x, y: y))
+                    strokesPath.addLine(to: CGPoint(x: x2, y: y2))
+                }
+                
+                // 绘制涂抹纹理
+                context.stroke(
+                    strokesPath,
+                    with: .color(Color.pencilDark.opacity(strokeAlpha)),
+                    lineWidth: 1.2 // 笔触稍粗，模拟侧锋
+                )
+                
+                // 高强度时的二次加深 (交叉笔触)
+                if intensity > 0.6 {
+                    var crossPath = Path()
+                    let crossDensity = Int(Double(density) * 0.5)
+                    
+                    for _ in 0..<crossDensity {
+                        let x = CGFloat.random(in: 0...size)
+                        let y = CGFloat.random(in: 0...size)
+                        let length = CGFloat.random(in: 2...5)
+                        // 反向笔触
+                        let angle = -Double.pi / 4 + Double.random(in: -0.3...0.3)
+                        
+                        crossPath.move(to: CGPoint(x: x, y: y))
+                        crossPath.addLine(to: CGPoint(x: x + CGFloat(cos(angle)) * length, y: y + CGFloat(sin(angle)) * length))
+                    }
+                    
+                    context.stroke(
+                        crossPath,
+                        with: .color(Color.pencilDark.opacity(strokeAlpha * 0.8)),
+                        lineWidth: 1.0
+                    )
+                }
+            }
+        }
+        .frame(width: size, height: size)
+    }
+}
+ 
+// (删除旧的 drawHatching 辅助函数，不再需要)
+
+// MARK: - 完整热力图组件 (8x5网格)
+
+struct PencilHeatmapGrid: View {
+    let data: [[Double]]  // 8列 x 5行的强度数据
+    let cellSize: CGFloat
+    let spacing: CGFloat
+    
+    init(data: [[Double]] = [], cellSize: CGFloat = 22, spacing: CGFloat = 4) {
+        // 确保8列5行
+        var normalizedData: [[Double]] = []
+        for col in 0..<8 {
+            var column: [Double] = []
+            for row in 0..<5 {
+                if col < data.count && row < data[col].count {
+                    column.append(data[col][row])
+                } else {
+                    column.append(0)
+                }
+            }
+            normalizedData.append(column)
+        }
+        self.data = normalizedData
+        self.cellSize = cellSize
+        self.spacing = spacing
+    }
+    
+    var body: some View {
+        HStack(spacing: spacing) {
+            ForEach(0..<8, id: \.self) { col in
+                VStack(spacing: spacing) {
+                    ForEach(0..<5, id: \.self) { row in
+                        PencilHeatmapCell(
+                            intensity: data[col][row],
+                            size: cellSize
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Retro Bar Chart
 
 struct RetroChartData: Identifiable {

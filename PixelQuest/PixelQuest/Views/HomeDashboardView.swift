@@ -48,7 +48,7 @@ struct HomeDashboardView: View {
             .padding(.bottom, 40)
         }
         .scrollIndicators(.hidden)
-        .background(Color.creamBg)
+        .background(PaperTextureBackground())
         .onAppear {
             withAnimation(.easeInOut(duration: 0.4)) {
                 appear = true
@@ -61,26 +61,16 @@ struct HomeDashboardView: View {
 
     private var header: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text("首页")
-                    .font(.pixelHeader(28))
-                    .foregroundStyle(Color.darkCoffee)
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(Color.pencilDark)
                 Text("记账与物品概览")
-                    .font(.pixel(12))
-                    .foregroundStyle(Color.lightCoffee)
+                    .font(.system(size: 11, weight: .regular))
+                    .foregroundStyle(Color.pencilLight)
             }
 
             Spacer()
-
-            Circle()
-                .fill(Color.warmButter)
-                .frame(width: 36, height: 36)
-                .overlay(
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Color.darkCoffee)
-                )
-                .cozyBorder(lineWidth: 3)
         }
     }
 
@@ -91,130 +81,194 @@ struct HomeDashboardView: View {
             BookkeepingView(heroNamespace: heroNamespace)
         } label: {
             VStack(alignment: .leading, spacing: 10) {
+                // 标题行
                 HStack {
                     Text("记账概览")
-                        .font(.pixelHeader(20))
-                        .foregroundStyle(Color.darkCoffee)
-
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Color.pencilDark)
                     Spacer()
-
                     Text("本月")
-                        .font(.pixel(12))
-                        .foregroundStyle(Color.lightCoffee)
+                        .font(.system(size: 10, weight: .regular))
+                        .foregroundStyle(Color.pencilLight)
                 }
 
-                Text("总余额")
-                    .font(.pixel(12))
-                    .foregroundStyle(Color.lightCoffee)
+                // 金额区域 - 居中对齐
+                VStack(spacing: 2) {
+                    Text("总余额")
+                        .font(.system(size: 10, weight: .regular))
+                        .foregroundStyle(Color.pencilLight)
 
-                Text(Double(financeStore.totalBalance) / 100, format: .currency(code: "CNY").precision(.fractionLength(2)))
-                    .font(.pixelHeader(32))
-                    .foregroundStyle(Color.darkCoffee)
-                    .ifAvailable17 { view in
-                        view.contentTransition(.numericText())
-                    }
+                    Text(Double(financeStore.totalBalance) / 100, format: .currency(code: "CNY").precision(.fractionLength(2)))
+                        .font(.system(size: 32, weight: .regular))
+                        .foregroundStyle(Color.pencilDark)
+                        .ifAvailable17 { view in
+                            view.contentTransition(.numericText())
+                        }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
 
-                HStack(spacing: 12) {
-                    amountPill(title: "收入", amount: financeStore.monthIncome, tint: Color("PixelGreen"))
-                    amountPill(title: "支出", amount: financeStore.monthExpense, tint: Color("PixelRed"))
-                    amountPill(title: "净值", amount: financeStore.monthNet, tint: Color("PixelAccent"))
+                // 收入/支出/净值 小标签
+                HStack(spacing: 8) {
+                    amountLabel(title: "收入", amount: financeStore.monthIncome)
+                    amountLabel(title: "支出", amount: financeStore.monthExpense)
+                    amountLabel(title: "净值", amount: financeStore.monthNet)
                 }
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .cozyCard(backgroundColor: .white, borderWidth: 3)
+            .pencilSketchCard()
             .matchedGeometryEffect(id: HomeHeroID.bookkeeping, in: heroNamespace)
         }
         .buttonStyle(.plain)
     }
 
-    private func amountPill(title: String, amount: Int, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+    private func amountLabel(title: String, amount: Int) -> some View {
+        HStack(spacing: 4) {
             Text(title)
-                .font(.pixel(11))
-                .foregroundStyle(Color.lightCoffee)
-
-            Text(Double(amount) / 100, format: .currency(code: "CNY").precision(.fractionLength(2)))
-                .font(.pixel(14))
-                .foregroundStyle(tint)
+                .font(.system(size: 10, weight: .regular))
+                .foregroundStyle(Color.pencilLight)
+            Text(Double(amount) / 100, format: .currency(code: "CNY").precision(.fractionLength(0)))
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.pencilDark)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 5)
         .padding(.horizontal, 8)
-        .cozyBorder(color: Color.darkCoffee.opacity(0.3), lineWidth: 2)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(Color.pencilStroke, lineWidth: 0.5)
+        )
+    }
+
+    private func sketchAmountPill(title: String, amount: Int) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title)
+                .font(.system(size: 9, weight: .regular))
+                .foregroundStyle(Color.pencilLight)
+
+            Text(Double(amount) / 100, format: .currency(code: "CNY").precision(.fractionLength(0)))
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color.pencilDark)
+        }
+        .padding(.vertical, 4)
+        .padding(.horizontal, 6)
+        .pencilSketchBorder()
     }
 
     // MARK: - Heatmap
 
     private var heatmapCard: some View {
         let heatmap = heatmapData
-        let weeks = heatmapWeeks(from: heatmap.days)
+        let gridData = heatmapGridData(from: heatmap.days, maxCount: heatmap.maxCount)
 
-        return VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 12) {
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack {
                 Text("热力图")
-                    .font(.pixelHeader(18))
-                    .foregroundStyle(Color.darkCoffee)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Color.pencilDark)
 
                 Spacer()
 
-                Picker("Source", selection: $heatmapSource) {
+                // 分段选择器
+                HStack(spacing: 0) {
                     ForEach(HeatmapSource.allCases) { source in
-                        Text(source.rawValue)
-                            .tag(source)
+                        Button {
+                            heatmapSource = source
+                        } label: {
+                            Text(source.rawValue)
+                                .font(.system(size: 12, weight: heatmapSource == source ? .medium : .regular))
+                                .foregroundStyle(heatmapSource == source ? Color.pencilDark : Color.pencilLight)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 7)
+                                .background(
+                                    heatmapSource == source ?
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Color.paperWhite)
+                                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.pencilStroke, lineWidth: 0.8))
+                                    : nil
+                                )
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
-                .pickerStyle(.segmented)
-                .frame(maxWidth: 220)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.pencilStroke, lineWidth: 0.5)
+                )
             }
 
+            // 13x5 热力图网格 - 精确还原参考图
             HStack(alignment: .top, spacing: 4) {
-                ForEach(weeks.indices, id: \.self) { index in
+                ForEach(0..<13, id: \.self) { col in
                     VStack(spacing: 4) {
-                        ForEach(weeks[index]) { day in
-                            heatmapCell(day: day, maxCount: heatmap.maxCount)
+                        ForEach(0..<5, id: \.self) { row in
+                            PencilHeatmapCell(
+                                intensity: gridData[col][row],
+                                size: 18
+                            )
                         }
                     }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .center)
             .animation(.easeInOut(duration: 0.2), value: heatmapSource)
         }
-        .padding(14)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cozyCard(backgroundColor: .white, borderWidth: 3)
+        .pencilSketchCard()
     }
 
-    private func heatmapCell(day: HeatmapDay, maxCount: Int) -> some View {
-        let size: CGFloat = 12
-        let color = heatmapColor(count: day.count, maxCount: maxCount, isFuture: day.isFuture)
+    /// 将热力图数据转换为13x5网格格式 (显示最近65天)
+    private func heatmapGridData(from days: [HeatmapDay], maxCount: Int) -> [[Double]] {
+        var grid: [[Double]] = Array(repeating: Array(repeating: 0.0, count: 5), count: 13)
+        
+        // 取最近65天的数据填充13x5网格
+        // 注意：通常热力图是从左上到右下，或者左下到右上。
+        // 参考图看起来是时间从左到右，每天一列？或者通常的周视图（一列是一周）？
+        // 13列 x 5行 = 65格。
+        // 如果是日历热力图，通常一列是一周（7天）。但这里是5行。
+        // 可能是一列代表连续的5天？或者这只是一个抽象的并在布局？
+        // 假设：从左到右是时间轴，每一列是连续的5天（不太可能）。
+        // 通常做法：左上角是最早的日期，右下角是最新的日期。
+        // 为了视觉对应，我们把最近的数据放在最后（右下角）。
+        
+        let totalCells = 13 * 5
+        let recentDays = Array(days.suffix(totalCells))
+        
+        // 我们需要把一维数组映射到二维网格 [col][row]
+        // 假设从左到右填充，列优先还是行优先？
+        // 观察参考图：深色块集中在后面。
+        // 我们按列填充：第一列是 Day 0-4, 第二列 Day 5-9...
+        
+        for (index, day) in recentDays.enumerated() {
+            // 如果我们想让最新的日期在最右侧那一列的底部
+            // index 0 应该是最早的日期
+            
+            let col = index / 5
+            let row = index % 5
+            
+            if col < 13 && row < 5 {
+                if day.isFuture {
+                    grid[col][row] = 0.0
+                } else if maxCount > 0 {
+                    grid[col][row] = Double(day.count) / Double(maxCount)
+                }
+            }
+        }
+        return grid
+    }
 
-        return Rectangle()
-            .fill(color)
-            .frame(width: size, height: size)
-            .overlay(
-                Rectangle()
-                    .stroke(Color.darkCoffee.opacity(0.15), lineWidth: 1)
-            )
+    private func pencilHeatmapCell(day: HeatmapDay, maxCount: Int) -> some View {
+        let size: CGFloat = 14  // 稍微放大的格子
+        let intensity = day.isFuture ? 0.0 : (maxCount > 0 ? Double(day.count) / Double(maxCount) : 0.0)
+        
+        return PencilHeatmapCell(intensity: intensity, size: size)
             .accessibilityLabel(heatmapAccessibilityLabel(for: day))
     }
 
-    private func heatmapColor(count: Int, maxCount: Int, isFuture: Bool) -> Color {
-        if isFuture {
-            return Color.darkCoffee.opacity(0.06)
-        }
-        if count == 0 {
-            return Color.darkCoffee.opacity(0.08)
-        }
-
-        let normalized = Double(count) / Double(max(maxCount, 1))
-        let bucket = Int((normalized * 4).rounded(.up))
-        let level = max(1, min(4, bucket))
-
-        switch level {
-        case 1: return Color("PixelAccent").opacity(0.25)
-        case 2: return Color("PixelAccent").opacity(0.45)
-        case 3: return Color("PixelAccent").opacity(0.7)
-        default: return Color("PixelAccent").opacity(0.95)
-        }
+    private func pencilHeatmapIntensity(count: Int, maxCount: Int, isFuture: Bool) -> Double {
+        if isFuture { return 0.0 }
+        if count == 0 { return 0.05 }
+        return Double(count) / Double(max(maxCount, 1))
     }
 
     private func heatmapAccessibilityLabel(for day: HeatmapDay) -> String {
@@ -278,53 +332,56 @@ struct HomeDashboardView: View {
             AssetsView(heroNamespace: heroNamespace)
         } label: {
             VStack(alignment: .leading, spacing: 10) {
+                // 标题行
                 HStack {
                     Text("物品概览")
-                        .font(.pixelHeader(20))
-                        .foregroundStyle(Color.darkCoffee)
-
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Color.pencilDark)
                     Spacer()
-
                     Text("总览")
-                        .font(.pixel(12))
-                        .foregroundStyle(Color.lightCoffee)
+                        .font(.system(size: 10, weight: .regular))
+                        .foregroundStyle(Color.pencilLight)
                 }
 
-                Text("物品总数")
-                    .font(.pixel(12))
-                    .foregroundStyle(Color.lightCoffee)
+                // 物品数量 - 居中大号显示
+                VStack(spacing: 2) {
+                    Text("物品总数")
+                        .font(.system(size: 10, weight: .regular))
+                        .foregroundStyle(Color.pencilLight)
 
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text("\(itemStore.items.count)")
-                        .font(.pixelHeader(32))
-                        .foregroundStyle(Color.darkCoffee)
-                        .ifAvailable17 { view in
-                            view.contentTransition(.numericText())
-                        }
-
-                    Text("件")
-                        .font(.pixel(14))
-                        .foregroundStyle(Color.lightCoffee)
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text("\(itemStore.items.count)")
+                            .font(.system(size: 36, weight: .regular))
+                            .foregroundStyle(Color.pencilDark)
+                            .ifAvailable17 { view in
+                                view.contentTransition(.numericText())
+                            }
+                        Text("件")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundStyle(Color.pencilLight)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
 
-                HStack(spacing: 12) {
-                    VStack(alignment: .leading, spacing: 2) {
+                // 总价值和最近物品
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 4) {
                         Text("总价值")
-                            .font(.pixel(11))
-                            .foregroundStyle(Color.lightCoffee)
+                            .font(.system(size: 9, weight: .regular))
+                            .foregroundStyle(Color.pencilLight)
                         Text(itemStore.formattedTotalValue)
-                            .font(.pixel(14))
-                            .foregroundStyle(Color("PixelAccent"))
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(Color.pencilDark)
                     }
 
                     if let latest = itemStore.items.first {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("最近物品")
-                                .font(.pixel(11))
-                                .foregroundStyle(Color.lightCoffee)
+                        HStack(spacing: 4) {
+                            Text("最近物品：")
+                                .font(.system(size: 9, weight: .regular))
+                                .foregroundStyle(Color.pencilLight)
                             Text(latest.name)
-                                .font(.pixel(14))
-                                .foregroundStyle(Color.darkCoffee)
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(Color.pencilDark)
                                 .lineLimit(1)
                         }
                     }
@@ -332,7 +389,7 @@ struct HomeDashboardView: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .cozyCard(backgroundColor: .white, borderWidth: 3)
+            .pencilSketchCard()
             .matchedGeometryEffect(id: HomeHeroID.assets, in: heroNamespace)
         }
         .buttonStyle(.plain)
@@ -348,67 +405,83 @@ struct HomeDashboardView: View {
     }
 
     private var recentEntriesCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 6) {
             Text("最近记账")
-                .font(.pixelHeader(16))
-                .foregroundStyle(Color.darkCoffee)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color.pencilDark)
 
             if financeStore.entries.isEmpty {
                 Text("暂无记录")
-                    .font(.pixel(12))
-                    .foregroundStyle(Color.lightCoffee)
+                    .font(.system(size: 10, weight: .regular))
+                    .foregroundStyle(Color.pencilLight)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
             } else {
                 ForEach(Array(financeStore.entries.prefix(3))) { entry in
-                    HStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: entry.categoryInfo?.icon ?? "circle")
+                            .font(.system(size: 10))
+                            .foregroundStyle(Color.pencilMedium)
+                            .frame(width: 14)
+                        
                         Text(entry.categoryInfo?.name ?? "其他")
-                            .font(.pixel(12))
-                            .foregroundStyle(Color.darkCoffee)
+                            .font(.system(size: 10, weight: .regular))
+                            .foregroundStyle(Color.pencilMedium)
                             .lineLimit(1)
 
                         Spacer()
 
                         Text(entry.signedAmountText)
-                            .font(.pixel(12))
-                            .foregroundStyle(entry.isExpense ? Color("PixelRed") : Color("PixelGreen"))
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(Color.pencilDark)
                     }
+                    .padding(.vertical, 2)
                 }
             }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cozyCard(backgroundColor: .white, borderWidth: 3)
+        .pencilSketchCard()
     }
 
     private var recentItemsCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 6) {
             Text("最近物品")
-                .font(.pixelHeader(16))
-                .foregroundStyle(Color.darkCoffee)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color.pencilDark)
 
             if itemStore.items.isEmpty {
                 Text("暂无物品")
-                    .font(.pixel(12))
-                    .foregroundStyle(Color.lightCoffee)
+                    .font(.system(size: 10, weight: .regular))
+                    .foregroundStyle(Color.pencilLight)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
             } else {
                 ForEach(Array(itemStore.items.prefix(3))) { item in
-                    HStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: "cube.box")
+                            .font(.system(size: 10))
+                            .foregroundStyle(Color.pencilMedium)
+                            .frame(width: 14)
+                        
                         Text(item.name)
-                            .font(.pixel(12))
-                            .foregroundStyle(Color.darkCoffee)
+                            .font(.system(size: 10, weight: .regular))
+                            .foregroundStyle(Color.pencilMedium)
                             .lineLimit(1)
 
                         Spacer()
 
                         Text("¥\(item.price)")
-                            .font(.pixel(12))
-                            .foregroundStyle(Color("PixelAccent"))
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(Color.pencilDark)
                     }
+                    .padding(.vertical, 2)
                 }
             }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cozyCard(backgroundColor: .white, borderWidth: 3)
+        .pencilSketchCard()
     }
 }
 
